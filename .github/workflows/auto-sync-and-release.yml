@@ -29,6 +29,11 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow
+
       - name: Run Master Sync Engine
         run: |
           python scripts/sync_repo_master.py
