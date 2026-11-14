@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76 32" width="228" height="96">
+  <!-- Solid Pure Red Square -->
+  <rect x="2" y="8" width="16" height="16" rx="2.5" fill="#FF0000"/>
+  <!-- Top Line: Compact Micro Tracked ON AIR -->
+  <text x="22" y="14.5" fill="#CBD5E1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif" font-weight="800" font-size="6.2" letter-spacing="2.0">ON AIR</text>
+  <!-- Bottom Line: Super Bold Hero LIVE -->
+  <text x="22" y="27" fill="#FF0000" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif" font-weight="900" font-size="14.5" letter-spacing="1.0">LIVE</text>
+</svg>
