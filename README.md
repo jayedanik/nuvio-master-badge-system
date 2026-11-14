@@ -6,7 +6,7 @@
   <a href="https://github.com/jayedanik/nuvio-master-badge-system"><img src="https://img.shields.io/badge/System-Nuvio_Master_Badges-00f2fe?style=flat-square" alt="Nuvio" /></a>
   <a href="badges.json"><img src="https://img.shields.io/badge/Badges-396_Stream_Rules-9b51e0?style=flat-square" alt="Badges" /></a>
   <a href="badges/"><img src="https://img.shields.io/badge/Assets-517_WebP_Files-3b82f6?style=flat-square" alt="Assets" /></a>
-  <a href="#theme-universes"><img src="https://img.shields.io/badge/Themes-11_Universes-f59e0b?style=flat-square" alt="Themes" /></a>
+  <a href="#theme-universes"><img src="https://img.shields.io/badge/Themes-13_Universes-f59e0b?style=flat-square" alt="Themes" /></a>
   <a href="badges.json"><img src="https://img.shields.io/badge/Scale-96px_Native-00ff88?style=flat-square" alt="96px Scale" /></a>
   <a href="#performance-architecture"><img src="https://img.shields.io/badge/Footprint-3.1_MB_Total-ff007f?style=flat-square" alt="Size" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-ffd700?style=flat-square" alt="License" /></a>
@@ -20,10 +20,10 @@
 
 ## Theme Architecture & Ecosystem
 
-Every stream in Nuvio can be experienced across **11 radically distinct physical material universes**. Rather than a static look, choose an aesthetic that matches your personal theater setup:
+Every stream in Nuvio can be experienced across **13 radically distinct physical material universes**. Rather than a static look, choose an aesthetic that matches your personal theater setup:
 
 <p align="center">
-  <img src="previews/theme-ecosystem.jpg?v=v3.9.18" alt="11 Masterpiece Theme Universes" width="100%" />
+  <img src="previews/theme-ecosystem.jpg?v=v3.9.18" alt="13 Masterpiece Theme Universes" width="100%" />
 </p>
 
 * **Zero CPU Overhead:** Every theme is pre-rendered at native 96px standard canvas height. Switching themes in Nuvio requires zero re-scaling or image reprocessing.
@@ -178,6 +178,32 @@ https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/crite
 
 ---
 
+### VisionOS Pure Liquid Glass
+> WWDC25 droplet optics with 3D convex liquid meniscus curvature, caustic refraction & smoked translucent core
+
+<p align="center">
+  <img src="previews/preview-liquid-glass.jpg?v=v3.9.18" alt="VisionOS Pure Liquid Glass" width="100%" />
+</p>
+
+```text
+https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/liquid-glass.json
+```
+
+---
+
+### Artisan Japanese Washi Tape
+> Authentic fibrous mulberry washi tape strips with fibrous torn deckled edges, tactile paper grain, chromatic brand backlight glows, and slight dark drop shadow grounding
+
+<p align="center">
+  <img src="previews/preview-washi-tape.jpg?v=v3.9.18" alt="Artisan Japanese Washi Tape" width="100%" />
+</p>
+
+```text
+https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/washi-tape.json
+```
+
+---
+
 ## Performance Architecture
 
 Built from the ground up to ensure Nuvio player operates at **maximum frame rates with zero loading latency or memory pressure**:
@@ -282,7 +308,7 @@ The Nuvio Master Badge System is in continuous, active development. More new str
 | **Alpha Channel** | Full Transparency (`#00000000`) | Seamless integration over dynamic backdrop art |
 | **Typography Standard** | Geometric Sans (`Inter` / `JetBrains Sans`) | Maximum legibility from 10-foot viewing distance |
 | **Sovereign Flag Geometry** | Math-accurate constitutional ratios | Zero distorted national symbols |
-| **Theme Silhouettes** | 10 Physical Universes | Hardware, artisan jewelry, retro synthwave & cinema |
+| **Theme Silhouettes** | 12 Physical Material Universes | Hardware, artisan jewelry, retro synthwave, VisionOS glass & Japanese washi tape |
 
 ---
 

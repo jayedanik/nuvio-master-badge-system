@@ -3,3 +3,5 @@ __pycache__/
 *.py
 !scripts/**
 temp_*
+
+scripts/__pycache__/
