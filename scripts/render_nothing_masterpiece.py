@@ -45,6 +45,8 @@ THEMES = [
      "Distressed industrial cyberpunk inspection tags with hazard stripes & serial stamps"),
     ("criterion-leather", "Criterion Leather", "#d97706",
      "Handcrafted archival leather book spine binding with deep gold leaf hot-stamping"),
+    ("liquid-glass", "VisionOS Liquid Glass", "#38bdf8",
+     "WWDC25 droplet optics with 3D convex liquid meniscus curvature, caustic refraction & smoked translucent core"),
 ]
 
 TIERS = [
