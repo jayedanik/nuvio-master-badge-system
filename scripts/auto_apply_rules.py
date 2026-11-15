@@ -38,9 +38,13 @@ def clean_alpha_transparency(img):
         im = im.crop(bbox)
     return im
 
-def ensure_horizontal_safe_margin(img, min_margin=18):
-    """Enforces minimum horizontal transparent margin (>= 18px) so Nuvio Desktop's
-    RoundedCornerShape clip never slices into badge text, logos, or drop shadows."""
+def ensure_horizontal_safe_margin(img, min_margin=18, max_width=240, canvas_h=96):
+    """Enforces anti-cropping standard:
+    1. Guarantees minimum horizontal transparent margin (>= 18px) so Nuvio Desktop's
+       RoundedCornerShape clip never slices into badge text, logos, or drop shadows.
+    2. Clamps maximum badge width to <= 240px so 11-12 concurrent badges fit in
+       Nuvio Desktop player's NowPlayingTile without horizontal clipping or overflow.
+    3. Guarantees canvas height is exactly 96px."""
     im = img.convert("RGBA")
     arr = np.array(im)
     alpha = arr[:, :, 3]
@@ -60,7 +64,21 @@ def ensure_horizontal_safe_margin(img, min_margin=18):
         new_w = im.width + pad_left + pad_right
         new_im = Image.new("RGBA", (new_w, im.height), (0, 0, 0, 0))
         new_im.paste(im, (pad_left, 0), im)
-        return new_im
+        im = new_im
+        
+    if im.width > max_width:
+        # Scale proportionally to fit within max_width while preserving safe margins
+        cw = max_x - min_x + 1
+        avail_w = max_width - min_margin * 2
+        scale = avail_w / float(cw) if cw > avail_w else 1.0
+        if scale < 1.0:
+            content = im.crop((min_x, 0, max_x + 1, im.height))
+            new_cw = max(1, int(round(cw * scale)))
+            content_scaled = content.resize((new_cw, im.height), Image.Resampling.LANCZOS)
+            new_im = Image.new("RGBA", (new_cw + min_margin * 2, canvas_h), (0, 0, 0, 0))
+            new_im.paste(content_scaled, (min_margin, 0), content_scaled)
+            im = new_im
+
     return im
 
 def add_badge(badge_id, src_path=None, main_text=None, sub_text=None, category="brands"):

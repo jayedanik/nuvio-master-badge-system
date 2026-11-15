@@ -9,6 +9,11 @@
     "webp_quality": 95,
     "alpha_channel": "100% transparent (#00000000) with zero black boxes, smoked capsules, or artificial card borders",
     "min_horizontal_padding_px": 18,
+    "max_badge_width_px": 240,
+    "target_aspect_ratio_range": [0.8, 2.3],
+    "max_simultaneous_player_badges_fit": 12,
+    "content_proportional_width": "true - canvas width tightly bounds content + safe padding, avoiding arbitrary 300px bloat",
+    "anti_cropping_guardrail": "Guarantees that 11-12 concurrent stream badges fit within Nuvio Desktop player NowPlayingTile without horizontal clipping or RoundedCornerShape slicing",
     "manifest_standards": {
       "tagStyle": "filled",
       "tagColor": "#00000000",
