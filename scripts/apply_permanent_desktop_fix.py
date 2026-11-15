@@ -20,10 +20,11 @@ for mpath in manifest_files:
         changed = False
         if 'filters' in data:
             for filt in data['filters']:
-                if filt.get('tagStyle') != 'none' or filt.get('borderColor') != '' or filt.get('tagColor') != '':
-                    filt['tagStyle'] = 'none'
-                    filt['tagColor'] = ''
-                    filt['borderColor'] = ''
+                if filt.get('tagStyle') != 'filled' or filt.get('borderColor') != '#00000000' or filt.get('tagColor') != '#00000000' or filt.get('textColor') != '#FFFFFF':
+                    filt['tagStyle'] = 'filled'
+                    filt['tagColor'] = '#00000000'
+                    filt['borderColor'] = '#00000000'
+                    filt['textColor'] = '#FFFFFF'
                     changed = True
         
         if changed:

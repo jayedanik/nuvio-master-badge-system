@@ -230,9 +230,10 @@ def create_theme(theme_id, theme_name, primary_font, secondary_font, style_desc,
         "id": theme_id,
         "name": theme_name,
         "description": style_desc,
-        "tagStyle": "none",
-        "tagColor": "",
-        "borderColor": "",
+        "tagStyle": "filled",
+        "tagColor": "#00000000",
+        "borderColor": "#00000000",
+        "textColor": "#FFFFFF",
         "accent": accent_hex,
         "badges": master_data.get("badges", [])
     }

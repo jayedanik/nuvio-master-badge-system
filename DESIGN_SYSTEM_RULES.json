@@ -10,9 +10,10 @@
     "alpha_channel": "100% transparent (#00000000) with zero black boxes, smoked capsules, or artificial card borders",
     "min_horizontal_padding_px": 18,
     "manifest_standards": {
-      "tagStyle": "none",
-      "tagColor": "",
-      "borderColor": ""
+      "tagStyle": "filled",
+      "tagColor": "#00000000",
+      "borderColor": "#00000000",
+      "textColor": "#FFFFFF"
     },
     "locked_previews": [
       "previews/theme-ecosystem.jpg",
