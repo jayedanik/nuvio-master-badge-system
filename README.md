@@ -48,11 +48,11 @@ https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/badge
 
 ---
 
-### Prismatic Studio Markers
-> Vibrant frameless studio production markers with prismatic HDR spectrum & metallic accents
+### Chroma Broadcast
+> Vibrant frameless studio monitor typography with neon chromatic spectrum & official studio marks
 
 <p align="center">
-  <img src="previews/preview-studio-markers.jpg?v=v4.0.0-LOCKED" alt="Prismatic Studio Markers" width="100%" />
+  <img src="previews/preview-studio-markers.jpg?v=v4.0.0-LOCKED" alt="Chroma Broadcast" width="100%" />
 </p>
 
 ```text

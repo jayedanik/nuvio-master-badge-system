@@ -29,7 +29,7 @@
 | Theme ID | Theme Name | Primary Font | Secondary / Subtext Font | Visual Aesthetic |
 |---|---|---|---|---|
 | `pristine` | Pristine Master | `Arial Bold` / `Segoe UI Bold` | `Segoe UI` | Clean OLED Floating Vector Sans |
-| `studio-markers` | Prismatic Studio Markers | `Bahnschrift` | `Bahnschrift` | Condensed Technical Studio Monitor Marker |
+| `studio-markers` | Chroma Broadcast | `Bahnschrift` | `Bahnschrift` | Condensed Technical Studio Monitor Marker |
 | `gmk-keycaps` | GMK Custom Keycaps | `Bahnschrift` | `Bahnschrift` | Double-shot PBT Cherry Profile DIN Standard |
 | `rgb-keycaps` | Cyberpunk RGB Keycaps | `Bahnschrift` | `Bahnschrift` | Translucent Pudding Keycaps with Neon RGB Underglow |
 | `cinema-ticket` | Golden Age Cinema Ticket | `Impact` | `Times Bold` | Vintage Perforated Admission Ticket Stub |

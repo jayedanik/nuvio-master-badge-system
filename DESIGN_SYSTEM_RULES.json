@@ -37,7 +37,7 @@
       }
     },
     "studio-markers": {
-      "name": "Prismatic Studio Markers",
+      "name": "Chroma Broadcast",
       "dir": "themes/studio-markers/badges",
       "json": "studio-markers.json",
       "typography": {
