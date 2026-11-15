@@ -38,7 +38,7 @@ FRIEREN_PATH = os.path.join(BRAIN_DIR, "frieren_iconic_glass_bg.jpg")
 with open(FRIEREN_PATH, "rb") as f:
     b64_frieren = base64.b64encode(f.read()).decode("utf-8")
 
-GOOGLE_FONTS_LINK = "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Chakra+Petch:wght@700&family=Cinzel+Decorative:wght@700&family=Cinzel:wght@700;800&family=Orbitron:wght@800;900&family=Oxanium:wght@800&family=Playfair+Display:wght@800;900&family=Righteous&family=Space+Grotesk:wght@700&family=Teko:wght@700&family=Inter:wght@800;900&display=swap"
+GOOGLE_FONTS_LINK = "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Chakra+Petch:wght@700&family=Cinzel+Decorative:wght@700&family=Cinzel:wght@700;800&family=Orbitron:wght@800;900&family=Oxanium:wght@800&family=Playfair+Display:wght@800;900&family=Righteous&family=Space+Grotesk:wght@700&family=Teko:wght@700&family=Inter:wght@800;900&family=Outfit:wght@800;900&display=swap"
 
 THEME_CONFIGS = [
     {
@@ -135,7 +135,7 @@ THEME_CONFIGS = [
         "accent": "#38bdf8",
         "desc": "WWDC25 droplet optics with 3D convex liquid meniscus curvature, caustic refraction & smoked translucent core",
         "bg_type": "aurora",
-        "title_css": "font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(90deg, #38bdf8 0%, #818cf8 28%, #c084fc 58%, #f472b6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(56, 189, 248, 0.45));",
+        "title_css": "font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(90deg, #38bdf8 0%, #818cf8 28%, #c084fc 58%, #f472b6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(56, 189, 248, 0.45));",
     },
     {
         "id": "washi-tape",
