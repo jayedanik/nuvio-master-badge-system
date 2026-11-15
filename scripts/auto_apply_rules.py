@@ -38,6 +38,31 @@ def clean_alpha_transparency(img):
         im = im.crop(bbox)
     return im
 
+def ensure_horizontal_safe_margin(img, min_margin=18):
+    """Enforces minimum horizontal transparent margin (>= 18px) so Nuvio Desktop's
+    RoundedCornerShape clip never slices into badge text, logos, or drop shadows."""
+    im = img.convert("RGBA")
+    arr = np.array(im)
+    alpha = arr[:, :, 3]
+    has_alpha = alpha > 10
+    
+    if not np.any(has_alpha):
+        return im
+        
+    cols = np.where(np.any(has_alpha, axis=0))[0]
+    min_x = cols[0]
+    max_x = cols[-1]
+    
+    pad_left = max(0, min_margin - min_x)
+    pad_right = max(0, min_margin - (im.width - 1 - max_x))
+    
+    if pad_left > 0 or pad_right > 0:
+        new_w = im.width + pad_left + pad_right
+        new_im = Image.new("RGBA", (new_w, im.height), (0, 0, 0, 0))
+        new_im.paste(im, (pad_left, 0), im)
+        return new_im
+    return im
+
 def add_badge(badge_id, src_path=None, main_text=None, sub_text=None, category="brands"):
     print(f"=== AUTO-APPLYING DESIGN RULES: ADDING BADGE '{badge_id}' ===")
     
@@ -62,9 +87,11 @@ def add_badge(badge_id, src_path=None, main_text=None, sub_text=None, category="
         px = (pw - gw) // 2
         py = (CANVAS_H - gh) // 2
         p_canvas.paste(sc, (px, py), sc)
+        p_canvas = ensure_horizontal_safe_margin(p_canvas, 18)
         p_canvas.save(pristine_out, "WEBP", quality=95)
     else:
         p_canvas = b5.render_pristine_floating(False, None, main_text or badge_id.upper(), sub_text, badge_id=badge_id)
+        p_canvas = ensure_horizontal_safe_margin(p_canvas, 18)
         p_canvas.save(pristine_out, "WEBP", quality=95)
     print(f"[OK] 01 - Pristine Master: Saved {pristine_out}")
 
@@ -94,30 +121,40 @@ def add_badge(badge_id, src_path=None, main_text=None, sub_text=None, category="
         
         is_ott = (category in ["brands", "ott", "streaming"]) or (glyph is not None)
         rendered = renderer(is_ott, glyph, main_text, sub_text, badge_id=badge_id)
+        rendered = ensure_horizontal_safe_margin(rendered, 18)
         rendered.save(out_p, "WEBP", quality=95)
         print(f"[OK] Bespoke Theme '{tid}': Rendered with authentic theme typography -> {out_p}")
 
     # 4. Apple VisionOS Liquid Glass
     lg_dir = os.path.join(REPO_ROOT, "themes", "liquid-glass", "badges")
     os.makedirs(lg_dir, exist_ok=True)
+    lg_out = os.path.join(lg_dir, f"{badge_id}.webp")
     try:
         import generate_all_liquid_glass_theme as gl
         gl.generate_single_badge(badge_id)
+        if os.path.exists(lg_out):
+            padded_lg = ensure_horizontal_safe_margin(Image.open(lg_out), 18)
+            padded_lg.save(lg_out, "WEBP", quality=95)
         print(f"[OK] 12 - VisionOS Liquid Glass: Refractive capsule generated")
     except Exception as e:
-        shutil.copy2(pristine_out, os.path.join(lg_dir, f"{badge_id}.webp"))
+        shutil.copy2(pristine_out, lg_out)
         print(f"[WARN] Liquid glass generation fallback: {e}")
 
     # 5. Artisan Japanese Washi Tape (With 3D drop shadow, deckled roll, and elevated prominence)
     wt_dir = os.path.join(REPO_ROOT, "themes", "washi-tape", "badges")
     os.makedirs(wt_dir, exist_ok=True)
+    wt_out = os.path.join(wt_dir, f"{badge_id}.webp")
     try:
         brain_scratch = r"C:\Users\yourt\.gemini\antigravity\brain\fb22a0fc-6924-43f9-ab27-8d6db9906f8f\scratch"
         sys.path.insert(0, brain_scratch)
         import generate_all_washi_tape_theme as gw
         gw.build_washi_badge_for_name(badge_id)
+        if os.path.exists(wt_out):
+            padded_wt = ensure_horizontal_safe_margin(Image.open(wt_out), 18)
+            padded_wt.save(wt_out, "WEBP", quality=95)
         print(f"[OK] 13 - Artisan Washi Tape: Handcrafted mulberry roll with 3D drop shadow generated")
     except Exception as e:
+        print(f"[WARN] Washi tape generation fallback: {e}")
         print(f"[WARN] Washi tape generation fallback: {e}")
 
     # 6. Synchronize JSON manifests
@@ -184,18 +221,24 @@ def create_theme(theme_id, theme_name, primary_font, secondary_font, style_desc,
             shutil.copy2(os.path.join(pristine_dir, fn), os.path.join(theme_badges_dir, fn))
             count += 1
             
-    # Create Theme JSON
+    # Create Theme JSON with zero border/tag background for desktop compatibility
     theme_json_path = os.path.join(REPO_ROOT, f"{theme_id}.json")
+    nested_theme_json_path = os.path.join(REPO_ROOT, "themes", theme_id, f"{theme_id}.json")
     with open(os.path.join(REPO_ROOT, "badges.json"), "r", encoding="utf-8") as f:
         master_data = json.load(f)
     theme_data = {
         "id": theme_id,
         "name": theme_name,
         "description": style_desc,
+        "tagStyle": "none",
+        "tagColor": "",
+        "borderColor": "",
         "accent": accent_hex,
         "badges": master_data.get("badges", [])
     }
     with open(theme_json_path, "w", encoding="utf-8") as f:
+        json.dump(theme_data, f, indent=2)
+    with open(nested_theme_json_path, "w", encoding="utf-8") as f:
         json.dump(theme_data, f, indent=2)
         
     print(f"[SUCCESS] Theme '{theme_id}' created with {count} baseline badges and registered in Design System Rules!")

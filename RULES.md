@@ -10,10 +10,14 @@
 1. **Canvas Height Standard:**
    - Every badge in every theme has an exact height of **`96px`** (`CANVAS_H = 96`).
    - High-resolution rendering must use **4x supersampling** (`384px` canvas rendered and downscaled with `LANCZOS`).
-2. **100% Alpha Transparency:**
+2. **100% Alpha Transparency & Zero-Border Manifest:**
    - Zero solid black cards, zero artificial pill borders, and zero smoked capsules.
    - All assets are transparent WebP (`#00000000`).
-3. **Locked Masterpiece Showcases:**
+   - Every manifest `.json` must set `"tagStyle": "none"`, `"tagColor": ""`, and `"borderColor": ""` to prevent Nuvio Desktop from drawing hardware outline boxes.
+3. **18px Horizontal Safe Margin (Anti-Crop Standard):**
+   - Every badge must maintain a minimum of **`18px`** transparent margin on left and right (`pad_left >= 18px`, `pad_right >= 18px`).
+   - Prevents Nuvio Desktop's `RoundedCornerShape` clip from slicing outer letters or icons on player stream chips.
+4. **Locked Masterpiece Showcases:**
    - `previews/theme-ecosystem.jpg` (2400x969px) is strictly locked to the 5-Tier Nothing Dot Matrix Architecture.
    - `previews/preview-washi-tape.jpg` (2400x1349px) is strictly locked to the Dark Emerald Frieren Showcase with dual 3D shadows and 60px elevated logos.
    - Verified via `SYSTEM_INTEGRITY.lock`.
