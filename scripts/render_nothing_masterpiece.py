@@ -24,7 +24,7 @@ with open(GLASS_PATH, "rb") as f:
     b64_glass = base64.b64encode(f.read()).decode("utf-8")
 
 # B. Golden Theme Background (Theme 05: Vintage Cinema Ticket)
-CINEMA_GOLD_PATH = os.path.join(BRAIN_DIR, "vibrant_glass_cinema-ticket.jpg")
+CINEMA_GOLD_PATH = os.path.join(BRAIN_DIR, "exact_cinema_golden_bokeh_master.jpg")
 with open(CINEMA_GOLD_PATH, "rb") as f:
     b64_cinema_gold = base64.b64encode(f.read()).decode("utf-8")
 
@@ -79,7 +79,7 @@ THEME_CONFIGS = [
         "accent": "#f59e0b",
         "desc": "Authentic perforated cinema admission stubs with 24K gold foil trim & serial stamp",
         "bg_type": "cinema_gold",
-        "title_css": "font-family: 'Playfair Display', serif; font-weight: 900; background: linear-gradient(135deg, #fffbeb 0%, #fef08a 35%, #f59e0b 70%, #b45309 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(245, 158, 11, 0.4));",
+        "title_css": "font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-weight: 700; letter-spacing: -0.5px; color: #f59e0b;",
     },
     {
         "id": "enamel-pins",
@@ -424,6 +424,15 @@ def render_html_preview(cfg):
 def execute():
     print("=== RENDERING ALL 13 THEMES NATIVELY WITH AUTHENTIC BESPOKE BACKGROUNDS & TYPOGRAPHY ===")
     for cfg in THEME_CONFIGS:
+        if cfg["id"] == "washi-tape":
+            # Theme 13 (Japanese Artisan Washi Tape): Copy exact canonical 2400x1349 master matching user screenshot
+            src_canonical = os.path.join(BRAIN_DIR, "preview_washi_tape_canonical.jpg")
+            dst_washi = os.path.join(PREVIEWS_DIR, "preview-washi-tape.jpg")
+            if os.path.exists(src_canonical):
+                import shutil
+                shutil.copy2(src_canonical, dst_washi)
+                print(f"[OK] Synced canonical master: washi-tape           -> {dst_washi}")
+                continue
         render_html_preview(cfg)
     print("=== ALL 13 THEMES SUCCESSFULLY RENDERED ===")
 
