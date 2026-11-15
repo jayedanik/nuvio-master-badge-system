@@ -56,7 +56,7 @@ THEME_CONFIGS = [
     },
     {
         "id": "studio-markers",
-        "name": "Chroma Broadcast",
+        "name": "Prismatic Studio Markers",
         "accent": "#f59e0b",
         "desc": "Frameless ultra-legible studio monitor typography with vivid chromatic accents",
         "bg_type": "glass",
@@ -167,6 +167,9 @@ TIERS = [
 
 def render_html_preview(cfg):
     theme_id = cfg["id"]
+    if theme_id == "washi-tape":
+        # Washi tape has an approved, bespoke master showcase with 3D shadows and elevated grounding
+        return
     title_name = cfg["name"]
     accent_hex = cfg["accent"]
     desc = cfg["desc"]
