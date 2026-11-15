@@ -193,9 +193,9 @@ def render_html_preview(cfg):
         bg_style = f"url('data:image/jpeg;base64,{b64_aurora}') center / cover no-repeat, #08090d"
     elif bg_type == "frieren":
         bg_style = f"""
-          radial-gradient(1500px 700px at 15% 0%, rgba(251, 113, 133, 0.22) 0%, transparent 65%),
-          radial-gradient(1200px 600px at 85% 15%, rgba(251, 191, 36, 0.16) 0%, transparent 60%),
-          linear-gradient(180deg, rgba(8, 12, 10, 0.25) 0%, rgba(6, 10, 8, 0.42) 100%),
+          radial-gradient(1500px 700px at 15% 0%, rgba(251, 113, 133, 0.30) 0%, transparent 68%),
+          radial-gradient(1200px 600px at 85% 15%, rgba(251, 191, 36, 0.18) 0%, transparent 60%),
+          linear-gradient(180deg, rgba(12, 10, 16, 0.55) 0%, rgba(6, 6, 10, 0.72) 100%),
           url('data:image/jpeg;base64,{b64_frieren}') center / cover no-repeat,
           #08090d
         """
