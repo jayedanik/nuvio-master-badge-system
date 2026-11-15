@@ -711,15 +711,6 @@ def render_ecosystem():
 def execute():
     print("=== RENDERING ALL 13 THEMES NATIVELY WITH AUTHENTIC BESPOKE BACKGROUNDS & TYPOGRAPHY ===")
     for cfg in THEME_CONFIGS:
-        if cfg["id"] == "washi-tape":
-            # Theme 13 (Japanese Artisan Washi Tape): Copy exact canonical 2400x1349 master matching user screenshot
-            src_canonical = os.path.join(BRAIN_DIR, "preview_washi_tape_canonical.jpg")
-            dst_washi = os.path.join(PREVIEWS_DIR, "preview-washi-tape.jpg")
-            if os.path.exists(src_canonical):
-                import shutil
-                shutil.copy2(src_canonical, dst_washi)
-                print(f"[OK] Synced canonical master: washi-tape           -> {dst_washi}")
-                continue
         render_html_preview(cfg)
     render_ecosystem()
     print("=== ALL 13 THEMES & ECOSYSTEM SUCCESSFULLY RENDERED ===")
