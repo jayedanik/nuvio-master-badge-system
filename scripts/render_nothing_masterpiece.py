@@ -52,7 +52,6 @@ THEME_CONFIGS = [
         "accent": "#38bdf8",
         "desc": "Ultra-clean floating OLED typography with official Dolby and HDR branding",
         "bg_type": "glass",
-        "footer_tag": "Bespoke Floating OLED Cinema Specification • Optical Clarity",
         "title_css": "font-family: 'Inter', sans-serif; font-weight: 900; background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 50%, #38bdf8 85%, #0284c7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(56, 189, 248, 0.35));",
     },
     {
@@ -61,7 +60,6 @@ THEME_CONFIGS = [
         "accent": "#f59e0b",
         "desc": "Frameless ultra-legible studio monitor typography with vivid chromatic accents",
         "bg_type": "glass",
-        "footer_tag": "High-Visibility Studio Monitor Layout • SMPTE Chromatics",
         "title_css": "font-family: 'Teko', sans-serif; font-weight: 700; font-size: 54px; letter-spacing: 2.5px; text-transform: uppercase; background: linear-gradient(135deg, #ffffff 15%, #fde047 50%, #eab308 80%, #ca8a04 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(250, 204, 21, 0.35));",
     },
     {
@@ -70,7 +68,6 @@ THEME_CONFIGS = [
         "accent": "#a78bfa",
         "desc": "Double-shot mechanical keycaps with scooped spherical dish & textured matte borders",
         "bg_type": "glass",
-        "footer_tag": "Double-Shot PBT Mechanical Profile • Spherical Geometry",
         "title_css": "font-family: 'Space Grotesk', sans-serif; font-weight: 700; letter-spacing: -1px; background: linear-gradient(135deg, #ffffff 0%, #e9d5ff 35%, #c084fc 70%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(167, 139, 250, 0.4));",
     },
     {
@@ -79,7 +76,6 @@ THEME_CONFIGS = [
         "accent": "#00f2fe",
         "desc": "Dual-layer translucent pudding keycaps with dynamic cybernetic gradient underglow",
         "bg_type": "glass",
-        "footer_tag": "Translucent Pudding Underglow • Addressable Optical Matrix",
         "title_css": "font-family: 'Chakra Petch', sans-serif; font-weight: 700; letter-spacing: 1px; background: linear-gradient(135deg, #00f2fe 0%, #4facfe 35%, #c084fc 70%, #f472b6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(0, 242, 254, 0.5));",
     },
     {
@@ -88,7 +84,6 @@ THEME_CONFIGS = [
         "accent": "#f59e0b",
         "desc": "Authentic perforated cinema admission stubs with 24K gold foil trim & serial stamp",
         "bg_type": "cinema_gold",
-        "footer_tag": "Archival Box Office Admission Stub • 24K Gold Perforations",
         "title_css": "font-family: 'Playfair Display', serif; font-weight: 900; letter-spacing: 0.5px; background: linear-gradient(135deg, #ffffff 0%, #fef08a 35%, #f59e0b 70%, #b45309 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(245, 158, 11, 0.45));",
     },
     {
@@ -97,7 +92,6 @@ THEME_CONFIGS = [
         "accent": "#fbbf24",
         "desc": "Jewelry-grade metal lapel badges with 24K gold brass framing & polished mineral enamel",
         "bg_type": "glass",
-        "footer_tag": "Jewelry-Grade Hard Cloisonné Enamel • Polished Brass Framing",
         "title_css": "font-family: 'Cinzel', serif; font-weight: 800; letter-spacing: 1.2px; background: linear-gradient(135deg, #ffffff 0%, #fef9c3 30%, #eab308 70%, #a16207 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(234, 179, 8, 0.4));",
     },
     {
@@ -106,7 +100,6 @@ THEME_CONFIGS = [
         "accent": "#ef4444",
         "desc": "Authentic 1980s analog magnetic cassette labels with vintage tracking stripes & barcode",
         "bg_type": "glass",
-        "footer_tag": "Vintage Analog Magnetic Cassette • Retro Tracking Striping",
         "title_css": "font-family: 'Righteous', cursive; background: linear-gradient(135deg, #fdf2f8 0%, #f472b6 35%, #ec4899 70%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(236, 72, 153, 0.45));",
     },
     {
@@ -115,7 +108,6 @@ THEME_CONFIGS = [
         "accent": "#e2e8f0",
         "desc": "Matte wooden movie production slates with bold diagonal acrylic chevrons",
         "bg_type": "glass",
-        "footer_tag": "Matte Hollywood Production Slate • High-Contrast Chevrons",
         "title_css": "font-family: 'Bebas Neue', sans-serif; font-size: 54px; letter-spacing: 2px; background: linear-gradient(135deg, #ffffff 15%, #f1f5f9 50%, #cbd5e1 80%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(241, 245, 249, 0.4));",
     },
     {
@@ -124,7 +116,6 @@ THEME_CONFIGS = [
         "accent": "#22d3ee",
         "desc": "Vintage Japanese vacuum fluorescent display tube glass with glowing cyan phosphor",
         "bg_type": "glass",
-        "footer_tag": "Vacuum Fluorescent Tube Phosphor • True Cyan Luminescence",
         "title_css": "font-family: 'Orbitron', sans-serif; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; background: linear-gradient(135deg, #ecfdf5 0%, #a7f3d0 30%, #2dd4bf 70%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(45, 212, 191, 0.5));",
     },
     {
@@ -133,7 +124,6 @@ THEME_CONFIGS = [
         "accent": "#f43f5e",
         "desc": "Distressed industrial cyberpunk inspection tags with hazard stripes & serial stamps",
         "bg_type": "glass",
-        "footer_tag": "Industrial Cyberpunk Inspection Rig • Stamped Hazard Chevrons",
         "title_css": "font-family: 'Oxanium', sans-serif; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; background: linear-gradient(135deg, #fff1f2 0%, #fb7185 30%, #ec4899 70%, #8b5cf6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(236, 72, 153, 0.45));",
     },
     {
@@ -142,7 +132,6 @@ THEME_CONFIGS = [
         "accent": "#d97706",
         "desc": "Handcrafted archival leather book spine binding with deep gold leaf hot-stamping",
         "bg_type": "glass",
-        "footer_tag": "Hand-Bound Archival Morocco Leather • 24K Gold Hot-Stamping",
         "title_css": "font-family: 'Cinzel Decorative', serif; font-weight: 700; letter-spacing: 1px; background: linear-gradient(135deg, #ffffff 0%, #fef08a 25%, #f59e0b 65%, #92400e 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(245, 158, 11, 0.4));",
     },
     {
@@ -151,7 +140,6 @@ THEME_CONFIGS = [
         "accent": "#38bdf8",
         "desc": "WWDC25 droplet optics with 3D convex liquid meniscus curvature, caustic refraction & smoked translucent core",
         "bg_type": "aurora",
-        "footer_tag": "Spatial 3D Convex Fluid Meniscus • Dynamic Caustic Optics",
         "title_css": "font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(90deg, #38bdf8 0%, #818cf8 28%, #c084fc 58%, #f472b6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(56, 189, 248, 0.45));",
     },
     {
@@ -159,8 +147,7 @@ THEME_CONFIGS = [
         "name": "Artisan Japanese Washi Tape",
         "accent": "#fb7185",
         "desc": "Handmade washi tape rolls with gold leaf hot-stamping, mulberry fiber texture & Japanese calligraphy",
-        "bg_type": "washi_glass",
-        "footer_tag": "Handmade Mulberry Echizen Washi Paper • Genuine Gold Hot-Stamping",
+        "bg_type": "frieren",
         "title_css": "font-family: 'Cinzel', serif; font-weight: 800; letter-spacing: 1px; background: linear-gradient(135deg, #ffffff 10%, #ffe4e6 45%, #fb7185 75%, #e11d48 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(251, 113, 133, 0.45));",
     }
 ]
@@ -185,7 +172,6 @@ def render_html_preview(cfg):
     desc = cfg["desc"]
     title_css = cfg["title_css"]
     bg_type = cfg.get("bg_type", "glass")
-    footer_tag = cfg.get("footer_tag", "Curated Master Audiovisual Specification • Hardware Accelerated")
 
     if bg_type == "cinema_gold":
         bg_style = f"url('data:image/jpeg;base64,{b64_cinema_gold}') center / cover no-repeat, #08090d"
@@ -193,15 +179,6 @@ def render_html_preview(cfg):
         bg_style = f"url('data:image/jpeg;base64,{b64_aurora}') center / cover no-repeat, #08090d"
     elif bg_type == "frieren":
         bg_style = f"url('data:image/jpeg;base64,{b64_frieren}') center / cover no-repeat, #08090d"
-    elif bg_type == "washi_glass":
-        bg_style = f"""
-          radial-gradient(1500px 700px at 15% 0%, rgba(251, 113, 133, 0.30) 0%, transparent 68%),
-          radial-gradient(1200px 600px at 85% 15%, rgba(251, 191, 36, 0.18) 0%, transparent 60%),
-          radial-gradient(1000px 500px at 50% 50%, rgba(244, 63, 94, 0.08) 0%, transparent 70%),
-          linear-gradient(180deg, rgba(14, 10, 18, 0.74) 0%, rgba(8, 6, 12, 0.84) 100%),
-          url('data:image/jpeg;base64,{b64_glass}') center / cover no-repeat,
-          #08090d
-        """
     else:
         bg_style = f"""
           radial-gradient(1400px 600px at 15% 0%, {accent_hex}18 0%, transparent 65%),
@@ -410,7 +387,7 @@ def render_html_preview(cfg):
     </div>
     
     <div class="footer">
-      <span>{footer_tag}</span>
+      <span>Official Dolby, IMAX, Studio & Streaming marks</span>
       <span>96px Native Master &bull; Zero CPU Overhead &bull; Hardware Accelerated</span>
     </div>
   </div>
@@ -740,8 +717,8 @@ def execute():
     print("=== RENDERING ALL 13 THEMES NATIVELY WITH AUTHENTIC BESPOKE BACKGROUNDS & TYPOGRAPHY ===")
     for cfg in THEME_CONFIGS:
         render_html_preview(cfg)
-    # NOTE: render_ecosystem() is preserved intact; theme-ecosystem.jpg is SHA-256 locked
-    print("=== ALL 13 THEMES SUCCESSFULLY RENDERED ===")
+    render_ecosystem()
+    print("=== ALL 13 THEMES & ECOSYSTEM SUCCESSFULLY RENDERED ===")
 
 if __name__ == "__main__":
     execute()
