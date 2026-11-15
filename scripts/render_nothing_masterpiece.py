@@ -466,15 +466,6 @@ ECOSYSTEM_TIERS = [
         ("themes/criterion-leather/badges", "dolby-vision"),
         ("themes/criterion-leather/badges", "criterion"),
         ("themes/criterion-leather/badges", "nepali-flag")
-    ]),
-    ("SPATIAL & ARTISAN", "VisionOS liquid glass refraction & Japanese fibrous washi paper", [
-        ("themes/liquid-glass/badges", "4k"),
-        ("themes/liquid-glass/badges", "dolby-vision"),
-        ("themes/liquid-glass/badges", "appletv"),
-        ("themes/washi-tape/badges", "1080p"),
-        ("themes/washi-tape/badges", "crunchyroll"),
-        ("themes/washi-tape/badges", "netflix"),
-        ("themes/washi-tape/badges", "japan-flag")
     ])
 ]
 
@@ -540,7 +531,7 @@ def render_ecosystem():
   
   .canvas {{
     width: 2400px;
-    padding: 68px 96px 52px 96px;
+    padding: 72px 96px 56px 96px;
     position: relative;
     background: 
       radial-gradient(1400px 600px at 15% 0%, rgba(56, 189, 248, 0.16) 0%, transparent 65%),
@@ -557,7 +548,7 @@ def render_ecosystem():
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding-bottom: 36px;
+    padding-bottom: 40px;
   }}
   
   .title {{
@@ -603,14 +594,14 @@ def render_ecosystem():
     grid-template-columns: 320px 1fr;
     gap: 52px;
     align-items: center;
-    padding: 22px 0;
+    padding: 26px 0;
     border-top: 1px solid rgba(255, 255, 255, 0.07);
   }}
   
   .tier-meta {{
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
   }}
   
   .tier-title {{
@@ -622,7 +613,7 @@ def render_ecosystem():
   }}
   
   .tier-desc {{
-    font-size: 14px;
+    font-size: 14.5px;
     line-height: 1.45;
     color: rgba(255, 255, 255, 0.38);
     letter-spacing: -0.1px;
@@ -631,7 +622,7 @@ def render_ecosystem():
   .tier-badges {{
     display: flex;
     flex-wrap: wrap;
-    gap: 14px 20px;
+    gap: 16px 20px;
     align-items: center;
   }}
   
@@ -642,7 +633,7 @@ def render_ecosystem():
   }}
   
   .badge-item img {{
-    height: 64px;
+    height: 68px;
     width: auto;
     object-fit: contain;
     filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.70));
@@ -652,7 +643,7 @@ def render_ecosystem():
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 32px;
+    padding-top: 36px;
     font-family: 'Geist Mono', monospace;
     font-size: 13.5px;
     letter-spacing: 1.8px;
@@ -669,7 +660,7 @@ def render_ecosystem():
         <span class="dot">·</span>
         <span class="theme-name">Theme Architecture & Ecosystem</span>
       </div>
-      <div class="header-desc">13 master physical material universes. Zero runtime CPU overhead; choose an aesthetic matching your theater setup.</div>
+      <div class="header-desc">11 master physical material universes. Zero runtime CPU overhead; choose an aesthetic matching your theater setup.</div>
     </div>
     
     <div class="tiers-container">
