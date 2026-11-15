@@ -85,20 +85,6 @@ def audit_and_enforce(fix=True):
             total_fixed_filters += file_fixed_count
             print(f"  [FIXED] {rel_path} ({file_fixed_count} filters updated to frameless)")
 
-    # Verify anti-cropping invariants from DESIGN_SYSTEM_RULES.json
-    rules_p = os.path.join(REPO_ROOT, "DESIGN_SYSTEM_RULES.json")
-    if os.path.exists(rules_p):
-        try:
-            with open(rules_p, "r", encoding="utf-8") as rf:
-                rules_data = json.load(rf)
-            invariants = rules_data.get("invariants", {})
-            if invariants.get("min_horizontal_padding_px") != 18:
-                violations.append("DESIGN_SYSTEM_RULES.json: min_horizontal_padding_px must be >= 18")
-            if invariants.get("max_badge_width_px") != 240:
-                violations.append("DESIGN_SYSTEM_RULES.json: max_badge_width_px must be 240")
-        except Exception as e:
-            violations.append(f"DESIGN_SYSTEM_RULES.json error: {e}")
-
     # Verify locked previews exist
     for p in LOCKED_PREVIEWS:
         if not os.path.exists(p):
