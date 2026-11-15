@@ -37,7 +37,7 @@
       }
     },
     "studio-markers": {
-      "name": "Prismatic Studio Markers",
+      "name": "StreamBridge Studio Markers Enhanced",
       "dir": "themes/studio-markers/badges",
       "json": "studio-markers.json",
       "typography": {

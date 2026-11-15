@@ -56,7 +56,7 @@ THEME_CONFIGS = [
     },
     {
         "id": "studio-markers",
-        "name": "Prismatic Studio Markers",
+        "name": "Studio Markers",
         "accent": "#f59e0b",
         "desc": "Frameless ultra-legible studio monitor typography with vivid chromatic accents",
         "bg_type": "glass",
