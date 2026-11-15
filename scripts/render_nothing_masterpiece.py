@@ -421,6 +421,302 @@ def render_html_preview(cfg):
     if os.path.exists(tmp_html):
         os.remove(tmp_html)
 
+ECOSYSTEM_TIERS = [
+    ("OLED & MONITORS", "Pristine floating vectors & frameless studio monitor tags", [
+        ("badges", "4k"),
+        ("badges", "dolby-vision"),
+        ("badges", "netflix"),
+        ("themes/studio-markers/badges", "1080p"),
+        ("themes/studio-markers/badges", "hdr10plus"),
+        ("themes/studio-markers/badges", "warnerbros"),
+        ("badges", "bangladesh-flag")
+    ]),
+    ("KEYBOARD KEYCAPS", "Double-shot PBT spherical dish & neon RGB translucent underglow", [
+        ("themes/gmk-keycaps/badges", "4k"),
+        ("themes/gmk-keycaps/badges", "dolby-atmos"),
+        ("themes/gmk-keycaps/badges", "shudder"),
+        ("themes/rgb-keycaps/badges", "remux"),
+        ("themes/rgb-keycaps/badges", "imax"),
+        ("themes/rgb-keycaps/badges", "disney"),
+        ("themes/gmk-keycaps/badges", "japanese")
+    ]),
+    ("ANALOGUE CINEMA", "1980s perforated admission stubs & aged magnetic tape labels", [
+        ("themes/cinema-ticket/badges", "4k"),
+        ("themes/cinema-ticket/badges", "truehd"),
+        ("themes/cinema-ticket/badges", "mgm"),
+        ("themes/vhs-tape/badges", "1080p"),
+        ("themes/vhs-tape/badges", "dtsx"),
+        ("themes/vhs-tape/badges", "prime"),
+        ("themes/vhs-tape/badges", "uk")
+    ]),
+    ("JEWELRY & SLATES", "Cast metal 24K brass enamel lapels & wooden director chevrons", [
+        ("themes/enamel-pins/badges", "dolby-vision"),
+        ("themes/enamel-pins/badges", "dolby-atmos"),
+        ("themes/enamel-pins/badges", "sonypictures"),
+        ("themes/clapperboard/badges", "4k"),
+        ("themes/clapperboard/badges", "imax"),
+        ("themes/clapperboard/badges", "a24"),
+        ("themes/enamel-pins/badges", "korean")
+    ]),
+    ("VFD, TECH & LEATHER", "Cyan phosphor vacuum tubes, cyberpunk inspection tags & archival leather", [
+        ("themes/audiophile-vfd/badges", "4k"),
+        ("themes/audiophile-vfd/badges", "flac"),
+        ("themes/neotokyo-tag/badges", "remux"),
+        ("themes/neotokyo-tag/badges", "cached"),
+        ("themes/criterion-leather/badges", "dolby-vision"),
+        ("themes/criterion-leather/badges", "criterion"),
+        ("themes/criterion-leather/badges", "nepali-flag")
+    ]),
+    ("SPATIAL & ARTISAN", "VisionOS liquid glass refraction & Japanese fibrous washi paper", [
+        ("themes/liquid-glass/badges", "4k"),
+        ("themes/liquid-glass/badges", "dolby-vision"),
+        ("themes/liquid-glass/badges", "appletv"),
+        ("themes/washi-tape/badges", "1080p"),
+        ("themes/washi-tape/badges", "crunchyroll"),
+        ("themes/washi-tape/badges", "netflix"),
+        ("themes/washi-tape/badges", "japan-flag")
+    ])
+]
+
+def render_ecosystem():
+    print("=== RENDERING THEME ARCHITECTURE & ECOSYSTEM MASTER SHOWCASE ===")
+    tiers_html = ""
+    for tier_name, tier_sub, badges in ECOSYSTEM_TIERS:
+        badges_html = ""
+        for rel_dir, b_name in badges:
+            b_path = os.path.join(REPO_ROOT, rel_dir, f"{b_name}.webp")
+            if not os.path.exists(b_path):
+                b_path = os.path.join(REPO_ROOT, "badges", f"{b_name}.webp")
+            if os.path.exists(b_path):
+                with open(b_path, "rb") as bf:
+                    b64_img = base64.b64encode(bf.read()).decode("utf-8")
+                badges_html += f'<div class="badge-item"><img src="data:image/webp;base64,{b64_img}" alt="{b_name}" /></div>\n'
+
+        tiers_html += f"""
+        <div class="tier-row">
+          <div class="tier-meta">
+            <div class="tier-title">{tier_name}</div>
+            <div class="tier-desc">{tier_sub}</div>
+          </div>
+          <div class="tier-badges">
+            {badges_html}
+          </div>
+        </div>
+        """
+
+    html = f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face {{
+    font-family: 'NDot55';
+    src: url('data:font/otf;base64,{b64_ndot}') format('opentype');
+  }}
+  @font-face {{
+    font-family: 'Geist Sans';
+    src: url('data:font/woff2;base64,{b64_geist_sans}') format('woff2');
+    font-weight: 100 900;
+  }}
+  @font-face {{
+    font-family: 'Geist Mono';
+    src: url('data:font/woff2;base64,{b64_geist_mono}') format('woff2');
+    font-weight: 100 900;
+  }}
+  
+  * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+  html, body {{
+    margin: 0;
+    padding: 0;
+    background: transparent !important;
+    width: 2400px;
+  }}
+  
+  body {{
+    font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+  }}
+  
+  .canvas {{
+    width: 2400px;
+    padding: 68px 96px 52px 96px;
+    position: relative;
+    background: 
+      radial-gradient(1400px 600px at 15% 0%, rgba(56, 189, 248, 0.16) 0%, transparent 65%),
+      radial-gradient(1000px 500px at 85% 10%, rgba(167, 139, 250, 0.08) 0%, transparent 55%),
+      linear-gradient(180deg, rgba(8, 10, 16, 0.86) 0%, rgba(5, 6, 10, 0.91) 100%),
+      url('data:image/jpeg;base64,{b64_glass}') center / cover no-repeat,
+      #08090d;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }}
+  
+  .header {{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 36px;
+  }}
+  
+  .title {{
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    line-height: 1.1;
+  }}
+  
+  .brand-name {{
+    font-family: 'NDot55', monospace;
+    font-size: 48px;
+    letter-spacing: 2.2px;
+    color: #ffffff;
+    text-transform: uppercase;
+  }}
+  
+  .dot {{
+    color: rgba(255, 255, 255, 0.25);
+    font-size: 38px;
+  }}
+  
+  .theme-name {{
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: #38bdf8;
+  }}
+  
+  .header-desc {{
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.44);
+    letter-spacing: -0.2px;
+  }}
+  
+  .tiers-container {{
+    display: flex;
+    flex-direction: column;
+  }}
+  
+  .tier-row {{
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 52px;
+    align-items: center;
+    padding: 22px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+  }}
+  
+  .tier-meta {{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }}
+  
+  .tier-title {{
+    font-family: 'NDot55', monospace;
+    font-size: 22px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    color: #ffffff;
+  }}
+  
+  .tier-desc {{
+    font-size: 14px;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.38);
+    letter-spacing: -0.1px;
+  }}
+  
+  .tier-badges {{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 20px;
+    align-items: center;
+  }}
+  
+  .badge-item {{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }}
+  
+  .badge-item img {{
+    height: 64px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.70));
+  }}
+  
+  .footer {{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 32px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 13.5px;
+    letter-spacing: 1.8px;
+    color: rgba(255, 255, 255, 0.28);
+    text-transform: uppercase;
+  }}
+</style>
+</head>
+<body>
+  <div id="canvas" class="canvas">
+    <div class="header">
+      <div class="title">
+        <span class="brand-name">NUVIO MASTER BADGES</span>
+        <span class="dot">·</span>
+        <span class="theme-name">Theme Architecture & Ecosystem</span>
+      </div>
+      <div class="header-desc">13 master physical material universes. Zero runtime CPU overhead; choose an aesthetic matching your theater setup.</div>
+    </div>
+    
+    <div class="tiers-container">
+      {tiers_html}
+    </div>
+    
+    <div class="footer">
+      <span>Official Dolby, IMAX, Studio & Streaming marks</span>
+      <span>96px Native Master • Zero CPU Overhead • Hardware Accelerated</span>
+    </div>
+  </div>
+</body>
+</html>"""
+
+    tmp_html = os.path.join(SCRIPT_DIR, "temp_nothing_ecosystem.html")
+    tmp_png = os.path.join(SCRIPT_DIR, "temp_nothing_ecosystem.png")
+    out_jpg = os.path.join(PREVIEWS_DIR, "theme-ecosystem.jpg")
+
+    with open(tmp_html, "w", encoding="utf-8") as f:
+        f.write(html)
+        
+    cmd = [
+        EDGE_PATH,
+        "--headless",
+        "--disable-gpu",
+        "--hide-scrollbars",
+        "--window-size=2400,2500",
+        "--default-background-color=00000000",
+        f"--screenshot={tmp_png}",
+        tmp_html
+    ]
+    subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    if os.path.exists(tmp_png):
+        im = Image.open(tmp_png)
+        bbox = im.getbbox()
+        if bbox:
+            im_cropped = im.crop((0, 0, 2400, bbox[3]))
+            im_cropped.convert("RGB").save(out_jpg, quality=95)
+            # Also save to brain
+            brain_copy = os.path.join(BRAIN_DIR, "theme_ecosystem_masterpiece.jpg")
+            im_cropped.convert("RGB").save(brain_copy, quality=95)
+            print(f"[OK] Razor-sharp render: theme-ecosystem      -> {out_jpg} (Height: {im_cropped.size[1]}px)")
+        os.remove(tmp_png)
+    if os.path.exists(tmp_html):
+        os.remove(tmp_html)
+
 def execute():
     print("=== RENDERING ALL 13 THEMES NATIVELY WITH AUTHENTIC BESPOKE BACKGROUNDS & TYPOGRAPHY ===")
     for cfg in THEME_CONFIGS:
@@ -434,7 +730,8 @@ def execute():
                 print(f"[OK] Synced canonical master: washi-tape           -> {dst_washi}")
                 continue
         render_html_preview(cfg)
-    print("=== ALL 13 THEMES SUCCESSFULLY RENDERED ===")
+    render_ecosystem()
+    print("=== ALL 13 THEMES & ECOSYSTEM SUCCESSFULLY RENDERED ===")
 
 if __name__ == "__main__":
     execute()

@@ -273,8 +273,15 @@ def update_hero_svg(stats, version):
 
 def update_theme_ecosystem_preview(stats, version):
     """
-    Renders high-end 2400x1200 showcase representing all 11 (or dynamic N) theme universes.
+    Renders authentic Nothing Dot Matrix 6-tier ecosystem showcase representing all 13 theme universes.
     """
+    try:
+        import render_nothing_masterpiece as rnm
+        rnm.render_ecosystem()
+        return True
+    except Exception as e:
+        print(f"Error rendering ecosystem via render_nothing_masterpiece: {e}")
+
     if not os.path.exists(EDGE_PATH):
         print("Note: Edge not found, skipping ecosystem render.")
         return False
