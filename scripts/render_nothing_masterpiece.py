@@ -1,5 +1,4 @@
 import os, subprocess, base64
-import numpy as np
 from PIL import Image
 
 REPO_ROOT = r"C:\Users\yourt\.gemini\antigravity\scratch\nuvio-badges-original"
@@ -18,56 +17,26 @@ with open(os.path.join(FONTS_DIR, "geist-sans.woff2"), "rb") as f:
 with open(os.path.join(FONTS_DIR, "geist-mono.woff2"), "rb") as f:
     b64_geist_mono = base64.b64encode(f.read()).decode("utf-8")
 
-# 2. Glass texture for standard themes
+# 2. Bespoke Backgrounds
+# A. Iconic Frosted Glass (Standard for themes 01-04, 06-11)
 GLASS_PATH = os.path.join(BRAIN_DIR, ".user_uploaded", "media_1794657324184_293a4cf2.jpg")
 with open(GLASS_PATH, "rb") as f:
     b64_glass = base64.b64encode(f.read()).decode("utf-8")
 
-# 3. Exact clean aurora background for Theme 12
-CLEAN_BG_PATH = os.path.join(BRAIN_DIR, "exact_user_clean_bg.jpg")
-with open(CLEAN_BG_PATH, "rb") as f:
-    b64_aurora_bg = base64.b64encode(f.read()).decode("utf-8")
+# B. Golden Theme Background (Theme 05: Vintage Cinema Ticket)
+CINEMA_GOLD_PATH = os.path.join(BRAIN_DIR, "vibrant_glass_cinema-ticket.jpg")
+with open(CINEMA_GOLD_PATH, "rb") as f:
+    b64_cinema_gold = base64.b64encode(f.read()).decode("utf-8")
 
-def make_cinema_bg():
-    H, W = 1188, 2400
-    y_coords, x_coords = np.meshgrid(np.arange(H), np.arange(W), indexing='ij')
-    tx = x_coords / float(W)
-    ty = y_coords / float(H)
-    mask_text = np.clip((tx - 0.17) / 0.12, 0.0, 1.0)
-    top_text = np.clip((ty - 0.13) / 0.08, 0.0, 1.0)
-    text_prot = (0.16 + 0.84 * mask_text) * (0.35 + 0.65 * top_text)
-    
-    img = np.zeros((H, W, 3), dtype=np.float32)
-    img[:, :, 0] = 6    # B
-    img[:, :, 1] = 8    # G
-    img[:, :, 2] = 16   # R
-    
-    orbs = [
-        (1450, 580, 420, 1.0),
-        (1950, 480, 360, 0.9),
-        (1150, 680, 280, 0.75),
-        (1700, 780, 320, 0.85),
-        (2200, 720, 260, 0.7),
-        (1300, 340, 220, 0.6),
-        (1850, 260, 240, 0.65),
-        (950, 520, 200, 0.5)
-    ]
-    for ox, oy, r, intensity in orbs:
-        dist_sq = ((x_coords - ox)/float(r))**2 + ((y_coords - oy)/float(r))**2
-        glow = np.exp(-dist_sq) * 220.0 * intensity
-        img[:, :, 2] += glow * 1.0 * text_prot
-        img[:, :, 1] += glow * 0.62 * text_prot
-        img[:, :, 0] += glow * 0.12 * text_prot
-        
-    return np.clip(img, 0, 255).astype(np.uint8)
+# C. Spatial Aurora Background (Theme 12: VisionOS Pure Liquid Glass)
+AURORA_PATH = os.path.join(BRAIN_DIR, "exact_user_clean_bg.jpg")
+with open(AURORA_PATH, "rb") as f:
+    b64_aurora = base64.b64encode(f.read()).decode("utf-8")
 
-cin_bg_arr = make_cinema_bg()
-im_cin = Image.fromarray(cin_bg_arr)
-tmp_cin_p = os.path.join(SCRIPT_DIR, "tmp_cin_bg_master.jpg")
-im_cin.save(tmp_cin_p, quality=96)
-with open(tmp_cin_p, "rb") as f:
-    b64_cinema_bg = base64.b64encode(f.read()).decode("utf-8")
-if os.path.exists(tmp_cin_p): os.remove(tmp_cin_p)
+# D. Frieren Iconic Glass Background (Theme 13: Artisan Japanese Washi Tape)
+FRIEREN_PATH = os.path.join(BRAIN_DIR, "frieren_iconic_glass_bg.jpg")
+with open(FRIEREN_PATH, "rb") as f:
+    b64_frieren = base64.b64encode(f.read()).decode("utf-8")
 
 GOOGLE_FONTS_LINK = "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Chakra+Petch:wght@700&family=Cinzel+Decorative:wght@700&family=Cinzel:wght@700;800&family=Orbitron:wght@800;900&family=Oxanium:wght@800&family=Playfair+Display:wght@800;900&family=Righteous&family=Space+Grotesk:wght@700&family=Teko:wght@700&family=Inter:wght@800;900&display=swap"
 
@@ -109,7 +78,7 @@ THEME_CONFIGS = [
         "name": "Cinema Ticket",
         "accent": "#f59e0b",
         "desc": "Authentic perforated cinema admission stubs with 24K gold foil trim & serial stamp",
-        "bg_type": "cinema_bokeh",
+        "bg_type": "cinema_gold",
         "title_css": "font-family: 'Playfair Display', serif; font-weight: 900; background: linear-gradient(135deg, #fffbeb 0%, #fef08a 35%, #f59e0b 70%, #b45309 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(245, 158, 11, 0.4));",
     },
     {
@@ -173,7 +142,7 @@ THEME_CONFIGS = [
         "name": "Artisan Japanese Washi Tape",
         "accent": "#fb7185",
         "desc": "Handmade washi tape rolls with gold leaf hot-stamping, mulberry fiber texture & Japanese calligraphy",
-        "bg_type": "glass",
+        "bg_type": "frieren",
         "title_css": "font-family: 'Cinzel', serif; font-weight: 800; letter-spacing: 1px; background: linear-gradient(135deg, #ffffff 10%, #ffe4e6 45%, #fb7185 75%, #e11d48 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(251, 113, 133, 0.45));",
     }
 ]
@@ -199,10 +168,12 @@ def render_html_preview(cfg):
     title_css = cfg["title_css"]
     bg_type = cfg.get("bg_type", "glass")
 
-    if bg_type == "cinema_bokeh":
-        bg_style = f"url('data:image/jpeg;base64,{b64_cinema_bg}') center / cover no-repeat, #08090d"
+    if bg_type == "cinema_gold":
+        bg_style = f"url('data:image/jpeg;base64,{b64_cinema_gold}') center / cover no-repeat, #08090d"
     elif bg_type == "aurora":
-        bg_style = f"url('data:image/jpeg;base64,{b64_aurora_bg}') center / cover no-repeat, #08090d"
+        bg_style = f"url('data:image/jpeg;base64,{b64_aurora}') center / cover no-repeat, #08090d"
+    elif bg_type == "frieren":
+        bg_style = f"url('data:image/jpeg;base64,{b64_frieren}') center / cover no-repeat, #08090d"
     else:
         bg_style = f"""
           radial-gradient(1400px 600px at 15% 0%, {accent_hex}18 0%, transparent 65%),
@@ -319,8 +290,9 @@ def render_html_preview(cfg):
   
   .header-desc {{
     font-size: 20px;
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.70);
     letter-spacing: -0.2px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
   }}
   
   .tiers-container {{
@@ -334,7 +306,7 @@ def render_html_preview(cfg):
     gap: 52px;
     align-items: center;
     padding: 26px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.10);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
   }}
   
   .tier-meta {{
@@ -349,13 +321,15 @@ def render_html_preview(cfg):
     letter-spacing: 2.4px;
     text-transform: uppercase;
     color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
   }}
   
   .tier-desc {{
     font-size: 14.5px;
     line-height: 1.45;
-    color: rgba(255, 255, 255, 0.45);
+    color: rgba(255, 255, 255, 0.60);
     letter-spacing: -0.1px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
   }}
   
   .tier-badges {{
@@ -386,8 +360,9 @@ def render_html_preview(cfg):
     font-family: 'Geist Mono', monospace;
     font-size: 13.5px;
     letter-spacing: 1.8px;
-    color: rgba(255, 255, 255, 0.35);
+    color: rgba(255, 255, 255, 0.45);
     text-transform: uppercase;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
   }}
 </style>
 </head>
@@ -396,7 +371,7 @@ def render_html_preview(cfg):
     <div class="header">
       <div class="title">
         <span class="brand-name">NUVIO MASTER BADGES</span>
-        <span class="dot">·</span>
+        <span class="dot">&middot;</span>
         <span class="theme-name">{title_name}</span>
       </div>
       <div class="header-desc">{desc}. 512 badges in this style; a sample shown by tier.</div>
@@ -408,7 +383,7 @@ def render_html_preview(cfg):
     
     <div class="footer">
       <span>Official Dolby, IMAX, Studio & Streaming marks</span>
-      <span>96px Native Master • Zero CPU Overhead • Hardware Accelerated</span>
+      <span>96px Native Master &bull; Zero CPU Overhead &bull; Hardware Accelerated</span>
     </div>
   </div>
 </body>
@@ -438,16 +413,19 @@ def render_html_preview(cfg):
         if bbox:
             im_cropped = im.crop((0, 0, 2400, bbox[3]))
             im_cropped.convert("RGB").save(out_jpg, quality=96)
+            # Also save to brain for artifacts and consistency
+            brain_copy = os.path.join(BRAIN_DIR, f"theme_{theme_id}.jpg")
+            im_cropped.convert("RGB").save(brain_copy, quality=96)
             print(f"[OK] Razor-sharp render: {theme_id:20} -> {out_jpg} (Height: {im_cropped.size[1]}px)")
         os.remove(tmp_png)
     if os.path.exists(tmp_html):
         os.remove(tmp_html)
 
 def execute():
-    print("=== RENDERING ALL 13 THEMES NATIVELY AT 2400px WITH BESPOKE TYPOGRAPHY & GRADIENTS ===")
+    print("=== RENDERING ALL 13 THEMES NATIVELY WITH AUTHENTIC BESPOKE BACKGROUNDS & TYPOGRAPHY ===")
     for cfg in THEME_CONFIGS:
         render_html_preview(cfg)
-    print("=== ALL 13 THEMES RENDERED WITH RAZOR-SHARP PRECISION ===")
+    print("=== ALL 13 THEMES SUCCESSFULLY RENDERED ===")
 
 if __name__ == "__main__":
     execute()
