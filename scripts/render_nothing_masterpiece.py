@@ -159,7 +159,7 @@ THEME_CONFIGS = [
         "name": "Artisan Japanese Washi Tape",
         "accent": "#fb7185",
         "desc": "Handmade washi tape rolls with gold leaf hot-stamping, mulberry fiber texture & Japanese calligraphy",
-        "bg_type": "frieren",
+        "bg_type": "washi_glass",
         "footer_tag": "Handmade Mulberry Echizen Washi Paper • Genuine Gold Hot-Stamping",
         "title_css": "font-family: 'Cinzel', serif; font-weight: 800; letter-spacing: 1px; background: linear-gradient(135deg, #ffffff 10%, #ffe4e6 45%, #fb7185 75%, #e11d48 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(251, 113, 133, 0.45));",
     }
@@ -192,11 +192,14 @@ def render_html_preview(cfg):
     elif bg_type == "aurora":
         bg_style = f"url('data:image/jpeg;base64,{b64_aurora}') center / cover no-repeat, #08090d"
     elif bg_type == "frieren":
+        bg_style = f"url('data:image/jpeg;base64,{b64_frieren}') center / cover no-repeat, #08090d"
+    elif bg_type == "washi_glass":
         bg_style = f"""
           radial-gradient(1500px 700px at 15% 0%, rgba(251, 113, 133, 0.30) 0%, transparent 68%),
           radial-gradient(1200px 600px at 85% 15%, rgba(251, 191, 36, 0.18) 0%, transparent 60%),
-          linear-gradient(180deg, rgba(12, 10, 16, 0.55) 0%, rgba(6, 6, 10, 0.72) 100%),
-          url('data:image/jpeg;base64,{b64_frieren}') center / cover no-repeat,
+          radial-gradient(1000px 500px at 50% 50%, rgba(244, 63, 94, 0.08) 0%, transparent 70%),
+          linear-gradient(180deg, rgba(14, 10, 18, 0.74) 0%, rgba(8, 6, 12, 0.84) 100%),
+          url('data:image/jpeg;base64,{b64_glass}') center / cover no-repeat,
           #08090d
         """
     else:
