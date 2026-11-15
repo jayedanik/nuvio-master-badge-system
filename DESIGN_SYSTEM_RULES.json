@@ -1,0 +1,160 @@
+{
+  "version": "4.0.0-LOCKED",
+  "system_name": "Nuvio Master Badge Design System & Theme Engine",
+  "invariants": {
+    "canvas_height_px": 96,
+    "render_supersampling_scale": 4,
+    "supersampling_height_px": 384,
+    "output_format": "WEBP",
+    "webp_quality": 95,
+    "alpha_channel": "100% transparent (#00000000) with zero black boxes, smoked capsules, or artificial card borders",
+    "locked_previews": [
+      "previews/theme-ecosystem.jpg",
+      "previews/preview-washi-tape.jpg"
+    ]
+  },
+  "themes": {
+    "pristine": {
+      "name": "Pristine Master",
+      "dir": "badges",
+      "json": "badges.json",
+      "typography": {
+        "primary": "arialbd.ttf",
+        "secondary": "segoeui.ttf",
+        "style": "Clean OLED Floating Vector Sans"
+      }
+    },
+    "studio-markers": {
+      "name": "StreamBridge Studio Markers Enhanced",
+      "dir": "themes/studio-markers/badges",
+      "json": "studio-markers.json",
+      "typography": {
+        "primary": "bahnschrift.ttf",
+        "secondary": "bahnschrift.ttf",
+        "style": "Condensed Technical Studio Monitor Marker"
+      }
+    },
+    "gmk-keycaps": {
+      "name": "GMK Custom Mechanical Keycaps",
+      "dir": "themes/gmk-keycaps/badges",
+      "json": "gmk-keycaps.json",
+      "typography": {
+        "primary": "bahnschrift.ttf",
+        "secondary": "bahnschrift.ttf",
+        "style": "Double-shot PBT Spherical Cherry Profile DIN Standard"
+      }
+    },
+    "rgb-keycaps": {
+      "name": "Cyberpunk RGB Mechanical Keycaps",
+      "dir": "themes/rgb-keycaps/badges",
+      "json": "rgb-keycaps.json",
+      "typography": {
+        "primary": "bahnschrift.ttf",
+        "secondary": "bahnschrift.ttf",
+        "style": "Translucent Pudding Keycaps with Neon RGB Underglow"
+      }
+    },
+    "cinema-ticket": {
+      "name": "Golden Age Cinema Ticket Stubs",
+      "dir": "themes/cinema-ticket/badges",
+      "json": "cinema-ticket.json",
+      "typography": {
+        "primary": "impact.ttf",
+        "secondary": "timesbd.ttf",
+        "style": "Perforated Vintage Admission Ticket with Starburst Punches"
+      }
+    },
+    "enamel-pins": {
+      "name": "Cloisonne Enamel & Gold Lapel Pins",
+      "dir": "themes/enamel-pins/badges",
+      "json": "enamel-pins.json",
+      "typography": {
+        "primary": ".fonts/Cinzel-Bold.ttf",
+        "secondary": "timesbd.ttf",
+        "style": "Jewelry-Grade Cast Brass Bezel with Cloisonne Enamel & Roman Engraving"
+      }
+    },
+    "vhs-tape": {
+      "name": "1980s Retro VHS Magnetic Tape",
+      "dir": "themes/vhs-tape/badges",
+      "json": "vhs-tape.json",
+      "typography": {
+        "primary": "impact.ttf",
+        "secondary": "impact.ttf",
+        "style": "Aged Matte Paper Cassette Label with 80s Rainbow Stripes & Barcodes"
+      }
+    },
+    "clapperboard": {
+      "name": "Hollywood Director Clapperboard",
+      "dir": "themes/clapperboard/badges",
+      "json": "clapperboard.json",
+      "typography": {
+        "primary": "impact.ttf",
+        "secondary": "bahnschrift.ttf",
+        "style": "Matte Slate Chalkboard with Diagonal Sound-Sync Chevrons"
+      }
+    },
+    "audiophile-vfd": {
+      "name": "Hi-Fi Vacuum Tube VFD Fluorescent",
+      "dir": "themes/audiophile-vfd/badges",
+      "json": "audiophile-vfd.json",
+      "typography": {
+        "primary": "consolab.ttf",
+        "secondary": "consolab.ttf",
+        "style": "Cyan Phosphor Vacuum Tube Instrument Monospace"
+      }
+    },
+    "neotokyo-tag": {
+      "name": "NeoTokyo Cyberpunk Asset Tag",
+      "dir": "themes/neotokyo-tag/badges",
+      "json": "neotokyo-tag.json",
+      "typography": {
+        "primary": "bahnschrift.ttf",
+        "secondary": "bahnschrift.ttf",
+        "style": "Weathered Industrial Machinery Tag with Stencil Legends"
+      }
+    },
+    "criterion-leather": {
+      "name": "Criterion Archival Moroccan Leather",
+      "dir": "themes/criterion-leather/badges",
+      "json": "criterion-leather.json",
+      "typography": {
+        "primary": ".fonts/CinzelDecorative-Bold.ttf",
+        "secondary": "timesbd.ttf",
+        "style": "Gilded Archival Leather Bookbinding with Gold Leaf Hot-Stamping"
+      }
+    },
+    "liquid-glass": {
+      "name": "Apple VisionOS Liquid Glass",
+      "dir": "themes/liquid-glass/badges",
+      "json": "liquid-glass.json",
+      "typography": {
+        "primary": "Outfit",
+        "secondary": "Inter",
+        "style": "WWDC25 Pure Translucent Liquid Droplet with Caustic Rim Specular Optics"
+      }
+    },
+    "washi-tape": {
+      "name": "Artisan Japanese Washi Tape",
+      "dir": "themes/washi-tape/badges",
+      "json": "washi-tape.json",
+      "typography": {
+        "primary": ".fonts/Cinzel-Bold.ttf",
+        "secondary": "msgothic.ttc",
+        "style": "Handmade Mulberry Fiber Paper Rolls with Deckled Edges, Gold Leaf Hot-Stamping, and Dual 3D Elevated Drop Shadows"
+      }
+    }
+  },
+  "unicode_font_fallbacks": {
+    "japanese": ["YuGothB.ttc", "msgothic.ttc", "msyh.ttc"],
+    "chinese": ["msyh.ttc", "simsun.ttc"],
+    "korean": ["malgun.ttf", "malgunbd.ttf"],
+    "indic_and_south_asian": "Nirmala.ttc",
+    "southeast_asian": ["LeelaUIb.ttf", "LeelawUI.ttf", "tahoma.ttf"],
+    "burmese": "mmrtext.ttf",
+    "georgian_and_armenian": "sylfaen.ttf",
+    "ethiopic_amharic": ["ebrima.ttf", "seguiemj.ttf"],
+    "arabic_persian_urdu": "tahoma.ttf",
+    "hebrew": ["arialbd.ttf", "segoeui.ttf"]
+  }
+}
