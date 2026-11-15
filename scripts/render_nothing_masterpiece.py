@@ -8,10 +8,15 @@ EDGE_PATH = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 BRAIN_DIR = r"C:\Users\yourt\.gemini\antigravity\brain\fb22a0fc-6924-43f9-ab27-8d6db9906f8f"
 
 # 1. Fonts
-with open(os.path.join(SCRIPT_DIR, "Ndot55-Regular.otf"), "rb") as f:
+ndot_path = os.path.join(REPO_ROOT, ".fonts", "Ndot55-Regular.otf")
+if not os.path.exists(ndot_path):
+    ndot_path = os.path.join(SCRIPT_DIR, "Ndot55-Regular.otf")
+with open(ndot_path, "rb") as f:
     b64_ndot = base64.b64encode(f.read()).decode("utf-8")
 
-FONTS_DIR = r"C:\Users\yourt\.gemini\antigravity\brain\e3a87934-5f4d-4111-a44e-2f095bc5cbab\scratch\caveman\extension\fonts"
+FONTS_DIR = os.path.join(REPO_ROOT, ".fonts")
+if not os.path.exists(os.path.join(FONTS_DIR, "geist-sans.woff2")):
+    FONTS_DIR = r"C:\Users\yourt\.gemini\antigravity\brain\e3a87934-5f4d-4111-a44e-2f095bc5cbab\scratch\caveman\extension\fonts"
 with open(os.path.join(FONTS_DIR, "geist-sans.woff2"), "rb") as f:
     b64_geist_sans = base64.b64encode(f.read()).decode("utf-8")
 with open(os.path.join(FONTS_DIR, "geist-mono.woff2"), "rb") as f:
