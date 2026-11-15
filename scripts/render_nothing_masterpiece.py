@@ -79,7 +79,7 @@ THEME_CONFIGS = [
         "accent": "#f59e0b",
         "desc": "Authentic perforated cinema admission stubs with 24K gold foil trim & serial stamp",
         "bg_type": "cinema_gold",
-        "title_css": "font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-weight: 700; letter-spacing: -0.5px; color: #f59e0b;",
+        "title_css": "font-family: 'Playfair Display', serif; font-weight: 900; letter-spacing: 0.5px; background: linear-gradient(135deg, #ffffff 0%, #fef08a 35%, #f59e0b 70%, #b45309 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(245, 158, 11, 0.45));",
     },
     {
         "id": "enamel-pins",
