@@ -173,6 +173,14 @@ THEME_CONFIGS = [
         "desc": "Machined silver-chrome metallic capsules with specular sheen & engraved dark ink lettering",
         "bg_type": "glass",
         "title_css": "font-family: 'Impact', 'Arial Black', sans-serif; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 45%, #94a3b8 75%, #f8fafc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 22px rgba(203, 213, 225, 0.4));",
+    },
+    {
+        "id": "holo-prism",
+        "name": "Iridescent Holographic Prism",
+        "accent": "#38bdf8",
+        "desc": "Dark obsidian glass cores framed by rainbow holographic foil rims & iridescent prism shimmer",
+        "bg_type": "glass",
+        "title_css": "font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; background: linear-gradient(90deg, #38bdf8 0%, #a855f7 35%, #ec4899 68%, #facc15 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(168, 85, 247, 0.45));",
     }
 ]
 

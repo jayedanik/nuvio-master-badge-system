@@ -180,6 +180,16 @@
         "secondary": "arialbd.ttf",
         "style": "Machined Silver-Chrome Metallic Capsule with Engraved Dark Ink Lettering"
       }
+    },
+    "holo-prism": {
+      "name": "Iridescent Holographic Prism",
+      "dir": "themes/holo-prism/badges",
+      "json": "holo-prism.json",
+      "typography": {
+        "primary": "bahnschrift.ttf",
+        "secondary": "arialbd.ttf",
+        "style": "Dark Obsidian Glass Core with Rainbow Holographic Foil Rim & Prism Shimmer"
+      }
     }
   },
   "unicode_font_fallbacks": {
