@@ -204,6 +204,71 @@ https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/washi
 
 ---
 
+### Anime / Manga Halftone Ink
+> Bold Japanese manga ink frames with Ben-Day halftone dots, hard offset shadows & vibrant accent bars
+
+<p align="center">
+  <img src="previews/preview-manga-halftone.jpg?v=v4.0.0-LOCKED" alt="Anime / Manga Halftone Ink" width="100%" />
+</p>
+
+```text
+https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/manga-halftone.json
+```
+
+---
+
+### Live TV & Sports Broadcast (Standalone)
+> Dedicated zero-background borderless broadcast typography curated exclusively for Live TV, IPTV & Sports streams
+
+<p align="center">
+  <img src="previews/preview-live-tv-broadcast.jpg?v=v4.0.0-LOCKED" alt="Live TV & Sports Broadcast" width="100%" />
+</p>
+
+```text
+https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/live-tv-broadcast.json
+```
+
+---
+
+### Swiss Bauhaus Split-Block
+> Matte cream hardware blocks with solid Swiss Bauhaus color-blocks & geometric punch-dots
+
+<p align="center">
+  <img src="previews/preview-bauhaus-split.jpg?v=v4.0.0-LOCKED" alt="Swiss Bauhaus Split-Block" width="100%" />
+</p>
+
+```text
+https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/bauhaus-split.json
+```
+
+---
+
+### Brushed Titanium / Chrome Pill
+> Machined silver-chrome metallic capsules with specular sheen & engraved dark ink lettering
+
+<p align="center">
+  <img src="previews/preview-titanium-chrome.jpg?v=v4.0.0-LOCKED" alt="Brushed Titanium / Chrome Pill" width="100%" />
+</p>
+
+```text
+https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/titanium-chrome.json
+```
+
+---
+
+### Iridescent Holographic Prism
+> Dark obsidian glass cores framed by rainbow holographic foil rims & iridescent prism shimmer
+
+<p align="center">
+  <img src="previews/preview-holo-prism.jpg?v=v4.0.0-LOCKED" alt="Iridescent Holographic Prism" width="100%" />
+</p>
+
+```text
+https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/holo-prism.json
+```
+
+---
+
 ## Performance Architecture
 
 Built from the ground up to ensure Nuvio player operates at **maximum frame rates with zero loading latency or memory pressure**:
