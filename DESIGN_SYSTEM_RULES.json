@@ -160,6 +160,26 @@
         "secondary": "arialbd.ttf",
         "style": "Bold Japanese Manga Ink Panel with Ben-Day Halftone Dots, Hard Offset Shadow & Vibrant Accent Bars"
       }
+    },
+    "bauhaus-split": {
+      "name": "Swiss Bauhaus Split-Block",
+      "dir": "themes/bauhaus-split/badges",
+      "json": "bauhaus-split.json",
+      "typography": {
+        "primary": "bahnschrift.ttf",
+        "secondary": "arialbd.ttf",
+        "style": "Matte Cream Hardware Block with Solid Bauhaus Color-Block & Geometric Punch-Hole"
+      }
+    },
+    "titanium-chrome": {
+      "name": "Brushed Titanium / Chrome Pill",
+      "dir": "themes/titanium-chrome/badges",
+      "json": "titanium-chrome.json",
+      "typography": {
+        "primary": "impact.ttf",
+        "secondary": "arialbd.ttf",
+        "style": "Machined Silver-Chrome Metallic Capsule with Engraved Dark Ink Lettering"
+      }
     }
   },
   "unicode_font_fallbacks": {

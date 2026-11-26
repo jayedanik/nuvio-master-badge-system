@@ -157,6 +157,22 @@ THEME_CONFIGS = [
         "desc": "Bold Japanese manga ink frames with Ben-Day halftone dots, hard offset shadows & vibrant accent bars",
         "bg_type": "glass",
         "title_css": "font-family: 'Impact', 'Arial Black', sans-serif; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; background: linear-gradient(135deg, #ffffff 0%, #fde047 35%, #ff2e63 75%, #9333ea 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(255, 46, 99, 0.45));",
+    },
+    {
+        "id": "bauhaus-split",
+        "name": "Swiss Bauhaus Split-Block",
+        "accent": "#f59e0b",
+        "desc": "Matte cream hardware blocks with solid Swiss Bauhaus color-blocks & geometric punch-dots",
+        "bg_type": "glass",
+        "title_css": "font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.5px; text-transform: uppercase; background: linear-gradient(135deg, #f4f1ea 0%, #fbbf24 40%, #ef4444 75%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(245, 158, 11, 0.4));",
+    },
+    {
+        "id": "titanium-chrome",
+        "name": "Brushed Titanium / Chrome Pill",
+        "accent": "#cbd5e1",
+        "desc": "Machined silver-chrome metallic capsules with specular sheen & engraved dark ink lettering",
+        "bg_type": "glass",
+        "title_css": "font-family: 'Impact', 'Arial Black', sans-serif; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 45%, #94a3b8 75%, #f8fafc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 22px rgba(203, 213, 225, 0.4));",
     }
 ]
 
