@@ -152,13 +152,15 @@ function preloadThemeBadges(theme) {
 }
 
 let simRenderSeq = 0;
+let frontLayerIdx = 0;
 
 function buildSimRowsOnce() {
   simStreamsEl.innerHTML = SIM_ROWS.map((row, idx) => `
     <div class="sim-row">
       <div class="sim-release">${row.release}</div>
       <div class="sim-row-badges" data-sim-row="${idx}">
-        ${row.badges.map((b) => `<img alt="${b}" />`).join("")}
+        <div class="sim-layer layer-front">${row.badges.map((b) => `<img alt="${b}" />`).join("")}</div>
+        <div class="sim-layer layer-back">${row.badges.map((b) => `<img alt="${b}" />`).join("")}</div>
       </div>
     </div>
   `).join("");
@@ -185,31 +187,38 @@ async function renderSimulator(themeId, animate = true) {
   simCopyBtn.onclick = () => copyUrl(RAW_BASE + t.json, simCopyBtn);
   simInspectBtn.onclick = () => openDialog(THEMES.indexOf(t));
 
+  await preloadThemeBadges(t);
+  if (seq !== simRenderSeq) return;
+
   const badgeRows = simStreamsEl.querySelectorAll(".sim-row-badges");
-  if (animate) {
-    badgeRows.forEach((el) => el.classList.add("swapping"));
-    await Promise.all([
-      preloadThemeBadges(t),
-      new Promise((r) => setTimeout(r, 180))
-    ]);
-    if (seq !== simRenderSeq) return;
+  if (!animate) {
+    SIM_ROWS.forEach((row, rIdx) => {
+      const layers = badgeRows[rIdx].querySelectorAll(".sim-layer");
+      const front = layers[frontLayerIdx];
+      const imgs = front.querySelectorAll("img");
+      row.badges.forEach((b, bIdx) => { imgs[bIdx].src = `${t.dir}/${b}.webp`; });
+    });
   } else {
-    await preloadThemeBadges(t);
-    if (seq !== simRenderSeq) return;
+    const nextLayerIdx = 1 - frontLayerIdx;
+    SIM_ROWS.forEach((row, rIdx) => {
+      const layers = badgeRows[rIdx].querySelectorAll(".sim-layer");
+      const incoming = layers[nextLayerIdx];
+      const imgs = incoming.querySelectorAll("img");
+      row.badges.forEach((b, bIdx) => { imgs[bIdx].src = `${t.dir}/${b}.webp`; });
+    });
+
+    requestAnimationFrame(() => {
+      badgeRows.forEach((rowEl) => {
+        const layers = rowEl.querySelectorAll(".sim-layer");
+        layers[frontLayerIdx].classList.remove("layer-front");
+        layers[frontLayerIdx].classList.add("layer-back");
+        layers[nextLayerIdx].classList.remove("layer-back");
+        layers[nextLayerIdx].classList.add("layer-front");
+      });
+      frontLayerIdx = nextLayerIdx;
+    });
   }
 
-  SIM_ROWS.forEach((row, rIdx) => {
-    const imgs = badgeRows[rIdx].querySelectorAll("img");
-    row.badges.forEach((b, bIdx) => {
-      imgs[bIdx].src = `${t.dir}/${b}.webp`;
-    });
-  });
-
-  requestAnimationFrame(() => {
-    badgeRows.forEach((el) => el.classList.remove("swapping"));
-  });
-
-  // Preload the next theme in the background for instant transitions
   const nextIdx = (THEMES.findIndex((x) => x.id === t.id) + 1) % THEMES.length;
   preloadThemeBadges(THEMES[nextIdx]);
 }
