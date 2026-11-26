@@ -240,6 +240,16 @@
         "secondary": "arialbd.ttf",
         "style": "Post-It Paper Sticky Notes with Folded Peeled-Up Corner Flap"
       }
+    },
+    "gta6-vice-sunset": {
+      "name": "GTA 6 Vice City Sunset",
+      "dir": "themes/gta6-vice-sunset/badges",
+      "json": "gta6-vice-sunset.json",
+      "typography": {
+        "primary": "impact.ttf",
+        "secondary": "arialbd.ttf",
+        "style": "Miami Sunset Sky with Glowing Sun Disc, Palm Tree Silhouettes & Heavy Stroked GTA Type"
+      }
     }
   },
   "unicode_font_fallbacks": {

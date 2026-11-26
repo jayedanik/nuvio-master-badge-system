@@ -221,6 +221,14 @@ THEME_CONFIGS = [
         "desc": "Post-It paper sticky notes with folded bottom-right corner flaps & crisp ink",
         "bg_type": "glass",
         "title_css": "font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; background: linear-gradient(135deg, #fef08a 0%, #fed7aa 35%, #bae6fd 70%, #a7f3d0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 22px rgba(250, 204, 21, 0.4));",
+    },
+    {
+        "id": "gta6-vice-sunset",
+        "name": "GTA 6 Vice City Sunset",
+        "accent": "#ff3e9d",
+        "desc": "Miami sunset skies with glowing sun discs, palm silhouettes & heavy stroked GTA typography",
+        "bg_type": "glass",
+        "title_css": "font-family: 'Impact', 'Arial Black', sans-serif; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; background: linear-gradient(135deg, #ffffff 0%, #ff9e44 35%, #ff3e9d 72%, #8b5cf6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(255, 62, 157, 0.5));",
     }
 ]
 

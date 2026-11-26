@@ -334,6 +334,19 @@ https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/stick
 
 ---
 
+### GTA 6 Vice City Sunset
+> Miami sunset skies with glowing sun discs, palm silhouettes & heavy stroked GTA typography
+
+<p align="center">
+  <img src="previews/preview-gta6-vice-sunset.jpg?v=v4.0.0-LOCKED" alt="GTA 6 Vice City Sunset" width="100%" />
+</p>
+
+```text
+https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/gta6-vice-sunset.json
+```
+
+---
+
 ## Performance Architecture
 
 Built from the ground up to ensure Nuvio player operates at **maximum frame rates with zero loading latency or memory pressure**:
