@@ -67,6 +67,8 @@ const simStreamsEl = document.getElementById("sim-streams");
 const simChipsEl = document.getElementById("sim-theme-chips");
 const simCopyBtn = document.getElementById("sim-copy-btn");
 const simInspectBtn = document.getElementById("sim-inspect-btn");
+const simAutoBtn = document.getElementById("sim-auto-btn");
+const cinemaFrameEl = document.querySelector(".cinema-frame");
 
 const flagTabsEl = document.getElementById("flagship-tabs");
 const flagStageEl = document.getElementById("flagship-stage");
@@ -134,6 +136,10 @@ function initFlagships() {
   renderFlagship(0);
 }
 
+let autoShuffleEnabled = true;
+let simHoverPaused = false;
+let simTimer = null;
+
 function renderSimulator(themeId) {
   simThemeId = themeId;
   const t = THEMES.find((x) => x.id === themeId) || THEMES[0];
@@ -144,20 +150,50 @@ function renderSimulator(themeId) {
     </div>
   `).join("");
 
-  simChipsEl.querySelectorAll(".sim-chip").forEach((c) => c.classList.toggle("active", c.dataset.id === t.id));
+  simChipsEl.querySelectorAll(".sim-chip").forEach((c) => {
+    const isAct = c.dataset.id === t.id;
+    c.classList.toggle("active", isAct);
+    if (isAct) {
+      const targetLeft = c.offsetLeft - (simChipsEl.clientWidth - c.clientWidth) / 2;
+      simChipsEl.scrollTo({ left: Math.max(0, targetLeft), behavior: "smooth" });
+    }
+  });
   simCopyBtn.onclick = () => copyUrl(RAW_BASE + t.json, simCopyBtn);
   simInspectBtn.onclick = () => openDialog(THEMES.indexOf(t));
 }
 
+function stepSimulator() {
+  if (!autoShuffleEnabled || simHoverPaused || dialogEl.open) return;
+  const curIdx = THEMES.findIndex((x) => x.id === simThemeId);
+  const nextIdx = (curIdx + 1) % THEMES.length;
+  renderSimulator(THEMES[nextIdx].id);
+}
+
+function resetSimTimer() {
+  if (simTimer) clearInterval(simTimer);
+  simTimer = setInterval(stepSimulator, 3000);
+}
+
 function initSimChips() {
-  const featured = THEMES.slice(0, 8);
-  simChipsEl.innerHTML = featured.map((t) =>
+  simChipsEl.innerHTML = THEMES.map((t) =>
     `<button type="button" class="sim-chip${t.id === simThemeId ? " active" : ""}" data-id="${t.id}">${t.name}</button>`
   ).join("");
   simChipsEl.addEventListener("click", (e) => {
     const chip = e.target.closest(".sim-chip");
-    if (chip) renderSimulator(chip.dataset.id);
+    if (chip) {
+      renderSimulator(chip.dataset.id);
+      resetSimTimer();
+    }
   });
+  simAutoBtn.addEventListener("click", () => {
+    autoShuffleEnabled = !autoShuffleEnabled;
+    simAutoBtn.textContent = autoShuffleEnabled ? "Auto: On" : "Auto: Off";
+    simAutoBtn.setAttribute("aria-pressed", String(autoShuffleEnabled));
+    if (autoShuffleEnabled) resetSimTimer();
+  });
+  cinemaFrameEl.addEventListener("mouseenter", () => { simHoverPaused = true; });
+  cinemaFrameEl.addEventListener("mouseleave", () => { simHoverPaused = false; });
+  resetSimTimer();
 }
 
 function renderGrid() {
