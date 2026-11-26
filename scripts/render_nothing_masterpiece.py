@@ -227,8 +227,8 @@ THEME_CONFIGS = [
         "name": "GTA 6 Vice City Sunset",
         "accent": "#ff3e9d",
         "desc": "Miami sunset skies with glowing sun discs, palm silhouettes & heavy stroked GTA typography",
-        "bg_type": "glass",
-        "title_css": "font-family: 'Impact', 'Arial Black', sans-serif; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; background: linear-gradient(135deg, #ffffff 0%, #ff9e44 35%, #ff3e9d 72%, #8b5cf6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(255, 62, 157, 0.5));",
+        "bg_type": "gta6_vice",
+        "title_css": "font-family: 'Impact', 'Arial Black', sans-serif; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; background: linear-gradient(180deg, #ffffff 0%, #ffd166 38%, #ff3e9d 72%, #c084fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 28px rgba(255, 62, 157, 0.65)) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.9));",
     }
 ]
 
@@ -262,6 +262,51 @@ def render_html_preview(cfg):
         bg_style = f"url('data:image/jpeg;base64,{b64_aurora}') center / cover no-repeat, #08090d"
     elif bg_type == "frieren":
         bg_style = f"url('data:image/jpeg;base64,{b64_frieren}') center / cover no-repeat, #08090d"
+    elif bg_type == "gta6_vice":
+        gta_svg = """<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2400 960' preserveAspectRatio='xMidYMid slice'>
+  <defs>
+    <linearGradient id='sky' x1='0' y1='0' x2='0.25' y2='1'>
+      <stop offset='0%' stop-color='#0e0620'/>
+      <stop offset='38%' stop-color='#2b0d3e'/>
+      <stop offset='72%' stop-color='#7b1e5a'/>
+      <stop offset='100%' stop-color='#c94b4b'/>
+    </linearGradient>
+    <linearGradient id='sun' x1='0' y1='0' x2='0' y2='1'>
+      <stop offset='0%' stop-color='#ffe57f' stop-opacity='0.55'/>
+      <stop offset='55%' stop-color='#ff6f61' stop-opacity='0.35'/>
+      <stop offset='100%' stop-color='#ff3e9d' stop-opacity='0.05'/>
+    </linearGradient>
+    <radialGradient id='vignette' cx='32%' cy='48%' r='70%'>
+      <stop offset='0%' stop-color='#0b0518' stop-opacity='0.58'/>
+      <stop offset='65%' stop-color='#0b0518' stop-opacity='0.72'/>
+      <stop offset='100%' stop-color='#070310' stop-opacity='0.88'/>
+    </radialGradient>
+  </defs>
+  <rect width='2400' height='960' fill='url(#sky)'/>
+  <circle cx='1980' cy='380' r='260' fill='url(#sun)'/>
+  <text x='2040' y='455' font-family='Impact, Arial Black, sans-serif' font-size='440' font-weight='900' fill='#ff3e9d' fill-opacity='0.09' text-anchor='middle' letter-spacing='12'>VI</text>
+  <g fill='#0b0516' fill-opacity='0.78'>
+    <path d='M2160 960 Q2185 690 2235 430 L2255 432 Q2208 690 2195 960 Z'/>
+    <path d='M2245 430 Q2120 365 2010 420 Q2115 395 2245 438 Z'/>
+    <path d='M2245 430 Q2165 305 2070 315 Q2165 340 2245 430 Z'/>
+    <path d='M2245 430 Q2265 280 2350 275 Q2285 330 2248 430 Z'/>
+    <path d='M2248 430 Q2355 345 2420 405 Q2345 385 2248 436 Z'/>
+    <path d='M2248 432 Q2330 445 2390 520 Q2315 470 2245 438 Z'/>
+    <path d='M130 960 Q145 780 175 610 L189 612 Q162 780 154 960 Z'/>
+    <path d='M182 610 Q90 565 15 605 Q92 585 182 616 Z'/>
+    <path d='M182 610 Q135 520 70 525 Q135 545 182 610 Z'/>
+    <path d='M182 610 Q205 510 275 512 Q220 550 184 610 Z'/>
+    <path d='M184 610 Q265 555 325 605 Q260 585 184 615 Z'/>
+  </g>
+  <rect width='2400' height='960' fill='url(#vignette)'/>
+</svg>"""
+        b64_gta = base64.b64encode(gta_svg.encode("utf-8")).decode("utf-8")
+        bg_style = f"""
+          radial-gradient(900px 500px at 82% 28%, rgba(255, 62, 157, 0.22) 0%, transparent 65%),
+          radial-gradient(700px 420px at 14% 12%, rgba(56, 189, 248, 0.14) 0%, transparent 60%),
+          url('data:image/svg+xml;base64,{b64_gta}') center / cover no-repeat,
+          #0c0618
+        """
     else:
         bg_style = f"""
           radial-gradient(1400px 600px at 15% 0%, {accent_hex}18 0%, transparent 65%),

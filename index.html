@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nuvio Master Badge System — 24 Bespoke Themes</title>
+  <meta name="description" content="24 handcrafted stream badge themes for Nuvio Player. 96px native WebP masters, live release tester &amp; one-click JSON import." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="brand" aria-label="Nuvio Badges Home">
+        <svg class="brand-logo" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 7.5C4 5.567 5.567 4 7.5 4H16.5C18.433 4 20 5.567 20 7.5V16.5C20 18.433 18.433 20 16.5 20H7.5C5.567 20 4 18.433 4 16.5V7.5Z" stroke="currentColor" stroke-width="1.8" />
+          <path d="M8.5 9.5H15.5M8.5 14.5H12.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          <circle cx="15" cy="14.5" r="1.2" fill="currentColor" />
+        </svg>
+        <span class="brand-wordmark">Nuvio <span>Badges</span></span>
+      </a>
+      <nav class="header-nav" aria-label="Primary">
+        <a href="#spotlight" class="nav-link">Flagships</a>
+        <a href="#architecture" class="nav-link">Architecture</a>
+        <a href="#themes" class="nav-link">Themes</a>
+        <a href="#install" class="nav-link">Import</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+        <a href="https://github.com/jayedanik/nuvio-master-badge-system" target="_blank" rel="noopener noreferrer" class="nav-cta">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Chapter 1 (Dark): Minimal Editorial Hero + Pure Cinema Stage -->
+    <section class="chapter-dark hero">
+      <div class="hero-aura" aria-hidden="true"></div>
+      <div class="container hero-inner">
+        <p class="hero-eyebrow">NUVIO MASTER BADGE SYSTEM • 4.0</p>
+        <h1 class="hero-title">Stream badges.<br /><span class="hero-gradient">Crafted to perfection.</span></h1>
+        <p class="hero-sub">
+          24 distinct material universes rendered at 96px native WebP. Zero runtime scaling. Effortless 120 FPS playback.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#themes" class="btn btn-white">Browse 24 Themes</a>
+          <a href="#spotlight" class="btn btn-link-light">Explore Flagships ›</a>
+        </div>
+
+        <div class="cinema-frame reveal">
+          <div class="cinema-topbar">
+            <div class="cinema-title-group">
+              <span>Nuvio Player — Live Preview</span>
+            </div>
+            <div class="cinema-cta-group">
+              <button type="button" id="sim-inspect-btn" class="btn btn-glass btn-xs">Inspect</button>
+              <button type="button" id="sim-copy-btn" class="btn btn-blue btn-xs">Copy JSON URL</button>
+            </div>
+          </div>
+
+          <div class="sim-streams" id="sim-streams"></div>
+          <div class="sim-theme-chips" id="sim-theme-chips" role="tablist" aria-label="Switch live preview theme"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 2 (Light): Flagship Showcase -->
+    <section id="spotlight" class="chapter-light spotlight-section">
+      <div class="container">
+        <div class="section-intro">
+          <span class="eyebrow-dark">FLAGSHIP DROPS</span>
+          <h2>Signature universes.</h2>
+        </div>
+
+        <div class="flagship-tabs" id="flagship-tabs" role="tablist" aria-label="Flagship themes"></div>
+        <div class="flagship-stage reveal" id="flagship-stage"></div>
+      </div>
+    </section>
+
+    <!-- Chapter 3 (Dark): Clean Bento Architecture -->
+    <section id="architecture" class="chapter-dark specs-section">
+      <div class="container">
+        <div class="section-intro center">
+          <span class="eyebrow-light">ARCHITECTURE</span>
+          <h2>Engineered for 120 FPS.</h2>
+          <p>Pre-rendered 4× supersampled masters with instant in-memory caching.</p>
+        </div>
+
+        <div class="bento-specs reveal">
+          <div class="spec-tile wide">
+            <span class="spec-tag">NATIVE MASTER</span>
+            <strong class="spec-big">96px</strong>
+            <p>Supersampled 4× at 384px and Lanczos-downsampled for razor-sharp 4K TV clarity.</p>
+          </div>
+          <div class="spec-tile">
+            <span class="spec-tag">COVERAGE</span>
+            <strong class="spec-big">517</strong>
+            <p>WebP badges per theme across codecs, HDR, studios, OTT &amp; flags.</p>
+          </div>
+          <div class="spec-tile">
+            <span class="spec-tag">FOOTPRINT</span>
+            <strong class="spec-big">~6.8 KB</strong>
+            <p>Feather-light WebP with clean <code>#00000000</code> transparency.</p>
+          </div>
+          <div class="spec-tile wide-accent">
+            <span class="spec-tag">DEDUPLICATION</span>
+            <strong class="spec-big">396 Rules</strong>
+            <p>Smart regex priority eliminates duplicate HDR/Audio clutter on every stream.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 4 (Light): Clean Minimal Storefront Catalog -->
+    <section id="themes" class="chapter-light themes-section">
+      <div class="container">
+        <div class="catalog-head">
+          <div>
+            <span class="eyebrow-dark">COLLECTION</span>
+            <h2>All 24 Themes.</h2>
+          </div>
+          <p class="catalog-sub">Every 4K preview fits edge-to-edge without borders or cropping. Inspect live regex rules and copy in one tap.</p>
+        </div>
+
+        <div class="sticky-toolbar-light">
+          <div class="filter-pills" role="tablist" aria-label="Theme categories">
+            <button type="button" class="pill active" data-cat="all">All <span class="cnt">24</span></button>
+            <button type="button" class="pill" data-cat="pop">Pop Culture <span class="cnt">6</span></button>
+            <button type="button" class="pill" data-cat="craft">Physical &amp; Craft <span class="cnt">8</span></button>
+            <button type="button" class="pill" data-cat="tech">Hardware &amp; Tech <span class="cnt">8</span></button>
+            <button type="button" class="pill" data-cat="minimal">Minimal <span class="cnt">2</span></button>
+            <button type="button" class="pill" data-cat="saved">★ Saved <span class="cnt" id="saved-count">0</span></button>
+          </div>
+
+          <div class="toolbar-right">
+            <div class="search-inline">
+              <input id="hero-search" type="search" placeholder="Search themes..." aria-label="Search themes" />
+              <kbd class="kbd-hint" title="Press / to focus search">/</kbd>
+            </div>
+            <select id="sort-select" class="sort-select" aria-label="Sort themes">
+              <option value="featured">Featured</option>
+              <option value="az">A – Z</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="theme-grid" class="theme-grid"></div>
+        <p id="empty-state" class="empty-state" hidden>No themes matched your current filter. Try clearing the search or switching categories.</p>
+      </div>
+    </section>
+
+    <!-- Chapter 5 (Dark): Import & FAQ -->
+    <section id="install" class="chapter-dark install-section">
+      <div class="container">
+        <div class="section-intro">
+          <span class="eyebrow-light">QUICK SETUP</span>
+          <h2>Ready in seconds.</h2>
+        </div>
+
+        <div class="steps-grid reveal">
+          <article class="step-card">
+            <span class="step-num">01</span>
+            <h3>Choose &amp; Test</h3>
+            <p>Browse all 24 themes and test any release filename live inside <strong>Inspect</strong>.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-num">02</span>
+            <h3>Copy JSON URL</h3>
+            <p>Tap <strong>Copy URL</strong> on your favorite theme card to copy the raw GitHub manifest.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-num">03</span>
+            <h3>Paste in Nuvio</h3>
+            <p>Open <code>Profile › Layout › Streams › Badge URLs</code> in Nuvio, paste the URL, and save.</p>
+          </article>
+        </div>
+
+        <div id="faq" class="faq-block reveal">
+          <h3 class="faq-heading">Questions, answered.</h3>
+          <div class="faq-list">
+            <details class="faq-item" open>
+              <summary>Why pre-render every badge at 96px native WebP?</summary>
+              <p>Nuvio never scales oversized SVGs or heavy PNGs on the fly. Each badge averages ~6.8 KB, caches instantly in memory, and keeps scrolling locked at 60/120 FPS.</p>
+            </details>
+            <details class="faq-item">
+              <summary>Are all badge backgrounds 100% transparent?</summary>
+              <p>Yes. Every badge across all 24 themes uses a clean alpha channel (<code>#00000000</code>) with zero black boxes or rectangular artifacts.</p>
+            </details>
+            <details class="faq-item">
+              <summary>What makes Live TV &amp; Sports Broadcast different?</summary>
+              <p>It is a dedicated borderless typography theme built exclusively for IPTV, Live TV, and Sports streams while keeping the iconic ON AIR LIVE mark untouched.</p>
+            </details>
+            <details class="faq-item">
+              <summary>Can I share a direct link to a specific theme?</summary>
+              <p>Yes. Opening any theme's Inspector updates the URL hash (e.g. <code>#theme=gta6-vice-sunset</code>) for instant bookmarking or sharing.</p>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>Nuvio Master Badge System • MIT License</span>
+      <span>24 Themes • 517 WebP Masters Each • v4.0.0-LOCKED</span>
+    </div>
+  </footer>
+
+  <!-- Inspector Dialog -->
+  <dialog id="inspector-dialog" class="inspector-dialog" aria-labelledby="dlg-title">
+    <div class="dlg-shell">
+      <div class="dlg-head">
+        <div class="dlg-title-group">
+          <span id="dlg-cat" class="dlg-cat"></span>
+          <h3 id="dlg-title"></h3>
+        </div>
+        <div class="dlg-head-actions">
+          <button type="button" id="dlg-prev" class="btn btn-glass btn-xs" aria-label="Previous theme">← Prev</button>
+          <button type="button" id="dlg-next" class="btn btn-glass btn-xs" aria-label="Next theme">Next →</button>
+          <button type="button" id="dlg-close" class="btn btn-glass btn-xs" aria-label="Close inspector">✕</button>
+        </div>
+      </div>
+
+      <div class="dlg-tabs" role="tablist">
+        <button type="button" class="dlg-tab active" data-tab="showcase">4K Showcase</button>
+        <button type="button" class="dlg-tab" data-tab="tester">Live Release Tester &amp; Badges</button>
+      </div>
+
+      <div id="tab-showcase" class="dlg-panel active">
+        <img id="dlg-img" class="dlg-4k-img" src="" alt="" />
+        <p id="dlg-desc" class="dlg-desc"></p>
+      </div>
+
+      <div id="tab-tester" class="dlg-panel" hidden>
+        <div class="tester-box">
+          <label for="release-input" class="tester-label">Test any stream filename against this theme's real JSON regex rules:</label>
+          <input id="release-input" type="text" class="tester-input" value="Dune.Part.Two.2024.2160p.UHD.BluRay.REMUX.DV.TrueHD.7.1.Atmos.HEVC.10bit.MKV" />
+          <div class="preset-chips">
+            <button type="button" class="preset-chip" data-preset="Dune.Part.Two.2024.2160p.UHD.BluRay.REMUX.DV.TrueHD.7.1.Atmos.HEVC.10bit.MKV">4K REMUX</button>
+            <button type="button" class="preset-chip" data-preset="Severance.S02E05.1080p.ATVP.WEB-DL.DDP5.1.HDR10.H265.English.MKV">1080p WEB-DL</button>
+            <button type="button" class="preset-chip" data-preset="[SubsPlease] Solo Leveling S2 - 08 (1080p) [Dual-Audio] [Crunchyroll] [AV1].mkv">Anime Dual</button>
+            <button type="button" class="preset-chip" data-preset="F1.Grand.Prix.2026.Live.1080p.60fps.HDTV.AAC.English.TS">Live Sports</button>
+          </div>
+          <div class="tester-output-wrap" id="tester-output-wrap">
+            <div class="tester-count" id="tester-count">Loading manifest rules…</div>
+            <div class="tester-badges" id="tester-badges"></div>
+          </div>
+        </div>
+        <div class="all-badges-section">
+          <div class="all-badges-head">
+            <h4>Sample Tier Badges</h4>
+            <span id="manifest-stats" class="manifest-stats"></span>
+          </div>
+          <div id="tier-sample-grid" class="tier-sample-grid"></div>
+        </div>
+      </div>
+
+      <div class="dlg-url-row">
+        <code id="dlg-url"></code>
+        <button type="button" id="dlg-copy" class="btn btn-blue btn-sm">Copy JSON URL</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
