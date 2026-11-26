@@ -6,7 +6,7 @@
   <a href="https://github.com/jayedanik/nuvio-master-badge-system"><img src="https://img.shields.io/badge/System-Nuvio_Master_Badges-00f2fe?style=flat-square" alt="Nuvio" /></a>
   <a href="badges.json"><img src="https://img.shields.io/badge/Badges-396_Stream_Rules-9b51e0?style=flat-square" alt="Badges" /></a>
   <a href="badges/"><img src="https://img.shields.io/badge/Assets-517_WebP_Files-3b82f6?style=flat-square" alt="Assets" /></a>
-  <a href="#theme-universes"><img src="https://img.shields.io/badge/Themes-23_Universes-f59e0b?style=flat-square" alt="Themes" /></a>
+  <a href="#theme-universes"><img src="https://img.shields.io/badge/Themes-24_Universes-f59e0b?style=flat-square" alt="Themes" /></a>
   <a href="badges.json"><img src="https://img.shields.io/badge/Scale-96px_Native-00ff88?style=flat-square" alt="96px Scale" /></a>
   <a href="#performance-architecture"><img src="https://img.shields.io/badge/Footprint-3.1_MB_Total-ff007f?style=flat-square" alt="Size" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-ffd700?style=flat-square" alt="License" /></a>
@@ -20,10 +20,10 @@
 
 ## Theme Architecture & Ecosystem
 
-Every stream in Nuvio can be experienced across **23 radically distinct physical material universes**. Rather than a static look, choose an aesthetic that matches your personal theater setup:
+Every stream in Nuvio can be experienced across **24 radically distinct physical material universes**. Rather than a static look, choose an aesthetic that matches your personal theater setup:
 
 <p align="center">
-  <img src="previews/theme-ecosystem.jpg?v=v4.0.0-LOCKED" alt="23 Masterpiece Theme Universes" width="100%" />
+  <img src="previews/theme-ecosystem.jpg?v=v4.0.0-LOCKED" alt="24 Masterpiece Theme Universes" width="100%" />
 </p>
 
 * **Zero CPU Overhead:** Every theme is pre-rendered at native 96px standard canvas height. Switching themes in Nuvio requires zero re-scaling or image reprocessing.
