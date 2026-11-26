@@ -149,6 +149,14 @@ THEME_CONFIGS = [
         "desc": "Handmade washi tape rolls with gold leaf hot-stamping, mulberry fiber texture & Japanese calligraphy",
         "bg_type": "frieren",
         "title_css": "font-family: 'Cinzel', serif; font-weight: 800; letter-spacing: 1px; background: linear-gradient(135deg, #ffffff 10%, #ffe4e6 45%, #fb7185 75%, #e11d48 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(251, 113, 133, 0.45));",
+    },
+    {
+        "id": "manga-halftone",
+        "name": "Anime / Manga Halftone Ink",
+        "accent": "#ff2e63",
+        "desc": "Bold Japanese manga ink frames with Ben-Day halftone dots, hard offset shadows & vibrant accent bars",
+        "bg_type": "glass",
+        "title_css": "font-family: 'Impact', 'Arial Black', sans-serif; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; background: linear-gradient(135deg, #ffffff 0%, #fde047 35%, #ff2e63 75%, #9333ea 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(255, 46, 99, 0.45));",
     }
 ]
 

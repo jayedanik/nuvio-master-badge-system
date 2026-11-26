@@ -150,6 +150,16 @@
         "secondary": "msgothic.ttc",
         "style": "Handmade Mulberry Fiber Paper Rolls with Deckled Edges, Gold Leaf Hot-Stamping, and Dual 3D Elevated Drop Shadows"
       }
+    },
+    "manga-halftone": {
+      "name": "Anime / Manga Halftone Ink",
+      "dir": "themes/manga-halftone/badges",
+      "json": "manga-halftone.json",
+      "typography": {
+        "primary": "impact.ttf",
+        "secondary": "arialbd.ttf",
+        "style": "Bold Japanese Manga Ink Panel with Ben-Day Halftone Dots, Hard Offset Shadow & Vibrant Accent Bars"
+      }
     }
   },
   "unicode_font_fallbacks": {
