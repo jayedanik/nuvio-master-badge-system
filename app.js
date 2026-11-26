@@ -168,8 +168,8 @@ function buildSimRowsOnce() {
         <span class="sim-movie-meta">${row.meta}</span>
       </div>
       <div class="sim-row-badges" data-sim-row="${idx}">
-        <div class="sim-layer layer-front">${row.badges.map((b) => `<img alt="${b}" />`).join("")}</div>
-        <div class="sim-layer layer-back">${row.badges.map((b) => `<img alt="${b}" />`).join("")}</div>
+        <div class="sim-layer layer-front">${row.badges.map((b) => `<img alt="${b}" onerror="this.style.display='none'" />`).join("")}</div>
+        <div class="sim-layer layer-back">${row.badges.map((b) => `<img alt="${b}" onerror="this.style.display='none'" />`).join("")}</div>
       </div>
     </div>
   `).join("");
@@ -206,7 +206,7 @@ async function renderSimulator(themeId, animate = true) {
       const layers = badgeRows[rIdx].querySelectorAll(".sim-layer");
       const front = layers[frontLayerIdx];
       const imgs = front.querySelectorAll("img");
-      row.badges.forEach((b, bIdx) => { imgs[bIdx].src = `${t.dir}/${b}.webp`; });
+      row.badges.forEach((b, bIdx) => { imgs[bIdx].style.display = ""; imgs[bIdx].src = `${t.dir}/${b}.webp`; });
     });
   } else {
     const nextLayerIdx = 1 - frontLayerIdx;
@@ -214,7 +214,7 @@ async function renderSimulator(themeId, animate = true) {
       const layers = badgeRows[rIdx].querySelectorAll(".sim-layer");
       const incoming = layers[nextLayerIdx];
       const imgs = incoming.querySelectorAll("img");
-      row.badges.forEach((b, bIdx) => { imgs[bIdx].src = `${t.dir}/${b}.webp`; });
+      row.badges.forEach((b, bIdx) => { imgs[bIdx].style.display = ""; imgs[bIdx].src = `${t.dir}/${b}.webp`; });
     });
 
     requestAnimationFrame(() => {
