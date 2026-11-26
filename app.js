@@ -140,33 +140,85 @@ let autoShuffleEnabled = true;
 let simHoverPaused = false;
 let simTimer = null;
 
-function renderSimulator(themeId) {
-  simThemeId = themeId;
-  const t = THEMES.find((x) => x.id === themeId) || THEMES[0];
-  simStreamsEl.innerHTML = SIM_ROWS.map((row) => `
+function preloadThemeBadges(theme) {
+  const urls = new Set();
+  SIM_ROWS.forEach((row) => row.badges.forEach((b) => urls.add(`${theme.dir}/${b}.webp`)));
+  return Promise.all([...urls].map((u) => new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => (img.decode ? img.decode().then(resolve, resolve) : resolve());
+    img.onerror = resolve;
+    img.src = u;
+  })));
+}
+
+let simRenderSeq = 0;
+
+function buildSimRowsOnce() {
+  simStreamsEl.innerHTML = SIM_ROWS.map((row, idx) => `
     <div class="sim-row">
       <div class="sim-release">${row.release}</div>
-      <div class="sim-row-badges">${row.badges.map((b) => `<img src="${t.dir}/${b}.webp" alt="${b}" />`).join("")}</div>
+      <div class="sim-row-badges" data-sim-row="${idx}">
+        ${row.badges.map((b) => `<img alt="${b}" />`).join("")}
+      </div>
     </div>
   `).join("");
+}
+
+async function renderSimulator(themeId, animate = true) {
+  const seq = ++simRenderSeq;
+  simThemeId = themeId;
+  const t = THEMES.find((x) => x.id === themeId) || THEMES[0];
 
   simChipsEl.querySelectorAll(".sim-chip").forEach((c) => {
     const isAct = c.dataset.id === t.id;
     c.classList.toggle("active", isAct);
     if (isAct) {
-      const targetLeft = c.offsetLeft - (simChipsEl.clientWidth - c.clientWidth) / 2;
-      simChipsEl.scrollTo({ left: Math.max(0, targetLeft), behavior: "smooth" });
+      const left = c.offsetLeft;
+      const right = left + c.offsetWidth;
+      const viewLeft = simChipsEl.scrollLeft;
+      const viewRight = viewLeft + simChipsEl.clientWidth;
+      if (left < viewLeft + 16 || right > viewRight - 16) {
+        simChipsEl.scrollTo({ left: Math.max(0, left - (simChipsEl.clientWidth - c.clientWidth) / 2), behavior: "smooth" });
+      }
     }
   });
   simCopyBtn.onclick = () => copyUrl(RAW_BASE + t.json, simCopyBtn);
   simInspectBtn.onclick = () => openDialog(THEMES.indexOf(t));
+
+  const badgeRows = simStreamsEl.querySelectorAll(".sim-row-badges");
+  if (animate) {
+    badgeRows.forEach((el) => el.classList.add("swapping"));
+    await Promise.all([
+      preloadThemeBadges(t),
+      new Promise((r) => setTimeout(r, 180))
+    ]);
+    if (seq !== simRenderSeq) return;
+  } else {
+    await preloadThemeBadges(t);
+    if (seq !== simRenderSeq) return;
+  }
+
+  SIM_ROWS.forEach((row, rIdx) => {
+    const imgs = badgeRows[rIdx].querySelectorAll("img");
+    row.badges.forEach((b, bIdx) => {
+      imgs[bIdx].src = `${t.dir}/${b}.webp`;
+    });
+  });
+
+  requestAnimationFrame(() => {
+    badgeRows.forEach((el) => el.classList.remove("swapping"));
+  });
+
+  // Preload the next theme in the background for instant transitions
+  const nextIdx = (THEMES.findIndex((x) => x.id === t.id) + 1) % THEMES.length;
+  preloadThemeBadges(THEMES[nextIdx]);
 }
 
 function stepSimulator() {
   if (!autoShuffleEnabled || simHoverPaused || dialogEl.open) return;
   const curIdx = THEMES.findIndex((x) => x.id === simThemeId);
   const nextIdx = (curIdx + 1) % THEMES.length;
-  renderSimulator(THEMES[nextIdx].id);
+  renderSimulator(THEMES[nextIdx].id, true);
 }
 
 function resetSimTimer() {
@@ -374,8 +426,9 @@ const io = new IntersectionObserver((entries) => {
 document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
 
 updateSavedCount();
+buildSimRowsOnce();
 initSimChips();
-renderSimulator(THEMES[0].id);
+renderSimulator(THEMES[0].id, false);
 initFlagships();
 renderGrid();
 
