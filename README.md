@@ -269,6 +269,71 @@ https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/holo-
 
 ---
 
+### Stained Glass Mosaic
+> Jewel-toned cathedral stained glass shards framed by bold black lead-came lines
+
+<p align="center">
+  <img src="previews/preview-stained-glass.jpg?v=v4.0.0-LOCKED" alt="Stained Glass Mosaic" width="100%" />
+</p>
+
+```text
+https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/stained-glass.json
+```
+
+---
+
+### Streetwear Zine Cutout
+> Tilted punk streetwear paper-cut collage strips with highlighter pop colors & brutalist ink
+
+<p align="center">
+  <img src="previews/preview-zine-cutout.jpg?v=v4.0.0-LOCKED" alt="Streetwear Zine Cutout" width="100%" />
+</p>
+
+```text
+https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/zine-cutout.json
+```
+
+---
+
+### Comic Book Speech Bubble
+> Pop comic speech bubbles with tails, thick black ink outlines & hard offset shadows
+
+<p align="center">
+  <img src="previews/preview-comic-bubble.jpg?v=v4.0.0-LOCKED" alt="Comic Book Speech Bubble" width="100%" />
+</p>
+
+```text
+https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/comic-bubble.json
+```
+
+---
+
+### Matrix Terminal >_
+> Phosphor-green hacker console frames with >_ command prompt prefixes
+
+<p align="center">
+  <img src="previews/preview-matrix-terminal.jpg?v=v4.0.0-LOCKED" alt="Matrix Terminal" width="100%" />
+</p>
+
+```text
+https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/matrix-terminal.json
+```
+
+---
+
+### Peeled Sticky Note
+> Post-It paper sticky notes with folded bottom-right corner flaps & crisp ink
+
+<p align="center">
+  <img src="previews/preview-sticky-note.jpg?v=v4.0.0-LOCKED" alt="Peeled Sticky Note" width="100%" />
+</p>
+
+```text
+https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/sticky-note.json
+```
+
+---
+
 ## Performance Architecture
 
 Built from the ground up to ensure Nuvio player operates at **maximum frame rates with zero loading latency or memory pressure**:

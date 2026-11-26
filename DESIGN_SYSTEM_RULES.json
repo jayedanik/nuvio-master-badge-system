@@ -190,6 +190,56 @@
         "secondary": "arialbd.ttf",
         "style": "Dark Obsidian Glass Core with Rainbow Holographic Foil Rim & Prism Shimmer"
       }
+    },
+    "stained-glass": {
+      "name": "Stained Glass Mosaic",
+      "dir": "themes/stained-glass/badges",
+      "json": "stained-glass.json",
+      "typography": {
+        "primary": "segoeuib.ttf",
+        "secondary": "arialbd.ttf",
+        "style": "Jewel-Toned Cathedral Stained Glass Shards with Bold Black Lead-Came Lines"
+      }
+    },
+    "zine-cutout": {
+      "name": "Streetwear Zine Cutout",
+      "dir": "themes/zine-cutout/badges",
+      "json": "zine-cutout.json",
+      "typography": {
+        "primary": "impact.ttf",
+        "secondary": "arialbd.ttf",
+        "style": "Tilted Punk Streetwear Paper-Cut Strips with Highlighter Pop & Heavy Black Ink"
+      }
+    },
+    "comic-bubble": {
+      "name": "Comic Book Speech Bubble",
+      "dir": "themes/comic-bubble/badges",
+      "json": "comic-bubble.json",
+      "typography": {
+        "primary": "comicbd.ttf",
+        "secondary": "arialbd.ttf",
+        "style": "Pop Comic Speech Bubbles with Tail, Thick Ink Outline & Hard Drop Shadow"
+      }
+    },
+    "matrix-terminal": {
+      "name": "Matrix Terminal >_",
+      "dir": "themes/matrix-terminal/badges",
+      "json": "matrix-terminal.json",
+      "typography": {
+        "primary": "consolab.ttf",
+        "secondary": "arialbd.ttf",
+        "style": "Phosphor-Green Hacker Console with >_ Command Prompt Prefix"
+      }
+    },
+    "sticky-note": {
+      "name": "Peeled Sticky Note",
+      "dir": "themes/sticky-note/badges",
+      "json": "sticky-note.json",
+      "typography": {
+        "primary": "segoeuib.ttf",
+        "secondary": "arialbd.ttf",
+        "style": "Post-It Paper Sticky Notes with Folded Peeled-Up Corner Flap"
+      }
     }
   },
   "unicode_font_fallbacks": {

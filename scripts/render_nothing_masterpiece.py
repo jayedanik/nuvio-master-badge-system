@@ -181,6 +181,46 @@ THEME_CONFIGS = [
         "desc": "Dark obsidian glass cores framed by rainbow holographic foil rims & iridescent prism shimmer",
         "bg_type": "glass",
         "title_css": "font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; background: linear-gradient(90deg, #38bdf8 0%, #a855f7 35%, #ec4899 68%, #facc15 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(168, 85, 247, 0.45));",
+    },
+    {
+        "id": "stained-glass",
+        "name": "Stained Glass Mosaic",
+        "accent": "#e11d48",
+        "desc": "Jewel-toned cathedral stained glass shards framed by bold black lead-came lines",
+        "bg_type": "glass",
+        "title_css": "font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; background: linear-gradient(135deg, #fb7185 0%, #f59e0b 35%, #38bdf8 70%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(225, 29, 72, 0.4));",
+    },
+    {
+        "id": "zine-cutout",
+        "name": "Streetwear Zine Cutout",
+        "accent": "#facc15",
+        "desc": "Tilted punk streetwear paper-cut collage strips with highlighter pop colors & brutalist ink",
+        "bg_type": "glass",
+        "title_css": "font-family: 'Impact', 'Arial Black', sans-serif; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; background: linear-gradient(135deg, #ffffff 0%, #facc15 35%, #22d3ee 70%, #f472b6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(250, 204, 21, 0.4));",
+    },
+    {
+        "id": "comic-bubble",
+        "name": "Comic Book Speech Bubble",
+        "accent": "#38bdf8",
+        "desc": "Pop comic speech bubbles with tails, thick black ink outlines & hard offset shadows",
+        "bg_type": "glass",
+        "title_css": "font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; background: linear-gradient(135deg, #fef08a 0%, #bae6fd 45%, #fbcfe8 80%, #a7f3d0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 22px rgba(56, 189, 248, 0.4));",
+    },
+    {
+        "id": "matrix-terminal",
+        "name": "Matrix Terminal >_",
+        "accent": "#22c55e",
+        "desc": "Phosphor-green hacker console frames with >_ command prompt prefixes",
+        "bg_type": "glass",
+        "title_css": "font-family: 'Consolas', 'Courier New', monospace; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; background: linear-gradient(90deg, #4ade80 0%, #22c55e 50%, #16a34a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 22px rgba(34, 197, 94, 0.45));",
+    },
+    {
+        "id": "sticky-note",
+        "name": "Peeled Sticky Note",
+        "accent": "#facc15",
+        "desc": "Post-It paper sticky notes with folded bottom-right corner flaps & crisp ink",
+        "bg_type": "glass",
+        "title_css": "font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; background: linear-gradient(135deg, #fef08a 0%, #fed7aa 35%, #bae6fd 70%, #a7f3d0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 22px rgba(250, 204, 21, 0.4));",
     }
 ]
 
