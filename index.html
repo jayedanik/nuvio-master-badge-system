@@ -49,23 +49,37 @@
         </div>
 
         <div class="cinema-frame reveal">
-          <div class="cinema-topbar">
-            <div class="cinema-title-group">
-              <span class="cinema-kicker">LIVE PREVIEW</span>
-              <strong id="sim-active-name" class="cinema-active-name">GTA 6 Vice City Sunset</strong>
+          <div class="cinema-ambient" aria-hidden="true"></div>
+
+          <div class="cinema-stage-top">
+            <div class="cinema-movie">
+              <span class="cinema-eyebrow">NOW STREAMING IN NUVIO</span>
+              <h2 class="cinema-movie-title">Dune: Part Two</h2>
+              <p class="cinema-movie-meta">2024 · 2160p UHD BluRay REMUX · Real-Debrid · 68.4 GB</p>
             </div>
             <div class="cinema-cta-group">
-              <button type="button" id="sim-auto-btn" class="btn btn-glass btn-xs" aria-pressed="true">Auto: On</button>
               <button type="button" id="sim-inspect-btn" class="btn btn-glass btn-xs">Inspect</button>
               <button type="button" id="sim-copy-btn" class="btn btn-blue btn-xs">Copy JSON URL</button>
             </div>
           </div>
 
-          <div class="sim-streams" id="sim-streams"></div>
-          <div class="sim-dock">
-            <button type="button" id="sim-prev-btn" class="dock-arrow" aria-label="Previous theme">‹</button>
-            <div class="sim-theme-chips" id="sim-theme-chips" role="tablist" aria-label="Switch live preview theme"></div>
-            <button type="button" id="sim-next-btn" class="dock-arrow" aria-label="Next theme">›</button>
+          <!-- Hero Badge Showcase (Double-Buffered Zero-Blink Crossfade) -->
+          <div class="cinema-badges-stage" id="cinema-badges-stage">
+            <div class="sim-layer layer-front" id="cinema-layer-0"></div>
+            <div class="sim-layer layer-back" id="cinema-layer-1"></div>
+          </div>
+
+          <!-- Minimalist Apple Liquid Glass Pill Dock -->
+          <div class="cinema-dock">
+            <div class="glass-pill-dock">
+              <button type="button" id="sim-prev-btn" class="dock-btn" aria-label="Previous theme">‹</button>
+              <div class="dock-center">
+                <span id="sim-active-name" class="dock-theme-name">GTA 6 Vice City Sunset</span>
+                <span id="sim-counter" class="dock-counter">1 / 24</span>
+              </div>
+              <button type="button" id="sim-next-btn" class="dock-btn" aria-label="Next theme">›</button>
+            </div>
+            <button type="button" id="sim-auto-btn" class="btn btn-glass btn-xs" aria-pressed="true">Auto: On</button>
           </div>
         </div>
       </div>

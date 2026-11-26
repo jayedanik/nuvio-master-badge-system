@@ -34,23 +34,7 @@ const FLAGSHIPS = [
   { idx: 3, tab: "Anime / Manga Ink", kicker: "POP CULTURE • BEN-DAY HALFTONE" }
 ];
 
-const SIM_ROWS = [
-  {
-    title: "Dune: Part Two (2024)",
-    meta: "Real-Debrid • 2160p UHD REMUX • 68.4 GB",
-    badges: ["4k", "remux", "dolby-vision", "dolby-atmos", "warnerbros", "english-flag"]
-  },
-  {
-    title: "Severance · S02E05",
-    meta: "TorBox • 1080p WEB-DL • 4.2 GB",
-    badges: ["1080p", "web-dl", "hdr10", "5.1", "appletv", "cached"]
-  },
-  {
-    title: "Formula 1 · Monaco Grand Prix",
-    meta: "Live Sports Feed • 60 FPS",
-    badges: ["live", "1080p", "60fps", "english-flag"]
-  }
-];
+const HERO_BADGES = ["4k", "remux", "dolby-vision", "dolby-atmos", "imax", "warnerbros", "english-flag", "live"];
 
 const TIER_SAMPLES = [
   "4k", "remux", "dolby-vision", "dolby-atmos", "imax", "cached", "live",
@@ -66,9 +50,10 @@ const searchEl = document.getElementById("hero-search");
 const sortEl = document.getElementById("sort-select");
 const savedCountEl = document.getElementById("saved-count");
 
-const simStreamsEl = document.getElementById("sim-streams");
-const simChipsEl = document.getElementById("sim-theme-chips");
+const simLayer0 = document.getElementById("cinema-layer-0");
+const simLayer1 = document.getElementById("cinema-layer-1");
 const simActiveNameEl = document.getElementById("sim-active-name");
+const simCounterEl = document.getElementById("sim-counter");
 const simCopyBtn = document.getElementById("sim-copy-btn");
 const simInspectBtn = document.getElementById("sim-inspect-btn");
 const simAutoBtn = document.getElementById("sim-auto-btn");
@@ -147,13 +132,11 @@ let simHoverPaused = false;
 let simTimer = null;
 
 function preloadThemeBadges(theme) {
-  const urls = new Set();
-  SIM_ROWS.forEach((row) => row.badges.forEach((b) => urls.add(`${theme.dir}/${b}.webp`)));
-  return Promise.all([...urls].map((u) => new Promise((resolve) => {
+  return Promise.all(HERO_BADGES.map((b) => new Promise((resolve) => {
     const img = new Image();
     img.onload = () => (img.decode ? img.decode().then(resolve, resolve) : resolve());
     img.onerror = resolve;
-    img.src = u;
+    img.src = `${theme.dir}/${b}.webp`;
   })));
 }
 
@@ -161,70 +144,39 @@ let simRenderSeq = 0;
 let frontLayerIdx = 0;
 
 function buildSimRowsOnce() {
-  simStreamsEl.innerHTML = SIM_ROWS.map((row, idx) => `
-    <div class="sim-row">
-      <div class="sim-row-head">
-        <span class="sim-movie-title">${row.title}</span>
-        <span class="sim-movie-meta">${row.meta}</span>
-      </div>
-      <div class="sim-row-badges" data-sim-row="${idx}">
-        <div class="sim-layer layer-front">${row.badges.map((b) => `<img alt="${b}" onerror="this.style.display='none'" />`).join("")}</div>
-        <div class="sim-layer layer-back">${row.badges.map((b) => `<img alt="${b}" onerror="this.style.display='none'" />`).join("")}</div>
-      </div>
-    </div>
-  `).join("");
+  const html = HERO_BADGES.map((b) => `<img alt="${b}" onerror="this.style.display='none'" />`).join("");
+  simLayer0.innerHTML = html;
+  simLayer1.innerHTML = html;
 }
 
 async function renderSimulator(themeId, animate = true) {
   const seq = ++simRenderSeq;
   simThemeId = themeId;
-  const t = THEMES.find((x) => x.id === themeId) || THEMES[0];
+  const idx = THEMES.findIndex((x) => x.id === themeId);
+  const t = THEMES[idx >= 0 ? idx : 0];
   simActiveNameEl.textContent = t.name;
+  simCounterEl.textContent = `${(idx >= 0 ? idx : 0) + 1} / ${THEMES.length}`;
 
-  simChipsEl.querySelectorAll(".sim-chip").forEach((c) => {
-    const isAct = c.dataset.id === t.id;
-    c.classList.toggle("active", isAct);
-    if (isAct) {
-      const left = c.offsetLeft;
-      const right = left + c.offsetWidth;
-      const viewLeft = simChipsEl.scrollLeft;
-      const viewRight = viewLeft + simChipsEl.clientWidth;
-      if (left < viewLeft + 16 || right > viewRight - 16) {
-        simChipsEl.scrollTo({ left: Math.max(0, left - (simChipsEl.clientWidth - c.clientWidth) / 2), behavior: "smooth" });
-      }
-    }
-  });
   simCopyBtn.onclick = () => copyUrl(RAW_BASE + t.json, simCopyBtn);
   simInspectBtn.onclick = () => openDialog(THEMES.indexOf(t));
 
   await preloadThemeBadges(t);
   if (seq !== simRenderSeq) return;
 
-  const badgeRows = simStreamsEl.querySelectorAll(".sim-row-badges");
+  const layers = [simLayer0, simLayer1];
   if (!animate) {
-    SIM_ROWS.forEach((row, rIdx) => {
-      const layers = badgeRows[rIdx].querySelectorAll(".sim-layer");
-      const front = layers[frontLayerIdx];
-      const imgs = front.querySelectorAll("img");
-      row.badges.forEach((b, bIdx) => { imgs[bIdx].style.display = ""; imgs[bIdx].src = `${t.dir}/${b}.webp`; });
-    });
+    const imgs = layers[frontLayerIdx].querySelectorAll("img");
+    HERO_BADGES.forEach((b, i) => { imgs[i].style.display = ""; imgs[i].src = `${t.dir}/${b}.webp`; });
   } else {
     const nextLayerIdx = 1 - frontLayerIdx;
-    SIM_ROWS.forEach((row, rIdx) => {
-      const layers = badgeRows[rIdx].querySelectorAll(".sim-layer");
-      const incoming = layers[nextLayerIdx];
-      const imgs = incoming.querySelectorAll("img");
-      row.badges.forEach((b, bIdx) => { imgs[bIdx].style.display = ""; imgs[bIdx].src = `${t.dir}/${b}.webp`; });
-    });
+    const imgs = layers[nextLayerIdx].querySelectorAll("img");
+    HERO_BADGES.forEach((b, i) => { imgs[i].style.display = ""; imgs[i].src = `${t.dir}/${b}.webp`; });
 
     requestAnimationFrame(() => {
-      badgeRows.forEach((rowEl) => {
-        const layers = rowEl.querySelectorAll(".sim-layer");
-        layers[frontLayerIdx].classList.remove("layer-front");
-        layers[frontLayerIdx].classList.add("layer-back");
-        layers[nextLayerIdx].classList.remove("layer-back");
-        layers[nextLayerIdx].classList.add("layer-front");
-      });
+      layers[frontLayerIdx].classList.remove("layer-front");
+      layers[frontLayerIdx].classList.add("layer-back");
+      layers[nextLayerIdx].classList.remove("layer-back");
+      layers[nextLayerIdx].classList.add("layer-front");
       frontLayerIdx = nextLayerIdx;
     });
   }
@@ -246,16 +198,6 @@ function resetSimTimer() {
 }
 
 function initSimChips() {
-  simChipsEl.innerHTML = THEMES.map((t) =>
-    `<button type="button" class="sim-chip${t.id === simThemeId ? " active" : ""}" data-id="${t.id}">${t.name}</button>`
-  ).join("");
-  simChipsEl.addEventListener("click", (e) => {
-    const chip = e.target.closest(".sim-chip");
-    if (chip) {
-      renderSimulator(chip.dataset.id);
-      resetSimTimer();
-    }
-  });
   simAutoBtn.addEventListener("click", () => {
     autoShuffleEnabled = !autoShuffleEnabled;
     simAutoBtn.textContent = autoShuffleEnabled ? "Auto: On" : "Auto: Off";
