@@ -51,7 +51,8 @@
         <div class="cinema-frame reveal">
           <div class="cinema-topbar">
             <div class="cinema-title-group">
-              <span>Nuvio Player — Live Preview</span>
+              <span class="cinema-kicker">LIVE PREVIEW</span>
+              <strong id="sim-active-name" class="cinema-active-name">GTA 6 Vice City Sunset</strong>
             </div>
             <div class="cinema-cta-group">
               <button type="button" id="sim-auto-btn" class="btn btn-glass btn-xs" aria-pressed="true">Auto: On</button>
@@ -61,7 +62,11 @@
           </div>
 
           <div class="sim-streams" id="sim-streams"></div>
-          <div class="sim-theme-chips" id="sim-theme-chips" role="tablist" aria-label="Switch live preview theme"></div>
+          <div class="sim-dock">
+            <button type="button" id="sim-prev-btn" class="dock-arrow" aria-label="Previous theme">‹</button>
+            <div class="sim-theme-chips" id="sim-theme-chips" role="tablist" aria-label="Switch live preview theme"></div>
+            <button type="button" id="sim-next-btn" class="dock-arrow" aria-label="Next theme">›</button>
+          </div>
         </div>
       </div>
     </section>

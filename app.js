@@ -36,15 +36,18 @@ const FLAGSHIPS = [
 
 const SIM_ROWS = [
   {
-    release: "Dune.Part.Two.2024.2160p.UHD.BluRay.REMUX.DV.TrueHD.7.1.Atmos.HEVC.MKV",
+    title: "Dune: Part Two (2024)",
+    meta: "Real-Debrid • 2160p UHD REMUX • 68.4 GB",
     badges: ["4k", "remux", "dolby-vision", "dolby-atmos", "warnerbros", "english-flag"]
   },
   {
-    release: "Severance.S02E05.1080p.ATVP.WEB-DL.DDP5.1.HDR10.H265.MKV",
+    title: "Severance · S02E05",
+    meta: "TorBox • 1080p WEB-DL • 4.2 GB",
     badges: ["1080p", "web-dl", "hdr10", "5.1", "appletv", "cached"]
   },
   {
-    release: "Formula.1.Monaco.GP.2026.LIVE.1080p.60fps.HDTV.English.TS",
+    title: "Formula 1 · Monaco Grand Prix",
+    meta: "Live Sports Feed • 60 FPS",
     badges: ["live", "1080p", "60fps", "english-flag"]
   }
 ];
@@ -65,9 +68,12 @@ const savedCountEl = document.getElementById("saved-count");
 
 const simStreamsEl = document.getElementById("sim-streams");
 const simChipsEl = document.getElementById("sim-theme-chips");
+const simActiveNameEl = document.getElementById("sim-active-name");
 const simCopyBtn = document.getElementById("sim-copy-btn");
 const simInspectBtn = document.getElementById("sim-inspect-btn");
 const simAutoBtn = document.getElementById("sim-auto-btn");
+const simPrevBtn = document.getElementById("sim-prev-btn");
+const simNextBtn = document.getElementById("sim-next-btn");
 const cinemaFrameEl = document.querySelector(".cinema-frame");
 
 const flagTabsEl = document.getElementById("flagship-tabs");
@@ -157,7 +163,10 @@ let frontLayerIdx = 0;
 function buildSimRowsOnce() {
   simStreamsEl.innerHTML = SIM_ROWS.map((row, idx) => `
     <div class="sim-row">
-      <div class="sim-release">${row.release}</div>
+      <div class="sim-row-head">
+        <span class="sim-movie-title">${row.title}</span>
+        <span class="sim-movie-meta">${row.meta}</span>
+      </div>
       <div class="sim-row-badges" data-sim-row="${idx}">
         <div class="sim-layer layer-front">${row.badges.map((b) => `<img alt="${b}" />`).join("")}</div>
         <div class="sim-layer layer-back">${row.badges.map((b) => `<img alt="${b}" />`).join("")}</div>
@@ -170,6 +179,7 @@ async function renderSimulator(themeId, animate = true) {
   const seq = ++simRenderSeq;
   simThemeId = themeId;
   const t = THEMES.find((x) => x.id === themeId) || THEMES[0];
+  simActiveNameEl.textContent = t.name;
 
   simChipsEl.querySelectorAll(".sim-chip").forEach((c) => {
     const isAct = c.dataset.id === t.id;
@@ -251,6 +261,16 @@ function initSimChips() {
     simAutoBtn.textContent = autoShuffleEnabled ? "Auto: On" : "Auto: Off";
     simAutoBtn.setAttribute("aria-pressed", String(autoShuffleEnabled));
     if (autoShuffleEnabled) resetSimTimer();
+  });
+  simPrevBtn.addEventListener("click", () => {
+    const cur = THEMES.findIndex((x) => x.id === simThemeId);
+    renderSimulator(THEMES[(cur - 1 + THEMES.length) % THEMES.length].id, true);
+    resetSimTimer();
+  });
+  simNextBtn.addEventListener("click", () => {
+    const cur = THEMES.findIndex((x) => x.id === simThemeId);
+    renderSimulator(THEMES[(cur + 1) % THEMES.length].id, true);
+    resetSimTimer();
   });
   cinemaFrameEl.addEventListener("mouseenter", () => { simHoverPaused = true; });
   cinemaFrameEl.addEventListener("mouseleave", () => { simHoverPaused = false; });
