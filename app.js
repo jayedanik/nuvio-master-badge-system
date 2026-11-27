@@ -249,6 +249,7 @@ async function renderSimulator(themeId, animate = true) {
   simCounterEl.textContent = `${safeIdx + 1} / ${THEMES.length}`;
   simMovieTitleEl.textContent = titleObj.title;
   simMovieMetaEl.textContent = titleObj.meta;
+  if (cinemaFrameEl) cinemaFrameEl.style.setProperty("--theme-accent", t.accent === "#1d1d1f" ? "#2997ff" : t.accent);
 
   simCopyBtn.onclick = () => copyUrl(RAW_BASE + t.json, simCopyBtn);
   simInspectBtn.onclick = () => openDialog(safeIdx, titleObj.release);
