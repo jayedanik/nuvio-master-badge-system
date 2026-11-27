@@ -446,8 +446,11 @@ function openDialog(idx, customRelease) {
   currentDialogIndex = (idx + THEMES.length) % THEMES.length;
   const t = THEMES[currentDialogIndex];
   const titleObj = LIVE_TITLES[currentDialogIndex % LIVE_TITLES.length];
+  const glowPair = THEME_GLOWS[t.id] || ["#2997ff", "#af52de"];
+  dialogEl.style.setProperty("--dlg-glow-1", glowPair[0]);
+  dialogEl.style.setProperty("--dlg-glow-2", glowPair[1]);
   releaseInput.value = customRelease || titleObj.release;
-  dlgCat.textContent = CAT_LABELS[t.cat];
+  dlgCat.textContent = `${CAT_LABELS[t.cat]} · 517 Badges · ${currentDialogIndex + 1} of ${THEMES.length}`;
   dlgTitle.textContent = t.name;
   dlgImg.src = `previews/preview-${t.id}.jpg`;
   dlgImg.alt = `${t.name} 4K preview`;
@@ -497,15 +500,17 @@ document.body.addEventListener("click", (e) => {
   if (openBtn && !openBtn.closest(".inspector-dialog")) openDialog(Number(openBtn.dataset.open));
 });
 
-document.querySelectorAll(".dlg-tab").forEach((tab) => {
-  tab.addEventListener("click", () => {
-    document.querySelectorAll(".dlg-tab").forEach((t) => t.classList.remove("active"));
-    tab.classList.add("active");
-    const target = tab.dataset.tab;
-    document.getElementById("tab-showcase").hidden = target !== "showcase";
-    document.getElementById("tab-tester").hidden = target !== "tester";
+const dlgToggleTesterBtn = document.getElementById("dlg-toggle-tester");
+if (dlgToggleTesterBtn) {
+  dlgToggleTesterBtn.addEventListener("click", () => {
+    const showEl = document.getElementById("tab-showcase");
+    const testEl = document.getElementById("tab-tester");
+    const showingTester = !testEl.hidden;
+    showEl.hidden = !showingTester;
+    testEl.hidden = showingTester;
+    dlgToggleTesterBtn.textContent = showingTester ? "Test Release" : "4K Showcase";
   });
-});
+}
 
 releaseInput.addEventListener("input", () => runReleaseTester(THEMES[currentDialogIndex]));
 document.querySelectorAll(".preset-chip").forEach((chip) => {

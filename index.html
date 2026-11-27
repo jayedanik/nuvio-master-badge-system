@@ -243,26 +243,20 @@
   <!-- Inspector Dialog -->
   <dialog id="inspector-dialog" class="inspector-dialog" aria-labelledby="dlg-title">
     <div class="dlg-shell">
-      <div class="dlg-head">
-        <div class="dlg-title-group">
-          <span id="dlg-cat" class="dlg-cat"></span>
-          <h3 id="dlg-title"></h3>
-        </div>
+      <div class="dlg-ambient" aria-hidden="true"></div>
+      <div class="dlg-topbar">
+        <span id="dlg-cat" class="dlg-cat"></span>
         <div class="dlg-head-actions">
-          <button type="button" id="dlg-prev" class="btn btn-glass btn-xs" aria-label="Previous theme">← Prev</button>
-          <button type="button" id="dlg-next" class="btn btn-glass btn-xs" aria-label="Next theme">Next →</button>
-          <button type="button" id="dlg-close" class="btn btn-glass btn-xs" aria-label="Close inspector">✕</button>
+          <button type="button" id="dlg-prev" class="dlg-nav-circle" aria-label="Previous theme">‹</button>
+          <button type="button" id="dlg-next" class="dlg-nav-circle" aria-label="Next theme">›</button>
+          <button type="button" id="dlg-close" class="dlg-nav-circle" aria-label="Close inspector">✕</button>
         </div>
-      </div>
-
-      <div class="dlg-tabs" role="tablist">
-        <button type="button" class="dlg-tab active" data-tab="showcase">4K Showcase</button>
-        <button type="button" class="dlg-tab" data-tab="tester">Live Release Tester &amp; Badges</button>
       </div>
 
       <div id="tab-showcase" class="dlg-panel active">
-        <img id="dlg-img" class="dlg-4k-img" src="" alt="" />
-        <p id="dlg-desc" class="dlg-desc"></p>
+        <div class="dlg-stage">
+          <img id="dlg-img" class="dlg-4k-img" src="" alt="" />
+        </div>
       </div>
 
       <div id="tab-tester" class="dlg-panel" hidden>
@@ -289,10 +283,17 @@
         </div>
       </div>
 
-      <div class="dlg-url-row">
-        <code id="dlg-url"></code>
-        <button type="button" id="dlg-copy" class="btn btn-blue btn-sm">Copy JSON URL</button>
+      <div class="dlg-footer-band">
+        <div class="dlg-info">
+          <h3 id="dlg-title"></h3>
+          <p id="dlg-desc" class="dlg-desc"></p>
+        </div>
+        <div class="dlg-footer-actions">
+          <button type="button" id="dlg-toggle-tester" class="btn-apple-quiet">Test Release</button>
+          <button type="button" id="dlg-copy" class="btn-apple-white">Copy JSON URL</button>
+        </div>
       </div>
+      <code id="dlg-url" hidden></code>
     </div>
   </dialog>
 
