@@ -660,7 +660,7 @@ if (location.hash.startsWith("#theme=")) {
         const warpX = fbm(nx + 1.3, ny + 2.7, gridPeriod);
         const warpY = fbm(nx + 4.1, ny + 0.9, gridPeriod);
         const n = fbm(nx + warpX * 1.1, ny + warpY * 1.1, gridPeriod);
-        const density = Math.max(0, Math.min(1, (n - 0.22) * 1.5));
+        const density = Math.max(0, Math.min(1, (n - 0.14) * 2.1));
         const alpha = Math.round(density * 255);
 
         const p = (y * size + x) * 4;
@@ -788,7 +788,7 @@ if (location.hash.startsWith("#theme=")) {
     // 3. Composite onto main hero canvas
     ctx.save();
     ctx.globalCompositeOperation = "screen";
-    ctx.globalAlpha = 0.58;
+    ctx.globalAlpha = 0.34;
     ctx.drawImage(plumeCanvas, 0, 0, width, height);
     ctx.restore();
   }
