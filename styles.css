@@ -25,7 +25,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.container { width: min(1240px, calc(100% - 40px)); margin-inline: auto; }
+.container { width: min(1240px, calc(100% - clamp(28px, 5vw, 48px))); margin-inline: auto; }
 
 /* Crystal-Clear Apple .clear Glass Fixed Floating Pill Header */
 .site-header {
@@ -531,50 +531,59 @@ body {
   .flag-slide { position: relative; grid-template-columns: 1fr; }
   .flag-slide > * { min-width: 0; }
   .flag-slide.layer-back { display: none; }
-  .flag-media { width: 100%; padding: 14px 14px 0; height: auto; }
-  .flag-media img { width: 100%; height: auto; }
-  .flag-info { padding: 20px 20px 22px; }
-  .flag-info h3 { white-space: normal; }
-  .bento-specs { grid-template-columns: 1fr; }
+  .flag-media { width: 100%; padding: 18px 18px 0; aspect-ratio: 16 / 9; height: auto; }
+  .flag-media img { width: 100%; height: 100%; object-fit: contain; box-shadow: none; }
+  .flag-info { padding: 20px 22px 24px; gap: 10px; }
+  .flag-info h3 { white-space: normal; min-height: 2.5em; display: flex; align-items: center; }
+  .flag-info p { min-height: 2.9em; }
+  .bento-specs { grid-template-columns: 1fr; gap: 16px; }
   .spec-tile.wide, .spec-tile.wide-accent { grid-column: auto; }
 }
 @media (max-width: 640px) {
-  .container { width: calc(100% - 24px); }
-  .site-header { height: 46px; top: 8px; width: calc(100% - 20px); }
-  .header-inner { padding-inline: 14px; }
+  .site-header { height: 48px; top: 10px; width: calc(100% - 24px); }
+  .header-inner { padding-inline: 16px; }
   .nav-link { display: none; }
 
-  .hero { padding: 74px 0 28px; }
-  .hero-title { font-size: 2.15rem; }
-  .hero-sub { font-size: 0.94rem; margin-bottom: 20px; }
-  .hero-actions { margin-bottom: 24px; gap: 8px; }
-  .hero-actions .btn { padding: 9px 16px; font-size: 0.84rem; }
+  .hero { padding: 80px 0 36px; }
+  .hero-title { font-size: clamp(2rem, 8.5vw, 2.5rem); }
+  .hero-sub { font-size: 0.96rem; margin-bottom: 24px; padding-inline: 4px; }
+  .hero-actions { margin-bottom: 28px; gap: 10px; }
+  .hero-actions .btn { padding: 10px 18px; font-size: 0.86rem; }
 
-  .cinema-frame { padding: 18px 16px; border-radius: 22px; }
-  .cinema-stage-top { flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 16px; }
+  .cinema-frame { padding: 22px 18px 20px; border-radius: 24px; }
+  .cinema-stage-top { flex-direction: column; align-items: flex-start; gap: 12px; margin-bottom: 18px; }
   .cinema-movie { width: 100%; }
-  .cinema-movie-title { font-size: 1.32rem; white-space: normal; }
-  .cinema-movie-meta { font-size: 0.8rem; white-space: normal; }
-  .cinema-cta-group { width: 100%; }
-  .cinema-cta-group .btn-xs { padding: 7px 14px; font-size: 0.8rem; }
-  .cinema-badges-stage { height: 76px; margin-bottom: 16px; }
-  .sim-layer { flex-wrap: wrap; gap: 7px; }
+  .cinema-movie-title {
+    font-size: 1.28rem; line-height: 1.2; white-space: normal;
+    height: 2.45em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .cinema-movie-meta {
+    font-size: 0.82rem; line-height: 1.35; white-space: normal;
+    height: 2.7em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .cinema-cta-group { width: 100%; gap: 10px; }
+  .cinema-cta-group .btn-xs { padding: 8px 15px; font-size: 0.82rem; }
+  .cinema-badges-stage { height: 76px; margin-bottom: 18px; }
+  .sim-layer { flex-wrap: wrap; gap: 8px; }
   .sim-layer img { height: 28px; }
-  .cinema-dock { flex-direction: column; align-items: stretch; gap: 10px; }
-  .glass-pill-dock { width: 100%; justify-content: space-between; }
+  .cinema-dock { flex-direction: column; align-items: stretch; gap: 12px; }
+  .glass-pill-dock { width: 100%; justify-content: space-between; padding: 6px 8px; }
   .dock-center { min-width: 0; flex: 1; justify-content: center; gap: 8px; padding-inline: 6px; }
   .dock-theme-name { font-size: 0.84rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .dock-counter { flex-shrink: 0; }
-  #sim-auto-btn { align-self: center; padding: 7px 16px; font-size: 0.8rem; }
+  #sim-auto-btn { align-self: center; padding: 8px 18px; font-size: 0.82rem; }
 
-  .spotlight-section, .specs-section, .themes-section, .install-section { padding: 52px 0; }
-  .sticky-toolbar-light { position: static; border-radius: 20px; padding: 12px; }
-  .toolbar-right { width: 100%; }
+  .spotlight-section, .specs-section, .themes-section, .install-section { padding: 64px 0; }
+  .chapter-head, .section-intro, .catalog-head { margin-bottom: 26px; }
+  .sticky-toolbar-light { position: static; border-radius: 22px; padding: 14px; gap: 12px; }
+  .filter-pills { gap: 8px; }
+  .toolbar-right { width: 100%; gap: 10px; }
   .search-inline { flex: 1; }
-  .search-inline input { width: 100%; padding-right: 13px; }
+  .search-inline input { width: 100%; padding: 8px 14px; }
   .kbd-hint { display: none; }
-  .theme-grid { grid-template-columns: 1fr; gap: 16px; }
-  .fav-btn { min-width: 34px; min-height: 34px; display: grid; place-items: center; }
+  .theme-grid { grid-template-columns: 1fr; gap: 20px; }
+  .card-body { padding: 18px 20px 22px; gap: 11px; }
+  .fav-btn { min-width: 36px; min-height: 36px; display: grid; place-items: center; }
   .dlg-head { flex-direction: column; align-items: flex-start; }
   .preset-chip { padding: 6px 12px; font-size: 0.78rem; }
 }
