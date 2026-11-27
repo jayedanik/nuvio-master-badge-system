@@ -260,6 +260,55 @@ def render_html_preview(cfg):
         bg_style = f"url('data:image/jpeg;base64,{b64_aurora}') center / cover no-repeat, #08090d"
     elif bg_type == "frieren":
         bg_style = f"linear-gradient(180deg, rgba(6, 12, 8, 0.74) 0%, rgba(5, 8, 6, 0.82) 100%), url('data:image/jpeg;base64,{b64_frieren}') center / cover no-repeat, #08090d"
+    elif bg_type == "synthwave":
+        synth_svg = """<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2400 960' preserveAspectRatio='xMidYMid slice'>
+  <defs>
+    <linearGradient id='sw_sky' x1='0' y1='0' x2='0' y2='1'>
+      <stop offset='0%' stop-color='#080316'/>
+      <stop offset='52%' stop-color='#190836'/>
+      <stop offset='72%' stop-color='#4a0e5c'/>
+      <stop offset='100%' stop-color='#090418'/>
+    </linearGradient>
+    <linearGradient id='sw_sun' x1='0' y1='0' x2='0' y2='1'>
+      <stop offset='0%' stop-color='#ffe05c' stop-opacity='0.68'/>
+      <stop offset='55%' stop-color='#ff2aa5' stop-opacity='0.48'/>
+      <stop offset='100%' stop-color='#7c3aed' stop-opacity='0.12'/>
+    </linearGradient>
+    <clipPath id='sun_bars'>
+      <rect x='1580' y='80' width='480' height='190'/>
+      <rect x='1580' y='282' width='480' height='46'/>
+      <rect x='1580' y='342' width='480' height='34'/>
+      <rect x='1580' y='392' width='480' height='24'/>
+      <rect x='1580' y='432' width='480' height='16'/>
+    </clipPath>
+    <radialGradient id='sw_vig' cx='35%' cy='48%' r='72%'>
+      <stop offset='0%' stop-color='#070314' stop-opacity='0.52'/>
+      <stop offset='70%' stop-color='#070314' stop-opacity='0.68'/>
+      <stop offset='100%' stop-color='#05020e' stop-opacity='0.88'/>
+    </radialGradient>
+  </defs>
+  <rect width='2400' height='960' fill='url(#sw_sky)'/>
+  <circle cx='1820' cy='310' r='220' fill='url(#sw_sun)' clip-path='url(#sun_bars)'/>
+  <polygon points='0,560 360,410 680,530 1040,380 1420,540 1760,420 2140,510 2400,430 2400,560' fill='#0c051e' fill-opacity='0.88'/>
+  <line x1='0' y1='560' x2='2400' y2='560' stroke='#ff2aa5' stroke-width='3' stroke-opacity='0.65'/>
+  <g stroke='#00ebff' stroke-opacity='0.26' stroke-width='2'>
+    <line x1='0' y1='610' x2='2400' y2='610'/>
+    <line x1='0' y1='675' x2='2400' y2='675'/>
+    <line x1='0' y1='755' x2='2400' y2='755'/>
+    <line x1='0' y1='855' x2='2400' y2='855'/>
+    <line x1='1200' y1='560' x2='-300' y2='960'/>
+    <line x1='1200' y1='560' x2='200' y2='960'/>
+    <line x1='1200' y1='560' x2='620' y2='960'/>
+    <line x1='1200' y1='560' x2='960' y2='960'/>
+    <line x1='1200' y1='560' x2='1440' y2='960'/>
+    <line x1='1200' y1='560' x2='1780' y2='960'/>
+    <line x1='1200' y1='560' x2='2200' y2='960'/>
+    <line x1='1200' y1='560' x2='2700' y2='960'/>
+  </g>
+  <rect width='2400' height='960' fill='url(#sw_vig)'/>
+</svg>"""
+        b64_sw = base64.b64encode(synth_svg.encode("utf-8")).decode("utf-8")
+        bg_style = f"url('data:image/svg+xml;base64,{b64_sw}') center / cover no-repeat, #080316"
     elif bg_type == "gta6_vice":
         gta_svg = """<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2400 960' preserveAspectRatio='xMidYMid slice'>
   <defs>
