@@ -610,20 +610,20 @@ if (location.hash.startsWith("#theme=")) {
   let simTime = 0;
   let steamSpawnAcc = 0;
 
-  // Pre-rendered soft white steam puff sprite (zero per-frame blur cost)
+  // Pre-rendered bright soft white steam puff sprite (zero per-frame blur cost)
   const puffSize = 128;
   const puffCanvas = document.createElement("canvas");
   puffCanvas.width = puffSize;
   puffCanvas.height = puffSize;
   const pCtx = puffCanvas.getContext("2d");
   const puffGrad = pCtx.createRadialGradient(
-    puffSize * 0.5, puffSize * 0.5, puffSize * 0.04,
+    puffSize * 0.5, puffSize * 0.5, puffSize * 0.02,
     puffSize * 0.5, puffSize * 0.5, puffSize * 0.5
   );
-  puffGrad.addColorStop(0, "rgba(255, 255, 255, 0.78)");
-  puffGrad.addColorStop(0.32, "rgba(242, 248, 255, 0.42)");
-  puffGrad.addColorStop(0.68, "rgba(215, 232, 255, 0.12)");
-  puffGrad.addColorStop(1, "rgba(215, 232, 255, 0)");
+  puffGrad.addColorStop(0, "rgba(255, 255, 255, 0.92)");
+  puffGrad.addColorStop(0.28, "rgba(245, 250, 255, 0.56)");
+  puffGrad.addColorStop(0.62, "rgba(220, 236, 255, 0.18)");
+  puffGrad.addColorStop(1, "rgba(220, 236, 255, 0)");
   pCtx.fillStyle = puffGrad;
   pCtx.fillRect(0, 0, puffSize, puffSize);
 
@@ -631,22 +631,22 @@ if (location.hash.startsWith("#theme=")) {
     return -(Math.cos(Math.PI * Math.max(0, Math.min(1, x))) - 1) / 2;
   }
 
-  // Smooth open/close breathing cycle (~7.8s)
+  // Smooth subtle crack-open & close cycle (~6.6s)
   function getCycleState(time) {
-    const period = 7.8;
+    const period = 6.6;
     const u = (time % period) / period;
     let open = 0;
     let venting = 0;
 
-    if (u < 0.40) {
-      const p = u / 0.40;
+    if (u < 0.36) {
+      const p = u / 0.36;
       open = easeInOutSine(p);
-      venting = Math.sin(p * Math.PI) * (0.4 + 0.6 * open);
-    } else if (u < 0.54) {
+      venting = Math.sin(p * Math.PI) * (0.45 + 0.55 * open);
+    } else if (u < 0.48) {
       open = 1;
-      venting = 0.25 * (1 - (u - 0.40) / 0.14);
-    } else if (u < 0.90) {
-      const p = (u - 0.54) / 0.36;
+      venting = 0.45 * (1 - (u - 0.36) / 0.12);
+    } else if (u < 0.84) {
+      const p = (u - 0.48) / 0.36;
       open = 1 - easeInOutSine(p);
       venting = 0;
     } else {
@@ -658,8 +658,8 @@ if (location.hash.startsWith("#theme=")) {
 
   function getLocalOpen(index, open) {
     const tNorm = index / Math.max(1, slatCount - 1);
-    const waveOffset = Math.sin(tNorm * Math.PI) * 0.12;
-    return Math.max(0, Math.min(1, open * 1.12 - waveOffset));
+    const waveOffset = Math.sin(tNorm * Math.PI) * 0.10;
+    return Math.max(0, Math.min(1, open * 1.10 - waveOffset));
   }
 
   function buildScene() {
@@ -671,38 +671,35 @@ if (location.hash.startsWith("#theme=")) {
     canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    slatCount = width <= 768 ? 18 : 32;
+    slatCount = width <= 768 ? 18 : 30;
     steamParticles = [];
   }
 
   function spawnSteamBurst(count, open) {
     const isMobile = width <= 768;
-    const maxParticles = isMobile ? 54 : 96;
+    const maxParticles = isMobile ? 75 : 130;
     const slatW = width / slatCount;
 
     for (let i = 0; i < count; i++) {
       if (steamParticles.length >= maxParticles) break;
-      // Pick a gap between slat idx and idx+1
       const idx = Math.floor(Math.random() * Math.max(1, slatCount - 1));
       const localOpen = getLocalOpen(idx, open);
-      if (localOpen < 0.12) continue;
+      if (localOpen < 0.10) continue;
 
       const gapCenterX = (idx + 1) * slatW;
-      const gapW = slatW * localOpen * 0.72;
-      const spawnX = gapCenterX + (Math.random() - 0.5) * Math.max(2, gapW * 0.45);
-      const spawnY = height * (0.22 + Math.random() * 0.72);
-      const initialSize = Math.max(14, gapW * 1.15);
+      const spawnY = height * (0.18 + Math.random() * 0.74);
 
       steamParticles.push({
-        x: spawnX,
+        x: gapCenterX + (Math.random() - 0.5) * 4,
         y: spawnY,
-        vx: (Math.random() - 0.35) * 20,
-        vy: -(28 + Math.random() * 38),
-        size: initialSize,
+        vx: (Math.random() - 0.5) * 28,
+        vy: -(48 + Math.random() * 56), // brisk hot steam rise
+        size: (isMobile ? 22 : 30) + Math.random() * 18,
         grow: (isMobile ? 2.4 : 3.0) + Math.random() * 1.2,
-        maxAlpha: 0.22 + Math.random() * 0.20,
+        maxAlpha: 0.34 + Math.random() * 0.24,
+        seed: Math.random() * Math.PI * 2,
         age: 0,
-        life: 2.6 + Math.random() * 2.2
+        life: 1.9 + Math.random() * 1.6
       });
     }
   }
@@ -715,28 +712,48 @@ if (location.hash.startsWith("#theme=")) {
         steamParticles.splice(i, 1);
         continue;
       }
-      const progress = p.age / p.life;
-      const breeze = Math.sin(time * 0.9 + p.y * 0.006) * 14;
-      p.x += (p.vx + breeze) * dt;
+      const curl = Math.sin(time * 2.4 + p.seed + p.y * 0.015) * 22;
+      p.x += (p.vx + curl) * dt;
       p.y += p.vy * dt;
+      p.vy *= 1 - 0.25 * dt;
     }
   }
 
-  // Draw steam with layer split: young/escaping steam behind slats, older/risen wisps curling in front
-  function drawSteamLayer(frontPass) {
+  function drawHotSteam(open) {
+    const slatW = width / slatCount;
+
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+
+    // Luminous hot vapor glow right along the cracked-open slits
+    if (open > 0.08) {
+      for (let i = 0; i < slatCount - 1; i++) {
+        const localOpen = getLocalOpen(i, open);
+        if (localOpen < 0.08) continue;
+        const gapCenterX = (i + 1) * slatW;
+        const glowW = Math.max(8, slatW * localOpen * 0.45);
+        const slitGrad = ctx.createRadialGradient(
+          gapCenterX, height * 0.55, 1,
+          gapCenterX, height * 0.55, glowW * 2.4
+        );
+        slitGrad.addColorStop(0, `rgba(255, 255, 255, ${0.26 * localOpen})`);
+        slitGrad.addColorStop(0.5, `rgba(215, 236, 255, ${0.10 * localOpen})`);
+        slitGrad.addColorStop(1, "rgba(215, 236, 255, 0)");
+        ctx.fillStyle = slitGrad;
+        ctx.fillRect(gapCenterX - glowW * 2.5, height * 0.12, glowW * 5, height * 0.82);
+      }
+    }
+
+    // Billowing hot white steam plumes escaping from the slits
     for (let i = 0; i < steamParticles.length; i++) {
       const p = steamParticles[i];
       const progress = p.age / p.life;
-      const isFront = progress > 0.38;
-      if (isFront !== frontPass) continue;
+      const fadeIn = Math.min(1, progress / 0.12);
+      const fadeOut = Math.pow(1 - progress, 1.3);
+      const alpha = p.maxAlpha * fadeIn * fadeOut;
+      if (alpha <= 0.005) continue;
 
-      const fadeIn = Math.min(1, progress / 0.14);
-      const fadeOut = Math.pow(1 - progress, 1.35);
-      const layerScale = frontPass ? 0.55 : 1.0;
-      const alpha = p.maxAlpha * fadeIn * fadeOut * layerScale;
-      if (alpha <= 0.004) continue;
-
-      const curSize = p.size * (0.65 + progress * p.grow);
+      const curSize = p.size * (0.6 + progress * p.grow);
       ctx.globalAlpha = alpha;
       ctx.drawImage(
         puffCanvas,
@@ -746,39 +763,22 @@ if (location.hash.startsWith("#theme=")) {
         curSize
       );
     }
-    ctx.globalAlpha = 1;
+
+    ctx.restore();
   }
 
   function drawFlutedGlass(open, time) {
     const slatW = width / slatCount;
 
-    // Subtle luminous white vapor backlight inside the open gaps between slats
-    if (open > 0.08) {
-      for (let i = 0; i < slatCount - 1; i++) {
-        const localOpen = getLocalOpen(i, open);
-        if (localOpen < 0.08) continue;
-        const gapCenterX = (i + 1) * slatW;
-        const gapW = slatW * localOpen * 0.72;
-        const gapGlow = ctx.createLinearGradient(0, height * 0.15, 0, height * 0.92);
-        gapGlow.addColorStop(0, "rgba(255, 255, 255, 0)");
-        gapGlow.addColorStop(0.45, `rgba(235, 245, 255, ${0.14 * localOpen})`);
-        gapGlow.addColorStop(0.8, `rgba(255, 255, 255, ${0.18 * localOpen})`);
-        gapGlow.addColorStop(1, "rgba(255, 255, 255, 0)");
-        ctx.fillStyle = gapGlow;
-        ctx.fillRect(gapCenterX - gapW * 0.5, 0, gapW, height);
-      }
-    }
-
     for (let i = 0; i < slatCount; i++) {
       const tNorm = i / Math.max(1, slatCount - 1);
       const localOpen = getLocalOpen(i, open);
 
-      // Louver rotation shrinks visible face width & opens glowing gaps between slats
-      const faceW = slatW * (1 - localOpen * 0.72);
+      // Subtle crack-open (max ~24% gap, never fully wide open)
+      const faceW = slatW * (1 - localOpen * 0.24);
       const xCenter = (i + 0.5) * slatW;
       const xLeft = xCenter - faceW * 0.5;
 
-      // Optical fluted-glass refraction wave (warm coral -> electric blue -> deep violet)
       const wavePhase = Math.sin(tNorm * 4.2 + time * 0.35);
       const yShift = height * (0.38 + wavePhase * 0.16);
 
@@ -786,16 +786,15 @@ if (location.hash.startsWith("#theme=")) {
       const coralAlpha = 0.14 * Math.max(0, 1 - tNorm * 1.55);
       const bluePos = Math.max(0.18, Math.min(0.65, yShift / height));
       vGrad.addColorStop(0, `rgba(255, 92, 68, ${coralAlpha})`);
-      vGrad.addColorStop(bluePos, `rgba(41, 151, 255, ${0.22 + 0.10 * (1 - localOpen * 0.5)})`);
+      vGrad.addColorStop(bluePos, `rgba(41, 151, 255, ${0.22 + 0.06 * (1 - localOpen)})`);
       vGrad.addColorStop(Math.min(0.88, bluePos + 0.24), "rgba(138, 68, 226, 0.18)");
       vGrad.addColorStop(1, "rgba(6, 8, 16, 0.55)");
 
       ctx.fillStyle = vGrad;
       ctx.fillRect(xLeft, 0, faceW, height);
 
-      // Horizontal fluted-glass bevel shading (bright specular left ridge -> dark shadow right edge)
       const hGrad = ctx.createLinearGradient(xLeft, 0, xLeft + faceW, 0);
-      hGrad.addColorStop(0, `rgba(255, 255, 255, ${0.24 + localOpen * 0.14})`);
+      hGrad.addColorStop(0, `rgba(255, 255, 255, ${0.24 + localOpen * 0.12})`);
       hGrad.addColorStop(0.16, "rgba(185, 228, 255, 0.10)");
       hGrad.addColorStop(0.55, "rgba(255, 255, 255, 0.01)");
       hGrad.addColorStop(0.88, "rgba(0, 0, 0, 0.38)");
@@ -804,7 +803,6 @@ if (location.hash.startsWith("#theme=")) {
       ctx.fillStyle = hGrad;
       ctx.fillRect(xLeft, 0, faceW, height);
 
-      // Crisp 1px glass edge highlight on the leading ridge
       ctx.fillStyle = `rgba(255, 255, 255, ${0.22 + localOpen * 0.16})`;
       ctx.fillRect(xLeft, 0, 1.1, height);
     }
@@ -834,8 +832,8 @@ if (location.hash.startsWith("#theme=")) {
 
     const { open, venting } = getCycleState(simTime);
 
-    if (venting > 0.05) {
-      const spawnRate = (width <= 768 ? 22 : 34) * venting;
+    if (venting > 0.04) {
+      const spawnRate = (width <= 768 ? 38 : 62) * venting;
       steamSpawnAcc += spawnRate * dt;
       const toSpawn = Math.floor(steamSpawnAcc);
       if (toSpawn > 0) {
@@ -847,12 +845,8 @@ if (location.hash.startsWith("#theme=")) {
     updateSteam(dt, simTime);
 
     ctx.clearRect(0, 0, width, height);
-    // 1. Emerging white steam behind/inside the gaps between the glass slats
-    drawSteamLayer(false);
-    // 2. Fluted glass slats (occlude/refract the steam behind them)
     drawFlutedGlass(open, simTime);
-    // 3. Soft risen wisps curling out past the slats
-    drawSteamLayer(true);
+    drawHotSteam(open);
 
     rafId = requestAnimationFrame(frame);
   }
