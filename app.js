@@ -205,7 +205,7 @@ function renderFlagship(flagIdx, animate = true) {
 function resetFlagTimer() {
   if (flagTimer) clearInterval(flagTimer);
   flagTimer = setInterval(() => {
-    if (!flagHoverPaused && !dialogEl.open) renderFlagship(activeFlagshipIdx + 1, true);
+    if (!flagHoverPaused && flagVisible && !dialogEl.open) renderFlagship(activeFlagshipIdx + 1, true);
   }, 4000);
 }
 
@@ -290,8 +290,11 @@ async function renderSimulator(themeId, animate = true) {
   preloadThemeBadges(THEMES[nextIdx], LIVE_TITLES[nextIdx % LIVE_TITLES.length]);
 }
 
+let heroVisible = true;
+let flagVisible = true;
+
 function stepSimulator() {
-  if (!autoShuffleEnabled || simHoverPaused || dialogEl.open) return;
+  if (!autoShuffleEnabled || simHoverPaused || !heroVisible || dialogEl.open) return;
   const curIdx = THEMES.findIndex((x) => x.id === simThemeId);
   const nextIdx = (curIdx + 1) % THEMES.length;
   renderSimulator(THEMES[nextIdx].id, true);
@@ -502,23 +505,40 @@ const io = new IntersectionObserver((entries) => {
   entries.forEach((en) => {
     if (en.isIntersecting) { en.target.classList.add("visible"); io.unobserve(en.target); }
   });
-}, { threshold: 0.08, rootMargin: "0px 0px -30px 0px" });
+}, { threshold: 0.05, rootMargin: "60px 0px" });
+
+// Pause off-screen auto-shuffles so background image decoding never hiccups scroll
+const visObserver = new IntersectionObserver((entries) => {
+  entries.forEach((en) => {
+    if (en.target === cinemaFrameEl) heroVisible = en.isIntersecting;
+    if (en.target === flagStageEl) flagVisible = en.isIntersecting;
+  });
+}, { threshold: 0.05 });
+if (cinemaFrameEl) visObserver.observe(cinemaFrameEl);
+if (flagStageEl) visObserver.observe(flagStageEl);
 
 function observeScrollItems() {
   document.querySelectorAll(".reveal, .spec-tile, .step-card, .faq-item, .scroll-card").forEach((el, i) => {
     if (!el.classList.contains("scroll-card") && !el.classList.contains("reveal")) {
       el.classList.add("scroll-card");
-      el.style.transitionDelay = `${(i % 4) * 75}ms`;
+      el.style.transitionDelay = `${(i % 4) * 60}ms`;
     }
     if (!el.classList.contains("visible")) io.observe(el);
   });
 }
 
-// Smooth Hero Scroll Parallax
+// Smooth Hero Scroll Parallax (desktop only, stops past hero)
 const heroTitleEl = document.querySelector(".hero-title");
 const heroAuraEl = document.querySelector(".hero-aura");
 let scrollTicking = false;
+let lastHeroReset = false;
 window.addEventListener("scroll", () => {
+  if (window.innerWidth <= 768) return;
+  if (window.scrollY > 560) {
+    if (!lastHeroReset) { lastHeroReset = true; }
+    return;
+  }
+  lastHeroReset = false;
   if (scrollTicking) return;
   scrollTicking = true;
   requestAnimationFrame(() => {
