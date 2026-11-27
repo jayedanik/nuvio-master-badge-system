@@ -590,7 +590,7 @@ if (location.hash.startsWith("#theme=")) {
   if (idx >= 0) openDialog(idx);
 }
 
-/* ---------- Hero Apple Fluted Glass Louvers + Silky FBM Steam (Behind -> Front Left Breeze) ---------- */
+/* ---------- Hero Apple Fluted Glass Louvers + Velvety Crossfaded FBM Steam ---------- */
 (function initHeroAotAtmosphere() {
   const canvas = document.getElementById("hero-aot-canvas");
   const heroSection = document.querySelector(".hero");
@@ -610,7 +610,7 @@ if (location.hash.startsWith("#theme=")) {
   let simTime = 0;
   let steamSpawnAcc = 0;
 
-  // Build 2 silky FBM-noise steam sprites once at init (authentic organic vapor, zero circles)
+  // Build 2 ultra-velvety FBM-noise steam sprites (seamless, zero hard edges or blotches)
   function createFbmSteamSprite(seedOffset) {
     const size = 128;
     const off = document.createElement("canvas");
@@ -643,7 +643,7 @@ if (location.hash.startsWith("#theme=")) {
       let freq = 1;
       for (let o = 0; o < 4; o++) {
         val += amp * smoothNoise(x * freq, y * freq);
-        freq *= 2.05;
+        freq *= 2.02;
         amp *= 0.5;
       }
       return val;
@@ -657,14 +657,14 @@ if (location.hash.startsWith("#theme=")) {
         const r2 = dx * dx + dy * dy;
         if (r2 >= 1) continue;
 
-        // Soft radial falloff * domain-warped FBM wisp density
-        const falloff = Math.pow(1 - r2, 2.1);
-        const nx = (x / size) * 4.2;
-        const ny = (y / size) * 4.2;
-        const warp = fbm(nx + 1.7, ny + 3.1);
-        const n = fbm(nx + warp * 1.35, ny + warp * 1.15);
-        const density = Math.max(0, (n - 0.22) * 1.45) * falloff;
-        const alpha = Math.min(255, Math.round(density * 255));
+        const falloff = Math.pow(1 - r2, 2.4);
+        const nx = (x / size) * 3.1;
+        const ny = (y / size) * 3.1;
+        const warp = fbm(nx + 1.4, ny + 2.8);
+        const n = fbm(nx + warp * 0.9, ny + warp * 0.9);
+        // Gentle velvety contrast so overlapping puffs merge seamlessly
+        const density = (0.45 + 0.65 * n) * falloff;
+        const alpha = Math.min(255, Math.round(density * 235));
 
         const p = (y * size + x) * 4;
         data[p] = 246;
@@ -679,13 +679,18 @@ if (location.hash.startsWith("#theme=")) {
 
   const steamSprites = [createFbmSteamSprite(1), createFbmSteamSprite(7)];
 
+  function smoothstep(edge0, edge1, x) {
+    const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
+    return t * t * (3 - 2 * t);
+  }
+
   function easeInOutSine(x) {
     return -(Math.cos(Math.PI * Math.max(0, Math.min(1, x))) - 1) / 2;
   }
 
-  // Smooth crack-open & close cycle (~7.2s)
+  // Smooth crack-open & close cycle (~7.4s)
   function getCycleState(time) {
-    const period = 7.2;
+    const period = 7.4;
     const u = (time % period) / period;
     let open = 0;
     let venting = 0;
@@ -693,7 +698,7 @@ if (location.hash.startsWith("#theme=")) {
     if (u < 0.36) {
       const p = u / 0.36;
       open = easeInOutSine(p);
-      venting = Math.sin(p * Math.PI) * (0.45 + 0.55 * open);
+      venting = Math.sin(p * Math.PI) * (0.4 + 0.6 * open);
     } else if (u < 0.52) {
       open = 1;
       venting = 0.6 * (1 - (u - 0.36) / 0.16);
@@ -729,7 +734,7 @@ if (location.hash.startsWith("#theme=")) {
 
   function spawnSteamBurst(count, open) {
     const isMobile = width <= 768;
-    const maxParticles = isMobile ? 64 : 110;
+    const maxParticles = isMobile ? 75 : 130;
     const slatW = width / slatCount;
 
     for (let i = 0; i < count; i++) {
@@ -739,29 +744,29 @@ if (location.hash.startsWith("#theme=")) {
       if (localOpen < 0.10) continue;
 
       const gapX = idx * slatW + (slatW * localOpen * 0.12);
-      const spawnY = height * (0.24 + Math.random() * 0.68);
+      const spawnY = height * (0.22 + Math.random() * 0.70);
 
       steamParticles.push({
         x: gapX,
         y: spawnY,
-        vx: -(18 + Math.random() * 20), // starts gentle behind glass
-        vy: -(16 + Math.random() * 22),
-        size: (isMobile ? 76 : 108) + Math.random() * 58,
-        grow: 1.7 + Math.random() * 0.9,
-        maxAlpha: 0.24 + Math.random() * 0.16,
+        vx: -(16 + Math.random() * 14),
+        vy: -(14 + Math.random() * 18),
+        size: (isMobile ? 86 : 122) + Math.random() * 64,
+        grow: 1.65 + Math.random() * 0.8,
+        maxAlpha: 0.15 + Math.random() * 0.10,
         spriteIdx: i % steamSprites.length,
         rot: Math.random() * Math.PI * 2,
-        rotSpeed: (Math.random() - 0.5) * 0.35,
+        rotSpeed: (Math.random() - 0.5) * 0.18,
         seed: Math.random() * Math.PI * 2,
         age: 0,
-        life: 2.3 + Math.random() * 1.5
+        life: 2.6 + Math.random() * 1.4
       });
     }
   }
 
   function updateSteam(dt, time) {
     const isMobile = width <= 768;
-    const fanWindX = isMobile ? -95 : -135; // steady fan breeze from right -> left
+    const fanWindX = isMobile ? -92 : -132;
 
     for (let i = steamParticles.length - 1; i >= 0; i--) {
       const p = steamParticles[i];
@@ -772,40 +777,37 @@ if (location.hash.startsWith("#theme=")) {
       }
 
       const progress = p.age / p.life;
-      if (progress > 0.26) {
-        // Once out in front of the glass, right-side fan breeze smoothly accelerates it LEFT
-        p.vx += (fanWindX - p.vx) * 1.6 * dt;
-        const waveY = Math.sin(time * 2.0 + p.seed + p.x * 0.01) * 18;
-        p.x += p.vx * dt;
-        p.y += (p.vy + waveY) * dt;
-      } else {
-        // Emerging from behind the glass through the gap
-        p.x += p.vx * dt;
-        p.y += p.vy * dt;
-      }
+      // Smooth continuous blend into right-side fan breeze (zero sudden jump!)
+      const fanBlend = smoothstep(0.10, 0.48, progress);
+      p.vx += (fanWindX - p.vx) * (1.5 * fanBlend) * dt;
+      const waveY = Math.sin(time * 1.8 + p.seed + p.x * 0.008) * (16 * fanBlend);
+
+      p.x += p.vx * dt;
+      p.y += (p.vy + waveY) * dt;
       p.rot += p.rotSpeed * dt;
     }
   }
 
-  function drawSteamLayer(frontPass) {
+  function drawSteamPass(frontPass) {
     ctx.save();
     ctx.globalCompositeOperation = "screen";
 
     for (let i = 0; i < steamParticles.length; i++) {
       const p = steamParticles[i];
       const progress = p.age / p.life;
-      // Behind glass while emerging (<= 0.26), then in front sweeping left (> 0.26)
-      const isFront = progress > 0.26;
-      if (isFront !== frontPass) continue;
 
-      const fadeIn = Math.min(1, progress / 0.15);
-      const fadeOut = Math.pow(1 - progress, 1.45);
-      const alpha = p.maxAlpha * fadeIn * fadeOut;
-      if (alpha <= 0.004) continue;
+      // Crossfade smoothly from behind-glass to front-of-glass (zero visual pop!)
+      const frontBlend = smoothstep(0.14, 0.36, progress);
+      const passWeight = frontPass ? frontBlend : (1 - frontBlend);
+      if (passWeight <= 0.01) continue;
 
-      const curSize = p.size * (0.58 + progress * p.grow);
-      // Slight horizontal elongation as the right-side fan carries it left
-      const windStretch = frontPass ? 1.28 : 1.0;
+      const fadeIn = smoothstep(0, 0.18, progress);
+      const fadeOut = Math.pow(1 - progress, 1.5);
+      const alpha = p.maxAlpha * fadeIn * fadeOut * passWeight;
+      if (alpha <= 0.003) continue;
+
+      const curSize = p.size * (0.60 + progress * p.grow);
+      const windStretch = 1 + frontBlend * 0.26;
 
       ctx.save();
       ctx.translate(p.x, p.y);
@@ -884,7 +886,7 @@ if (location.hash.startsWith("#theme=")) {
     const { open, venting } = getCycleState(simTime);
 
     if (venting > 0.04) {
-      const spawnRate = (width <= 768 ? 28 : 44) * venting;
+      const spawnRate = (width <= 768 ? 34 : 52) * venting;
       steamSpawnAcc += spawnRate * dt;
       const toSpawn = Math.floor(steamSpawnAcc);
       if (toSpawn > 0) {
@@ -896,12 +898,12 @@ if (location.hash.startsWith("#theme=")) {
     updateSteam(dt, simTime);
 
     ctx.clearRect(0, 0, width, height);
-    // 1. Steam emerging from BEHIND the glass slats
-    drawSteamLayer(false);
+    // 1. Emerging steam behind the fluted glass (crossfades smoothly)
+    drawSteamPass(false);
     // 2. Fluted glass louvers
     drawFlutedGlass(open, simTime);
-    // 3. Escaped steam in FRONT of the glass blowing LEFT from a right-side fan breeze
-    drawSteamLayer(true);
+    // 3. Escaped steam in front sweeping smoothly left from right-side fan breeze
+    drawSteamPass(true);
 
     rafId = requestAnimationFrame(frame);
   }
