@@ -288,7 +288,7 @@ body {
   -webkit-backdrop-filter: blur(2px) saturate(180%);
   border-radius: 28px; border: 1px solid rgba(255, 255, 255, 0.65);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.82);
-  overflow: hidden; height: 490px;
+  overflow: hidden; height: 446px;
 }
 .flag-slide {
   position: absolute; inset: 0; height: 100%;
@@ -433,11 +433,10 @@ body {
 .card-actions .btn { flex: 1; }
 .empty-state { text-align: center; color: var(--ink-muted); padding: 48px 0; }
 
-/* Chapter 5 (Dark): Glass Import & FAQ — Full Viewport */
+/* Chapter 5 (Dark): Glass Import & FAQ */
 .install-section {
-  padding: 84px 0 64px;
-  min-height: calc(100vh - 64px);
-  min-height: calc(100dvh - 64px);
+  padding: 72px 0 44px;
+  min-height: calc(100dvh - 52px);
   display: flex; flex-direction: column; justify-content: center;
 }
 .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; margin-bottom: 54px; }
@@ -472,8 +471,11 @@ body {
 .faq-item p { margin: 10px 0 0; font-size: 0.9rem; color: #a1a1a6; }
 .faq-item code { font-family: 'JetBrains Mono', monospace; color: #fff; }
 
-.site-footer { background: #000; border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 24px 0; color: #86868b; font-size: 0.82rem; }
-.footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+.site-footer {
+  background: #000; border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 14px 0; color: #6e6e73; font-size: 0.72rem; letter-spacing: 0.01em;
+}
+.footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
 
 .reveal,
 .scroll-card {
@@ -531,9 +533,9 @@ body {
   .flag-slide { position: relative; grid-template-columns: 1fr; }
   .flag-slide > * { min-width: 0; }
   .flag-slide.layer-back { display: none; }
-  .flag-media { width: 100%; padding: 18px 18px 0; aspect-ratio: 16 / 9; height: auto; }
-  .flag-media img { width: 100%; height: 100%; object-fit: contain; box-shadow: none; }
-  .flag-info { padding: 20px 22px 24px; gap: 10px; }
+  .flag-media { width: 100%; padding: 18px 18px 0; height: 215px; display: flex; align-items: center; justify-content: center; }
+  .flag-media img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 14px; box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14); }
+  .flag-info { padding: 18px 20px 22px; gap: 10px; }
   .flag-info h3 { white-space: normal; line-height: 1.25; height: 2.5em; display: flex; align-items: center; }
   .flag-info p { line-height: 1.45; height: 2.9em; }
   .bento-specs { grid-template-columns: 1fr; gap: 16px; }
@@ -569,12 +571,15 @@ body {
   .cinema-dock { flex-direction: column; align-items: stretch; gap: 12px; }
   .glass-pill-dock { width: 100%; justify-content: space-between; padding: 6px 8px; }
   .dock-center { min-width: 0; flex: 1; justify-content: center; gap: 8px; padding-inline: 6px; }
-  .dock-theme-name { font-size: 0.84rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .dock-counter { flex-shrink: 0; }
+  .dock-theme-name { font-size: 0.78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dock-counter { flex-shrink: 0; font-size: 0.68rem; }
   #sim-auto-btn { align-self: center; padding: 8px 18px; font-size: 0.82rem; }
 
-  .spotlight-section, .specs-section, .themes-section, .install-section { padding: 64px 0; }
-  .chapter-head, .section-intro, .catalog-head { margin-bottom: 26px; }
+  .spotlight-section, .specs-section, .themes-section, .install-section { padding: 54px 0; }
+  .install-section { min-height: auto; padding: 54px 0 40px; }
+  .site-footer { padding: 12px 0; font-size: 0.68rem; }
+  .footer-inner { justify-content: center; text-align: center; gap: 4px 12px; }
+  .chapter-head, .section-intro, .catalog-head { margin-bottom: 24px; }
   .sticky-toolbar-light { position: static; border-radius: 22px; padding: 14px; gap: 12px; }
   .filter-pills { gap: 8px; }
   .toolbar-right { width: 100%; gap: 10px; }
@@ -584,6 +589,8 @@ body {
   .theme-grid { grid-template-columns: 1fr; gap: 20px; }
   .card-body { padding: 18px 20px 22px; gap: 11px; }
   .fav-btn { min-width: 36px; min-height: 36px; display: grid; place-items: center; }
+  .dlg-shell { padding: 16px; }
   .dlg-head { flex-direction: column; align-items: flex-start; }
+  .dlg-url-row .btn { width: 100%; }
   .preset-chip { padding: 6px 12px; font-size: 0.78rem; }
 }
