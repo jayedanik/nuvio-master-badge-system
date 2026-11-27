@@ -1,5 +1,32 @@
 const RAW_BASE = "https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/";
 
+const THEME_GLOWS = {
+  "gta6-vice-sunset": ["#ff3e9d", "#ff9e44"],
+  "washi-tape": ["#d97706", "#16a34a"],
+  "liquid-glass": ["#2997ff", "#a855f7"],
+  "manga-halftone": ["#ef4444", "#facc15"],
+  "holo-prism": ["#38bdf8", "#ec4899"],
+  "stained-glass": ["#e11d48", "#38bdf8"],
+  "comic-bubble": ["#38bdf8", "#facc15"],
+  "zine-cutout": ["#facc15", "#ec4899"],
+  "matrix-terminal": ["#22c55e", "#10b981"],
+  "sticky-note": ["#facc15", "#fb923c"],
+  "bauhaus-split": ["#f59e0b", "#3b82f6"],
+  "titanium-chrome": ["#94a3b8", "#e2e8f0"],
+  "live-tv-broadcast": ["#ef4444", "#f97316"],
+  "enamel-pins": ["#fbbf24", "#7c3aed"],
+  "criterion-leather": ["#d97706", "#78350f"],
+  "cinema-ticket": ["#f59e0b", "#b45309"],
+  "clapperboard": ["#e2e8f0", "#475569"],
+  "vhs-tape": ["#f97316", "#ec4899"],
+  "neotokyo-tag": ["#06b6d4", "#f43f5e"],
+  "audiophile-vfd": ["#22d3ee", "#0284c7"],
+  "gmk-keycaps": ["#94a3b8", "#38bdf8"],
+  "rgb-keycaps": ["#ec4899", "#22d3ee"],
+  "studio-markers": ["#3b82f6", "#60a5fa"],
+  "pristine": ["#38bdf8", "#a855f7"]
+};
+
 const THEMES = [
   { id: "gta6-vice-sunset", name: "GTA 6 Vice City Sunset", cat: "pop", json: "gta6-vice-sunset.json", dir: "themes/gta6-vice-sunset/badges", desc: "Miami sunset skies with glowing sun discs, palm silhouettes & heavy stroked GTA typography." },
   { id: "washi-tape", name: "Artisan Japanese Washi Tape", cat: "craft", json: "washi-tape.json", dir: "themes/washi-tape/badges", desc: "Handmade mulberry fiber paper rolls with deckled torn edges, gold leaf hot-stamping & 3D drop shadows." },
@@ -249,7 +276,11 @@ async function renderSimulator(themeId, animate = true) {
   simCounterEl.textContent = `${safeIdx + 1} / ${THEMES.length}`;
   simMovieTitleEl.textContent = titleObj.title;
   simMovieMetaEl.textContent = titleObj.meta;
-  if (cinemaFrameEl) cinemaFrameEl.style.setProperty("--theme-accent", t.accent === "#1d1d1f" ? "#2997ff" : t.accent);
+  if (cinemaFrameEl) {
+    const [g1, g2] = THEME_GLOWS[t.id] || [t.accent, "#2997ff"];
+    cinemaFrameEl.style.setProperty("--glow-1", g1);
+    cinemaFrameEl.style.setProperty("--glow-2", g2);
+  }
 
   simCopyBtn.onclick = () => copyUrl(RAW_BASE + t.json, simCopyBtn);
   simInspectBtn.onclick = () => openDialog(safeIdx, titleObj.release);
