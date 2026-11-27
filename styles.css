@@ -255,6 +255,12 @@ body {
 .hero-finish-pill.expanded .finish-label {
   padding-right: 10px; min-width: 66px;
 }
+.hero-finish-pill.force-collapsed .finish-label-wrap {
+  grid-template-columns: 0fr !important; opacity: 0 !important;
+}
+.hero-finish-pill.force-collapsed .finish-label {
+  padding-right: 0 !important; min-width: 0 !important;
+}
 @media (max-width: 640px) {
   .hero-finish-pill { top: 56px; right: 14px; padding: 5px 8px; }
   .finish-dot { width: 12px; height: 12px; }

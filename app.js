@@ -933,21 +933,35 @@ if (location.hash.startsWith("#theme=")) {
     window.dispatchEvent(new CustomEvent("nuvio:finishchange", { detail: fin }));
   }
 
-  function expandBriefly() {
-    pill.classList.add("expanded");
+  function collapseNow() {
     clearTimeout(collapseTimer);
-    collapseTimer = setTimeout(() => pill.classList.remove("expanded"), 2200);
+    pill.classList.remove("expanded");
+    pill.classList.add("force-collapsed");
   }
 
   pill.querySelectorAll(".finish-dot").forEach((dot) => {
     dot.addEventListener("mouseenter", () => {
+      pill.classList.remove("force-collapsed");
       labelEl.textContent = NAMES[dot.dataset.finish];
     });
     dot.addEventListener("click", (e) => {
       e.stopPropagation();
+      dot.blur();
       applyFinish(dot.dataset.finish);
-      expandBriefly();
+      // Show selected name briefly on touch devices, then auto-collapse cleanly
+      if (window.matchMedia("(hover: none)").matches) {
+        pill.classList.remove("force-collapsed");
+        pill.classList.add("expanded");
+        clearTimeout(collapseTimer);
+        collapseTimer = setTimeout(() => pill.classList.remove("expanded"), 1100);
+      } else {
+        collapseNow();
+      }
     });
+  });
+
+  pill.addEventListener("mouseenter", () => {
+    pill.classList.remove("force-collapsed");
   });
 
   pill.addEventListener("mouseleave", () => {
