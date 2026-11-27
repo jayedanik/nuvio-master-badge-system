@@ -794,27 +794,27 @@ if (location.hash.startsWith("#theme=")) {
       const yShift = height * (0.38 + wavePhase * 0.16);
 
       const vGrad = ctx.createLinearGradient(0, 0, 0, height);
-      const coralAlpha = 0.14 * Math.max(0, 1 - tNorm * 1.55);
+      const coralAlpha = 0.08 * Math.max(0, 1 - tNorm * 1.55);
       const bluePos = Math.max(0.18, Math.min(0.65, yShift / height));
       vGrad.addColorStop(0, `rgba(255, 92, 68, ${coralAlpha})`);
-      vGrad.addColorStop(bluePos, `rgba(28, 108, 210, ${0.30 + 0.08 * (1 - localOpen)})`);
-      vGrad.addColorStop(Math.min(0.88, bluePos + 0.24), "rgba(92, 44, 165, 0.26)");
-      vGrad.addColorStop(1, "rgba(12, 16, 30, 0.32)");
+      vGrad.addColorStop(bluePos, `rgba(24, 92, 185, ${0.16 + 0.05 * (1 - localOpen)})`);
+      vGrad.addColorStop(Math.min(0.88, bluePos + 0.24), "rgba(74, 34, 138, 0.15)");
+      vGrad.addColorStop(1, "rgba(4, 6, 12, 0.42)");
 
       ctx.fillStyle = vGrad;
       ctx.fillRect(xLeft, 0, faceW, height);
 
       const hGrad = ctx.createLinearGradient(xLeft, 0, xRight, 0);
-      hGrad.addColorStop(0, `rgba(255, 255, 255, ${0.22 + localOpen * 0.16})`);
-      hGrad.addColorStop(0.16, "rgba(185, 228, 255, 0.10)");
-      hGrad.addColorStop(0.55, "rgba(10, 14, 24, 0.18)");
-      hGrad.addColorStop(0.88, "rgba(0, 0, 0, 0.36)");
-      hGrad.addColorStop(1, "rgba(0, 0, 0, 0.50)");
+      hGrad.addColorStop(0, `rgba(255, 255, 255, ${0.13 + localOpen * 0.09})`);
+      hGrad.addColorStop(0.16, "rgba(185, 228, 255, 0.05)");
+      hGrad.addColorStop(0.55, "rgba(6, 8, 16, 0.28)");
+      hGrad.addColorStop(0.88, "rgba(0, 0, 0, 0.46)");
+      hGrad.addColorStop(1, "rgba(0, 0, 0, 0.62)");
 
       ctx.fillStyle = hGrad;
       ctx.fillRect(xLeft, 0, faceW, height);
 
-      ctx.fillStyle = `rgba(255, 255, 255, ${0.22 + localOpen * 0.18})`;
+      ctx.fillStyle = `rgba(255, 255, 255, ${0.13 + localOpen * 0.10})`;
       ctx.fillRect(xLeft, 0, 1.1, height);
     }
 
