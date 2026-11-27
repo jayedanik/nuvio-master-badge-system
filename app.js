@@ -590,7 +590,7 @@ if (location.hash.startsWith("#theme=")) {
   if (idx >= 0) openDialog(idx);
 }
 
-/* ---------- Hero Apple Fluted Glass Louvers + Opening White Steam ---------- */
+/* ---------- Hero Apple Fluted Glass Louvers + AoT Sweeping Hot Steam ---------- */
 (function initHeroAotAtmosphere() {
   const canvas = document.getElementById("hero-aot-canvas");
   const heroSection = document.querySelector(".hero");
@@ -610,7 +610,7 @@ if (location.hash.startsWith("#theme=")) {
   let simTime = 0;
   let steamSpawnAcc = 0;
 
-  // Pre-rendered bright soft white steam puff sprite (zero per-frame blur cost)
+  // Pre-rendered dense AoT white steam cloud sprite (zero per-frame blur cost)
   const puffSize = 128;
   const puffCanvas = document.createElement("canvas");
   puffCanvas.width = puffSize;
@@ -620,10 +620,10 @@ if (location.hash.startsWith("#theme=")) {
     puffSize * 0.5, puffSize * 0.5, puffSize * 0.02,
     puffSize * 0.5, puffSize * 0.5, puffSize * 0.5
   );
-  puffGrad.addColorStop(0, "rgba(255, 255, 255, 0.92)");
-  puffGrad.addColorStop(0.28, "rgba(245, 250, 255, 0.56)");
-  puffGrad.addColorStop(0.62, "rgba(220, 236, 255, 0.18)");
-  puffGrad.addColorStop(1, "rgba(220, 236, 255, 0)");
+  puffGrad.addColorStop(0, "rgba(255, 255, 255, 0.95)");
+  puffGrad.addColorStop(0.30, "rgba(246, 250, 255, 0.62)");
+  puffGrad.addColorStop(0.65, "rgba(225, 238, 255, 0.22)");
+  puffGrad.addColorStop(1, "rgba(225, 238, 255, 0)");
   pCtx.fillStyle = puffGrad;
   pCtx.fillRect(0, 0, puffSize, puffSize);
 
@@ -631,9 +631,9 @@ if (location.hash.startsWith("#theme=")) {
     return -(Math.cos(Math.PI * Math.max(0, Math.min(1, x))) - 1) / 2;
   }
 
-  // Smooth subtle crack-open & close cycle (~6.6s)
+  // Smooth crack-open & close cycle (~6.8s)
   function getCycleState(time) {
-    const period = 6.6;
+    const period = 6.8;
     const u = (time % period) / period;
     let open = 0;
     let venting = 0;
@@ -641,12 +641,12 @@ if (location.hash.startsWith("#theme=")) {
     if (u < 0.36) {
       const p = u / 0.36;
       open = easeInOutSine(p);
-      venting = Math.sin(p * Math.PI) * (0.45 + 0.55 * open);
-    } else if (u < 0.48) {
+      venting = Math.sin(p * Math.PI) * (0.5 + 0.5 * open);
+    } else if (u < 0.50) {
       open = 1;
-      venting = 0.45 * (1 - (u - 0.36) / 0.12);
-    } else if (u < 0.84) {
-      const p = (u - 0.48) / 0.36;
+      venting = 0.55 * (1 - (u - 0.36) / 0.14);
+    } else if (u < 0.86) {
+      const p = (u - 0.50) / 0.36;
       open = 1 - easeInOutSine(p);
       venting = 0;
     } else {
@@ -677,7 +677,7 @@ if (location.hash.startsWith("#theme=")) {
 
   function spawnSteamBurst(count, open) {
     const isMobile = width <= 768;
-    const maxParticles = isMobile ? 75 : 130;
+    const maxParticles = isMobile ? 80 : 140;
     const slatW = width / slatCount;
 
     for (let i = 0; i < count; i++) {
@@ -686,20 +686,26 @@ if (location.hash.startsWith("#theme=")) {
       const localOpen = getLocalOpen(idx, open);
       if (localOpen < 0.10) continue;
 
+      // Slats open to the right, so steam jets sideways to the right + slightly up (AoT wind sweep)
       const gapCenterX = (idx + 1) * slatW;
-      const spawnY = height * (0.18 + Math.random() * 0.74);
+      const spawnY = height * (0.14 + Math.random() * 0.78);
+      const isStreak = Math.random() < 0.42;
 
       steamParticles.push({
-        x: gapCenterX + (Math.random() - 0.5) * 4,
+        x: gapCenterX,
         y: spawnY,
-        vx: (Math.random() - 0.5) * 28,
-        vy: -(48 + Math.random() * 56), // brisk hot steam rise
-        size: (isMobile ? 22 : 30) + Math.random() * 18,
-        grow: (isMobile ? 2.4 : 3.0) + Math.random() * 1.2,
-        maxAlpha: 0.34 + Math.random() * 0.24,
+        vx: (isMobile ? 65 : 95) + Math.random() * (isMobile ? 55 : 85),
+        vy: -(18 + Math.random() * 34),
+        size: isStreak
+          ? ((isMobile ? 28 : 38) + Math.random() * 20)
+          : ((isMobile ? 42 : 58) + Math.random() * 34),
+        stretchX: isStreak ? 2.5 : 1.55,
+        stretchY: isStreak ? 0.55 : 0.85,
+        grow: isStreak ? 1.8 : 2.3,
+        maxAlpha: isStreak ? (0.34 + Math.random() * 0.20) : (0.28 + Math.random() * 0.22),
         seed: Math.random() * Math.PI * 2,
         age: 0,
-        life: 1.9 + Math.random() * 1.6
+        life: 1.5 + Math.random() * 1.3
       });
     }
   }
@@ -708,14 +714,14 @@ if (location.hash.startsWith("#theme=")) {
     for (let i = steamParticles.length - 1; i >= 0; i--) {
       const p = steamParticles[i];
       p.age += dt;
-      if (p.age >= p.life || p.y < -p.size * 2) {
+      if (p.age >= p.life || p.x > width + p.size * 2 || p.y < -p.size * 2) {
         steamParticles.splice(i, 1);
         continue;
       }
-      const curl = Math.sin(time * 2.4 + p.seed + p.y * 0.015) * 22;
-      p.x += (p.vx + curl) * dt;
-      p.y += p.vy * dt;
-      p.vy *= 1 - 0.25 * dt;
+      const waveY = Math.sin(time * 2.6 + p.seed + p.x * 0.012) * 16;
+      p.x += p.vx * dt;
+      p.y += (p.vy + waveY) * dt;
+      p.vx *= 1 - 0.18 * dt;
     }
   }
 
@@ -725,43 +731,37 @@ if (location.hash.startsWith("#theme=")) {
     ctx.save();
     ctx.globalCompositeOperation = "screen";
 
-    // Luminous hot vapor glow right along the cracked-open slits
+    // Subtle bright vapor slit glow along the cracked-open side of each fin
     if (open > 0.08) {
       for (let i = 0; i < slatCount - 1; i++) {
         const localOpen = getLocalOpen(i, open);
         if (localOpen < 0.08) continue;
         const gapCenterX = (i + 1) * slatW;
-        const glowW = Math.max(8, slatW * localOpen * 0.45);
-        const slitGrad = ctx.createRadialGradient(
-          gapCenterX, height * 0.55, 1,
-          gapCenterX, height * 0.55, glowW * 2.4
-        );
-        slitGrad.addColorStop(0, `rgba(255, 255, 255, ${0.26 * localOpen})`);
-        slitGrad.addColorStop(0.5, `rgba(215, 236, 255, ${0.10 * localOpen})`);
-        slitGrad.addColorStop(1, "rgba(215, 236, 255, 0)");
-        ctx.fillStyle = slitGrad;
-        ctx.fillRect(gapCenterX - glowW * 2.5, height * 0.12, glowW * 5, height * 0.82);
+        const glowW = Math.max(6, slatW * localOpen * 0.42);
+        ctx.fillStyle = `rgba(240, 248, 255, ${0.14 * localOpen})`;
+        ctx.fillRect(gapCenterX - glowW * 0.4, 0, glowW, height);
       }
     }
 
-    // Billowing hot white steam plumes escaping from the slits
+    // Sweeping AoT-style white steam ribbons & clouds
     for (let i = 0; i < steamParticles.length; i++) {
       const p = steamParticles[i];
       const progress = p.age / p.life;
-      const fadeIn = Math.min(1, progress / 0.12);
-      const fadeOut = Math.pow(1 - progress, 1.3);
+      const fadeIn = Math.min(1, progress / 0.10);
+      const fadeOut = Math.pow(1 - progress, 1.35);
       const alpha = p.maxAlpha * fadeIn * fadeOut;
       if (alpha <= 0.005) continue;
 
-      const curSize = p.size * (0.6 + progress * p.grow);
+      const curSize = p.size * (0.65 + progress * p.grow);
+      const angle = Math.atan2(p.vy, p.vx);
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(angle);
+      ctx.scale(p.stretchX, p.stretchY);
       ctx.globalAlpha = alpha;
-      ctx.drawImage(
-        puffCanvas,
-        p.x - curSize * 0.5,
-        p.y - curSize * 0.5,
-        curSize,
-        curSize
-      );
+      ctx.drawImage(puffCanvas, -curSize * 0.5, -curSize * 0.5, curSize, curSize);
+      ctx.restore();
     }
 
     ctx.restore();
@@ -774,10 +774,9 @@ if (location.hash.startsWith("#theme=")) {
       const tNorm = i / Math.max(1, slatCount - 1);
       const localOpen = getLocalOpen(i, open);
 
-      // Subtle crack-open (max ~24% gap, never fully wide open)
+      // Subtle crack-open (~24%) pivoting to the left so the right-side slit opens
       const faceW = slatW * (1 - localOpen * 0.24);
-      const xCenter = (i + 0.5) * slatW;
-      const xLeft = xCenter - faceW * 0.5;
+      const xLeft = i * slatW;
 
       const wavePhase = Math.sin(tNorm * 4.2 + time * 0.35);
       const yShift = height * (0.38 + wavePhase * 0.16);
@@ -788,7 +787,7 @@ if (location.hash.startsWith("#theme=")) {
       vGrad.addColorStop(0, `rgba(255, 92, 68, ${coralAlpha})`);
       vGrad.addColorStop(bluePos, `rgba(41, 151, 255, ${0.22 + 0.06 * (1 - localOpen)})`);
       vGrad.addColorStop(Math.min(0.88, bluePos + 0.24), "rgba(138, 68, 226, 0.18)");
-      vGrad.addColorStop(1, "rgba(6, 8, 16, 0.55)");
+      vGrad.addColorStop(1, "rgba(24, 32, 58, 0.22)");
 
       ctx.fillStyle = vGrad;
       ctx.fillRect(xLeft, 0, faceW, height);
@@ -797,8 +796,8 @@ if (location.hash.startsWith("#theme=")) {
       hGrad.addColorStop(0, `rgba(255, 255, 255, ${0.24 + localOpen * 0.12})`);
       hGrad.addColorStop(0.16, "rgba(185, 228, 255, 0.10)");
       hGrad.addColorStop(0.55, "rgba(255, 255, 255, 0.01)");
-      hGrad.addColorStop(0.88, "rgba(0, 0, 0, 0.38)");
-      hGrad.addColorStop(1, "rgba(0, 0, 0, 0.56)");
+      hGrad.addColorStop(0.88, "rgba(0, 0, 0, 0.28)");
+      hGrad.addColorStop(1, "rgba(0, 0, 0, 0.42)");
 
       ctx.fillStyle = hGrad;
       ctx.fillRect(xLeft, 0, faceW, height);
@@ -807,17 +806,11 @@ if (location.hash.startsWith("#theme=")) {
       ctx.fillRect(xLeft, 0, 1.1, height);
     }
 
-    const vigTop = ctx.createLinearGradient(0, 0, 0, height * 0.24);
-    vigTop.addColorStop(0, "rgba(0, 0, 0, 0.65)");
+    const vigTop = ctx.createLinearGradient(0, 0, 0, height * 0.18);
+    vigTop.addColorStop(0, "rgba(0, 0, 0, 0.45)");
     vigTop.addColorStop(1, "rgba(0, 0, 0, 0)");
     ctx.fillStyle = vigTop;
-    ctx.fillRect(0, 0, width, height * 0.24);
-
-    const vigBot = ctx.createLinearGradient(0, height * 0.78, 0, height);
-    vigBot.addColorStop(0, "rgba(0, 0, 0, 0)");
-    vigBot.addColorStop(1, "rgba(0, 0, 0, 0.75)");
-    ctx.fillStyle = vigBot;
-    ctx.fillRect(0, height * 0.78, width, height * 0.22);
+    ctx.fillRect(0, 0, width, height * 0.18);
   }
 
   function frame(now) {
@@ -833,7 +826,7 @@ if (location.hash.startsWith("#theme=")) {
     const { open, venting } = getCycleState(simTime);
 
     if (venting > 0.04) {
-      const spawnRate = (width <= 768 ? 38 : 62) * venting;
+      const spawnRate = (width <= 768 ? 44 : 72) * venting;
       steamSpawnAcc += spawnRate * dt;
       const toSpawn = Math.floor(steamSpawnAcc);
       if (toSpawn > 0) {
