@@ -29,9 +29,8 @@ const THEMES = [
 
 const FLAGSHIPS = [
   { idx: 0, tab: "GTA 6 Vice Sunset", kicker: "NEW DROP • VICE CITY EDITION" },
-  { idx: 2, tab: "VisionOS Liquid Glass", kicker: "SPATIAL OPTICS • WWDC25" },
-  { idx: 1, tab: "Japanese Washi Tape", kicker: "ARTISAN CRAFT • MULBERRY FIBER" },
-  { idx: 3, tab: "Anime / Manga Ink", kicker: "POP CULTURE • BEN-DAY HALFTONE" }
+  { idx: 5, tab: "Stained Glass Mosaic", kicker: "ARTISAN CRAFT • CATHEDRAL SHARDS" },
+  { idx: 7, tab: "Streetwear Zine Cutout", kicker: "POP CULTURE • PAPER COLLAGE" }
 ];
 
 const LIVE_TITLES = [
