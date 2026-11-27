@@ -547,6 +547,18 @@ body {
   .theme-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 640px) {
+  .chapter-dark {
+    background:
+      radial-gradient(520px 320px at 80% 18%, rgba(41, 151, 255, 0.12) 0%, transparent 65%),
+      radial-gradient(460px 300px at 18% 82%, rgba(175, 82, 222, 0.10) 0%, transparent 65%),
+      #000000;
+  }
+  .chapter-light {
+    background:
+      radial-gradient(520px 300px at 15% 15%, rgba(41, 151, 255, 0.06) 0%, transparent 65%),
+      radial-gradient(480px 280px at 85% 75%, rgba(175, 82, 222, 0.05) 0%, transparent 65%),
+      #e8e8ee;
+  }
   .site-header { height: 44px; top: 8px; width: calc(100% - 20px); }
   .header-inner { padding-inline: 14px; }
   .nav-link { display: none; }
