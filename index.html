@@ -11,6 +11,16 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <!-- Apple .clear Waterdrop Optical Refraction Filter (Chromium/Edge) -->
+  <svg width="0" height="0" style="position:absolute;pointer-events:none" aria-hidden="true">
+    <defs>
+      <filter id="waterdrop-glass" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.012" numOctaves="1" seed="3" result="noise" />
+        <feGaussianBlur in="noise" stdDeviation="3" result="softNoise" />
+        <feDisplacementMap in="SourceGraphic" in2="softNoise" scale="14" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
   <header class="site-header">
     <div class="container header-inner">
       <a href="#" class="brand" aria-label="Nuvio Badges Home">
