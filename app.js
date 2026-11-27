@@ -24,7 +24,9 @@ const THEME_GLOWS = {
   "gmk-keycaps": ["#94a3b8", "#38bdf8"],
   "rgb-keycaps": ["#ec4899", "#22d3ee"],
   "studio-markers": ["#3b82f6", "#60a5fa"],
-  "pristine": ["#38bdf8", "#a855f7"]
+  "pristine": ["#38bdf8", "#a855f7"],
+  "tokyo-neon": ["#00ebff", "#ff38a5"],
+  "synthwave-84": ["#ff2aa5", "#00ebff"]
 };
 
 const THEMES = [
@@ -51,7 +53,9 @@ const THEMES = [
   { id: "neotokyo-tag", name: "NeoTokyo Cyberpunk Asset Tag", cat: "pop", json: "neotokyo-tag.json", dir: "themes/neotokyo-tag/badges", desc: "Weathered industrial machinery asset tag with stencil legends." },
   { id: "audiophile-vfd", name: "Hi-Fi Vacuum Tube VFD", cat: "tech", json: "audiophile-vfd.json", dir: "themes/audiophile-vfd/badges", desc: "Cyan phosphor vacuum tube instrument monospace display." },
   { id: "gmk-keycaps", name: "GMK Custom Mechanical Keycaps", cat: "tech", json: "gmk-keycaps.json", dir: "themes/gmk-keycaps/badges", desc: "Double-shot PBT spherical Cherry profile DIN standard keycaps." },
-  { id: "rgb-keycaps", name: "Cyberpunk RGB Keycaps", cat: "tech", json: "rgb-keycaps.json", dir: "themes/rgb-keycaps/badges", desc: "Translucent pudding keycaps with neon RGB underglow." }
+  { id: "rgb-keycaps", name: "Cyberpunk RGB Keycaps", cat: "tech", json: "rgb-keycaps.json", dir: "themes/rgb-keycaps/badges", desc: "Translucent pudding keycaps with neon RGB underglow." },
+  { id: "tokyo-neon", name: "Frameless Tokyo Neon Tubes", cat: "pop", json: "tokyo-neon.json", dir: "themes/tokyo-neon/badges", desc: "Zero background — pure glowing glass neon tubes with white plasma core." },
+  { id: "synthwave-84", name: "Synthwave '84 Laser Horizon", cat: "pop", json: "synthwave-84.json", dir: "themes/synthwave-84/badges", desc: "Outrun perspective cyan grid, laser pink horizon & chrome glow." }
 ];
 
 const FLAGSHIPS = [
