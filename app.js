@@ -590,7 +590,7 @@ if (location.hash.startsWith("#theme=")) {
   if (idx >= 0) openDialog(idx);
 }
 
-/* ---------- Hero Apple Fluted Glass Louvers + Seamless Continuous FBM Steam Curtain ---------- */
+/* ---------- Hero Apple Fluted Glass Louvers + Fin-Slit Masked FBM Steam ---------- */
 (function initHeroAotAtmosphere() {
   const canvas = document.getElementById("hero-aot-canvas");
   const heroSection = document.querySelector(".hero");
@@ -608,7 +608,11 @@ if (location.hash.startsWith("#theme=")) {
   let lastTime = 0;
   let simTime = 0;
 
-  // Build seamlessly tileable 256x256 FBM steam texture once at init (100% consistent, zero seams)
+  // Offscreen half-res mask buffer so steam ONLY originates from each open fin slit & sweeps left
+  const plumeCanvas = document.createElement("canvas");
+  const plumeCtx = plumeCanvas.getContext("2d", { alpha: true });
+
+  // Build seamlessly tileable 256x256 FBM steam texture once at init
   function createTileableFbmTexture(seedOffset, gridPeriod) {
     const size = 256;
     const off = document.createElement("canvas");
@@ -656,13 +660,12 @@ if (location.hash.startsWith("#theme=")) {
         const warpX = fbm(nx + 1.3, ny + 2.7, gridPeriod);
         const warpY = fbm(nx + 4.1, ny + 0.9, gridPeriod);
         const n = fbm(nx + warpX * 1.1, ny + warpY * 1.1, gridPeriod);
-        // Smooth silky vapor contrast
-        const density = Math.max(0, Math.min(1, (n - 0.24) * 1.45));
+        const density = Math.max(0, Math.min(1, (n - 0.22) * 1.5));
         const alpha = Math.round(density * 255);
 
         const p = (y * size + x) * 4;
-        data[p] = 244;
-        data[p + 1] = 249;
+        data[p] = 246;
+        data[p + 1] = 250;
         data[p + 2] = 255;
         data[p + 3] = alpha;
       }
@@ -671,8 +674,7 @@ if (location.hash.startsWith("#theme=")) {
     return off;
   }
 
-  const steamTexA = createTileableFbmTexture(3, 4);
-  const steamTexB = createTileableFbmTexture(11, 6);
+  const steamTex = createTileableFbmTexture(5, 5);
 
   function smoothstep(edge0, edge1, x) {
     const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
@@ -724,23 +726,70 @@ if (location.hash.startsWith("#theme=")) {
     canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
+    // Half-res plume mask buffer for ultra-fast smooth compositing
+    plumeCanvas.width = Math.max(1, Math.round(width * 0.5));
+    plumeCanvas.height = Math.max(1, Math.round(height * 0.5));
+
     slatCount = width <= 768 ? 16 : 26;
   }
 
-  // Draw seamless tiled FBM steam drifting steadily LEFT + gently UP (like a right-side fan)
-  function drawTiledSteam(tex, tileSize, speedX, speedY, alpha, time) {
-    if (alpha <= 0.003) return;
-    const ox = -(((time * speedX) % tileSize + tileSize) % tileSize);
-    const oy = -(((time * speedY) % tileSize + tileSize) % tileSize);
+  // Render FBM steam strictly masked to plumes originating from each open fin slit & sweeping left
+  function drawFinSlitSteam(open, steam, time) {
+    if (steam <= 0.004 || open <= 0.004 || !plumeCtx) return;
 
-    ctx.save();
-    ctx.globalCompositeOperation = "screen";
-    ctx.globalAlpha = alpha;
-    for (let y = oy; y < height; y += tileSize) {
-      for (let x = ox; x < width; x += tileSize) {
-        ctx.drawImage(tex, x, y, tileSize, tileSize);
+    const pw = plumeCanvas.width;
+    const ph = plumeCanvas.height;
+    const sx = pw / width;
+    const slatW = pw / slatCount;
+    const reach = slatW * (1.4 + 1.1 * steam); // how far left the fan carries steam from each slit
+
+    plumeCtx.globalCompositeOperation = "source-over";
+    plumeCtx.clearRect(0, 0, pw, ph);
+
+    // 1. Paint exact plume emission masks anchored at every open fin slit, fading left
+    for (let i = 0; i < slatCount; i++) {
+      const localOpen = getLocalOpen(i, open);
+      if (localOpen <= 0.01) continue;
+
+      const slitX = i * slatW + slatW * localOpen * 0.14;
+      const leftX = slitX - reach;
+      const g = plumeCtx.createLinearGradient(leftX, 0, slitX + 2, 0);
+      g.addColorStop(0, "rgba(255, 255, 255, 0)");
+      g.addColorStop(0.55, `rgba(255, 255, 255, ${0.42 * localOpen * steam})`);
+      g.addColorStop(0.92, `rgba(255, 255, 255, ${0.95 * localOpen * steam})`);
+      g.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+      plumeCtx.fillStyle = g;
+      plumeCtx.fillRect(leftX, 0, reach + 3, ph);
+    }
+
+    // Soft top & bottom vertical fade so plumes emerge smoothly from mid-to-lower fins
+    plumeCtx.globalCompositeOperation = "destination-in";
+    const vMask = plumeCtx.createLinearGradient(0, 0, 0, ph);
+    vMask.addColorStop(0, "rgba(255, 255, 255, 0)");
+    vMask.addColorStop(0.18, "rgba(255, 255, 255, 0.65)");
+    vMask.addColorStop(0.65, "rgba(255, 255, 255, 1)");
+    vMask.addColorStop(0.95, "rgba(255, 255, 255, 0.35)");
+    vMask.addColorStop(1, "rgba(255, 255, 255, 0)");
+    plumeCtx.fillStyle = vMask;
+    plumeCtx.fillRect(0, 0, pw, ph);
+
+    // 2. Multiply scrolling FBM vapor texture strictly inside those fin-slit plumes
+    plumeCtx.globalCompositeOperation = "source-in";
+    const tile = (width <= 768 ? 140 : 190) * sx;
+    const ox = -(((time * 64 * sx) % tile + tile) % tile);
+    const oy = -(((time * 24 * sx) % tile + tile) % tile);
+    for (let y = oy; y < ph; y += tile) {
+      for (let x = ox; x < pw; x += tile) {
+        plumeCtx.drawImage(steamTex, x, y, tile, tile);
       }
     }
+
+    // 3. Composite onto main hero canvas
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    ctx.globalAlpha = 0.58;
+    ctx.drawImage(plumeCanvas, 0, 0, width, height);
     ctx.restore();
   }
 
@@ -802,19 +851,10 @@ if (location.hash.startsWith("#theme=")) {
     simTime += dt;
 
     const { open, steam } = getCycleState(simTime);
-    const tileA = width <= 768 ? 260 : 340;
-    const tileB = width <= 768 ? 320 : 420;
 
     ctx.clearRect(0, 0, width, height);
-
-    // 1. Bright steady steam BEHIND the fluted glass (shines through the opening slits)
-    drawTiledSteam(steamTexA, tileA, 48, 22, steam * 0.24, simTime);
-
-    // 2. Fluted glass louvers
     drawFlutedGlass(open, simTime);
-
-    // 3. Silky counter-drifting steam IN FRONT sweeping steadily LEFT from right-side fan
-    drawTiledSteam(steamTexB, tileB, 86, 30, steam * 0.16, simTime);
+    drawFinSlitSteam(open, steam, simTime);
 
     rafId = requestAnimationFrame(frame);
   }
