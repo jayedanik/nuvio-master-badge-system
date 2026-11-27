@@ -34,7 +34,56 @@ const FLAGSHIPS = [
   { idx: 3, tab: "Anime / Manga Ink", kicker: "POP CULTURE • BEN-DAY HALFTONE" }
 ];
 
-const HERO_BADGES = ["4k", "remux", "dolby-vision", "dolby-atmos", "imax", "warnerbros", "english-flag", "live"];
+const LIVE_TITLES = [
+  {
+    title: "Superman",
+    meta: "2025 · 2160p UHD BluRay REMUX · Real-Debrid · 72.1 GB",
+    release: "Superman.2025.2160p.UHD.BluRay.REMUX.DV.TrueHD.7.1.Atmos.IMAX.HEVC.10bit.MKV",
+    badges: ["4k", "remux", "dolby-vision", "dolby-atmos", "imax", "warnerbros", "english-flag"]
+  },
+  {
+    title: "Avatar: Fire and Ash",
+    meta: "2025 · 2160p IMAX UHD REMUX · Real-Debrid · 84.0 GB",
+    release: "Avatar.Fire.and.Ash.2025.2160p.UHD.BluRay.REMUX.DV.Atmos.IMAX.HEVC.MKV",
+    badges: ["4k", "remux", "dolby-vision", "dolby-atmos", "imax", "20thcentury", "english-flag"]
+  },
+  {
+    title: "Mission: Impossible – The Final Reckoning",
+    meta: "2025 · 2160p UHD REMUX · TorBox · 78.6 GB",
+    release: "Mission.Impossible.The.Final.Reckoning.2025.2160p.UHD.REMUX.HDR10Plus.Atmos.IMAX.MKV",
+    badges: ["4k", "remux", "hdr10plus", "dolby-atmos", "imax", "paramount_studio", "english-flag"]
+  },
+  {
+    title: "Severance · S02E10",
+    meta: "2025 · 2160p ATVP WEB-DL · Real-Debrid · 6.4 GB",
+    release: "Severance.S02E10.2025.2160p.ATVP.WEB-DL.DDP5.1.Atmos.DV.H265.English.MKV",
+    badges: ["4k", "web-dl", "dolby-vision", "dolby-atmos", "appletv", "cached", "english-flag"]
+  },
+  {
+    title: "The Fantastic Four: First Steps",
+    meta: "2025 · 2160p DSNP WEB-DL · TorBox · 18.4 GB",
+    release: "The.Fantastic.Four.First.Steps.2025.2160p.DSNP.WEB-DL.DV.Atmos.IMAX.H265.MKV",
+    badges: ["4k", "web-dl", "dolby-vision", "dolby-atmos", "imax", "disney", "english-flag"]
+  },
+  {
+    title: "Solo Leveling · S02E13",
+    meta: "2025 · 1080p CR WEB-DL · Dual-Audio · 1.8 GB",
+    release: "[SubsPlease] Solo Leveling S2 - 13 (2025) (1080p) [Dual-Audio] [Crunchyroll] [AV1].mkv",
+    badges: ["1080p", "web-dl", "av1", "dual", "crunchyroll", "japanese", "english-flag"]
+  },
+  {
+    title: "Andor · S02E12",
+    meta: "2025 · 2160p DSNP WEB-DL · Real-Debrid · 5.8 GB",
+    release: "Andor.S02E12.2025.2160p.DSNP.WEB-DL.DV.Atmos.H265.English.MKV",
+    badges: ["4k", "web-dl", "dolby-vision", "dolby-atmos", "disney", "cached", "english-flag"]
+  },
+  {
+    title: "Formula 1 · Monaco Grand Prix",
+    meta: "2026 · Live Sports Feed · 1080p 60 FPS",
+    release: "F1.Grand.Prix.2026.Live.1080p.60fps.HDTV.AAC.English.TS",
+    badges: ["live", "1080p", "60fps", "aac", "hdtv", "cached", "english-flag"]
+  }
+];
 
 const TIER_SAMPLES = [
   "4k", "remux", "dolby-vision", "dolby-atmos", "imax", "cached", "live",
@@ -52,6 +101,8 @@ const savedCountEl = document.getElementById("saved-count");
 
 const simLayer0 = document.getElementById("cinema-layer-0");
 const simLayer1 = document.getElementById("cinema-layer-1");
+const simMovieTitleEl = document.getElementById("sim-movie-title");
+const simMovieMetaEl = document.getElementById("sim-movie-meta");
 const simActiveNameEl = document.getElementById("sim-active-name");
 const simCounterEl = document.getElementById("sim-counter");
 const simCopyBtn = document.getElementById("sim-copy-btn");
@@ -94,26 +145,48 @@ function copyUrl(url, btn) {
   });
 }
 
-function renderFlagship(flagIdx) {
-  const f = FLAGSHIPS[flagIdx];
+let activeFlagshipIdx = 0;
+let flagHoverPaused = false;
+let flagTimer = null;
+
+function renderFlagship(flagIdx, animate = true) {
+  activeFlagshipIdx = (flagIdx + FLAGSHIPS.length) % FLAGSHIPS.length;
+  const f = FLAGSHIPS[activeFlagshipIdx];
   const t = THEMES[f.idx];
   const url = RAW_BASE + t.json;
 
-  flagTabsEl.querySelectorAll(".flag-tab").forEach((b, i) => b.classList.toggle("active", i === flagIdx));
-  flagStageEl.innerHTML = `
-    <div class="flag-media" data-open="${f.idx}">
-      <img src="previews/preview-${t.id}.jpg" alt="${t.name}" />
-    </div>
-    <div class="flag-info">
-      <span class="flag-kicker">${f.kicker}</span>
-      <h3>${t.name}</h3>
-      <p>${t.desc}</p>
-      <div class="flag-actions">
-        <button type="button" class="btn btn-blue btn-sm" data-copy="${url}">Copy JSON URL</button>
-        <button type="button" class="btn btn-outline-dark btn-sm" data-open="${f.idx}">Inspect 4K &amp; Regex ›</button>
+  flagTabsEl.querySelectorAll(".flag-tab").forEach((b, i) => b.classList.toggle("active", i === activeFlagshipIdx));
+  const apply = () => {
+    flagStageEl.innerHTML = `
+      <div class="flag-media" data-open="${f.idx}">
+        <img src="previews/preview-${t.id}.jpg" alt="${t.name}" />
       </div>
-    </div>
-  `;
+      <div class="flag-info">
+        <span class="flag-kicker">${f.kicker}</span>
+        <h3>${t.name}</h3>
+        <p>${t.desc}</p>
+        <div class="flag-actions">
+          <button type="button" class="btn btn-blue btn-sm" data-copy="${url}">Copy JSON URL</button>
+          <button type="button" class="btn btn-outline-dark btn-sm" data-open="${f.idx}">Inspect 4K &amp; Regex ›</button>
+        </div>
+      </div>
+    `;
+    flagStageEl.classList.remove("flag-swapping");
+  };
+
+  if (animate) {
+    flagStageEl.classList.add("flag-swapping");
+    setTimeout(apply, 180);
+  } else {
+    apply();
+  }
+}
+
+function resetFlagTimer() {
+  if (flagTimer) clearInterval(flagTimer);
+  flagTimer = setInterval(() => {
+    if (!flagHoverPaused && !dialogEl.open) renderFlagship(activeFlagshipIdx + 1, true);
+  }, 4000);
 }
 
 function initFlagships() {
@@ -122,17 +195,23 @@ function initFlagships() {
   ).join("");
   flagTabsEl.addEventListener("click", (e) => {
     const tab = e.target.closest(".flag-tab");
-    if (tab) renderFlagship(Number(tab.dataset.flag));
+    if (tab) {
+      renderFlagship(Number(tab.dataset.flag), true);
+      resetFlagTimer();
+    }
   });
-  renderFlagship(0);
+  flagStageEl.addEventListener("mouseenter", () => { flagHoverPaused = true; });
+  flagStageEl.addEventListener("mouseleave", () => { flagHoverPaused = false; });
+  renderFlagship(0, false);
+  resetFlagTimer();
 }
 
 let autoShuffleEnabled = true;
 let simHoverPaused = false;
 let simTimer = null;
 
-function preloadThemeBadges(theme) {
-  return Promise.all(HERO_BADGES.map((b) => new Promise((resolve) => {
+function preloadThemeBadges(theme, titleObj) {
+  return Promise.all(titleObj.badges.map((b) => new Promise((resolve) => {
     const img = new Image();
     img.onload = () => (img.decode ? img.decode().then(resolve, resolve) : resolve());
     img.onerror = resolve;
@@ -144,33 +223,37 @@ let simRenderSeq = 0;
 let frontLayerIdx = 0;
 
 function buildSimRowsOnce() {
-  const html = HERO_BADGES.map((b) => `<img alt="${b}" onerror="this.style.display='none'" />`).join("");
-  simLayer0.innerHTML = html;
-  simLayer1.innerHTML = html;
+  simLayer0.innerHTML = "";
+  simLayer1.innerHTML = "";
 }
 
 async function renderSimulator(themeId, animate = true) {
   const seq = ++simRenderSeq;
   simThemeId = themeId;
   const idx = THEMES.findIndex((x) => x.id === themeId);
-  const t = THEMES[idx >= 0 ? idx : 0];
+  const safeIdx = idx >= 0 ? idx : 0;
+  const t = THEMES[safeIdx];
+  const titleObj = LIVE_TITLES[safeIdx % LIVE_TITLES.length];
+
   simActiveNameEl.textContent = t.name;
-  simCounterEl.textContent = `${(idx >= 0 ? idx : 0) + 1} / ${THEMES.length}`;
+  simCounterEl.textContent = `${safeIdx + 1} / ${THEMES.length}`;
+  simMovieTitleEl.textContent = titleObj.title;
+  simMovieMetaEl.textContent = titleObj.meta;
 
   simCopyBtn.onclick = () => copyUrl(RAW_BASE + t.json, simCopyBtn);
-  simInspectBtn.onclick = () => openDialog(THEMES.indexOf(t));
+  simInspectBtn.onclick = () => openDialog(safeIdx, titleObj.release);
 
-  await preloadThemeBadges(t);
+  await preloadThemeBadges(t, titleObj);
   if (seq !== simRenderSeq) return;
 
   const layers = [simLayer0, simLayer1];
+  const badgesHtml = titleObj.badges.map((b) => `<img src="${t.dir}/${b}.webp" alt="${b}" onerror="this.style.display='none'" />`).join("");
+
   if (!animate) {
-    const imgs = layers[frontLayerIdx].querySelectorAll("img");
-    HERO_BADGES.forEach((b, i) => { imgs[i].style.display = ""; imgs[i].src = `${t.dir}/${b}.webp`; });
+    layers[frontLayerIdx].innerHTML = badgesHtml;
   } else {
     const nextLayerIdx = 1 - frontLayerIdx;
-    const imgs = layers[nextLayerIdx].querySelectorAll("img");
-    HERO_BADGES.forEach((b, i) => { imgs[i].style.display = ""; imgs[i].src = `${t.dir}/${b}.webp`; });
+    layers[nextLayerIdx].innerHTML = badgesHtml;
 
     requestAnimationFrame(() => {
       layers[frontLayerIdx].classList.remove("layer-front");
@@ -181,8 +264,8 @@ async function renderSimulator(themeId, animate = true) {
     });
   }
 
-  const nextIdx = (THEMES.findIndex((x) => x.id === t.id) + 1) % THEMES.length;
-  preloadThemeBadges(THEMES[nextIdx]);
+  const nextIdx = (safeIdx + 1) % THEMES.length;
+  preloadThemeBadges(THEMES[nextIdx], LIVE_TITLES[nextIdx % LIVE_TITLES.length]);
 }
 
 function stepSimulator() {
@@ -307,9 +390,11 @@ async function runReleaseTester(theme) {
   }
 }
 
-function openDialog(idx) {
+function openDialog(idx, customRelease) {
   currentDialogIndex = (idx + THEMES.length) % THEMES.length;
   const t = THEMES[currentDialogIndex];
+  const titleObj = LIVE_TITLES[currentDialogIndex % LIVE_TITLES.length];
+  releaseInput.value = customRelease || titleObj.release;
   dlgCat.textContent = CAT_LABELS[t.cat];
   dlgTitle.textContent = t.name;
   dlgImg.src = `previews/preview-${t.id}.jpg`;
