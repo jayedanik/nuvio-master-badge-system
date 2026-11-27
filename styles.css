@@ -473,9 +473,9 @@ body {
 
 .site-footer {
   background: #000; border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 14px 0; color: #6e6e73; font-size: 0.72rem; letter-spacing: 0.01em;
+  padding: 12px 0; color: #6e6e73; font-size: 0.7rem; letter-spacing: 0.01em;
 }
-.footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
+.footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px; }
 
 .reveal,
 .scroll-card {
@@ -542,55 +542,81 @@ body {
   .spec-tile.wide, .spec-tile.wide-accent { grid-column: auto; }
 }
 @media (max-width: 640px) {
-  .site-header { height: 48px; top: 10px; width: calc(100% - 24px); }
-  .header-inner { padding-inline: 16px; }
+  .site-header { height: 44px; top: 8px; width: calc(100% - 20px); }
+  .header-inner { padding-inline: 14px; }
   .nav-link { display: none; }
 
-  .hero { padding: 80px 0 36px; }
-  .hero-title { font-size: clamp(2rem, 8.5vw, 2.5rem); }
-  .hero-sub { font-size: 0.96rem; margin-bottom: 24px; padding-inline: 4px; }
-  .hero-actions { margin-bottom: 28px; gap: 10px; }
-  .hero-actions .btn { padding: 10px 18px; font-size: 0.86rem; }
+  /* First Page: Fit 100% cleanly inside 1 mobile screen */
+  .hero { padding: 62px 0 18px; min-height: 100dvh; justify-content: space-evenly; }
+  .hero-eyebrow { font-size: 0.64rem; margin-bottom: 6px; }
+  .hero-title { font-size: clamp(1.85rem, 8vw, 2.25rem); margin-bottom: 8px; }
+  .hero-sub { font-size: 0.88rem; margin-bottom: 14px; line-height: 1.4; }
+  .hero-actions { margin-bottom: 16px; gap: 8px; }
+  .hero-actions .btn { padding: 8px 15px; font-size: 0.82rem; }
 
-  .cinema-frame { padding: 22px 18px 20px; border-radius: 24px; }
-  .cinema-stage-top { flex-direction: column; align-items: flex-start; gap: 12px; margin-bottom: 18px; }
+  .cinema-frame { padding: 15px 14px; border-radius: 20px; }
+  .cinema-stage-top { flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 12px; }
   .cinema-movie { width: 100%; }
+  .cinema-eyebrow { font-size: 0.62rem; margin-bottom: 3px; }
   .cinema-movie-title {
-    font-size: 1.28rem; line-height: 1.2; white-space: normal;
-    height: 2.45em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    font-size: 1.15rem; line-height: 1.2; white-space: normal;
+    height: 2.35em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }
   .cinema-movie-meta {
-    font-size: 0.82rem; line-height: 1.35; white-space: normal;
-    height: 2.7em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    font-size: 0.76rem; line-height: 1.3; white-space: normal;
+    height: 2.55em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }
-  .cinema-cta-group { width: 100%; gap: 10px; }
-  .cinema-cta-group .btn-xs { padding: 8px 15px; font-size: 0.82rem; }
-  .cinema-badges-stage { height: 76px; margin-bottom: 18px; }
-  .sim-layer { flex-wrap: wrap; gap: 8px; }
-  .sim-layer img { height: 28px; }
-  .cinema-dock { flex-direction: column; align-items: stretch; gap: 12px; }
-  .glass-pill-dock { width: 100%; justify-content: space-between; padding: 6px 8px; }
-  .dock-center { min-width: 0; flex: 1; justify-content: center; gap: 8px; padding-inline: 6px; }
-  .dock-theme-name { font-size: 0.78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .dock-counter { flex-shrink: 0; font-size: 0.68rem; }
-  #sim-auto-btn { align-self: center; padding: 8px 18px; font-size: 0.82rem; }
+  .cinema-cta-group { width: 100%; gap: 8px; }
+  .cinema-cta-group .btn-xs { padding: 6px 12px; font-size: 0.76rem; }
+  .cinema-badges-stage { height: 64px; margin-bottom: 12px; }
+  .sim-layer { flex-wrap: wrap; gap: 6px; }
+  .sim-layer img { height: 25px; }
+  .cinema-dock { flex-direction: column; align-items: stretch; gap: 8px; }
+  .glass-pill-dock { width: 100%; justify-content: space-between; padding: 4px 6px; }
+  .dock-btn { width: 28px; height: 28px; font-size: 1rem; }
+  .dock-center { min-width: 0; flex: 1; justify-content: center; gap: 6px; padding-inline: 4px; }
+  .dock-theme-name { font-size: 0.76rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dock-counter { flex-shrink: 0; font-size: 0.66rem; }
+  #sim-auto-btn { align-self: center; padding: 6px 14px; font-size: 0.76rem; }
 
-  .spotlight-section, .specs-section, .themes-section, .install-section { padding: 54px 0; }
-  .install-section { min-height: auto; padding: 54px 0 40px; }
-  .site-footer { padding: 12px 0; font-size: 0.68rem; }
-  .footer-inner { justify-content: center; text-align: center; gap: 4px 12px; }
-  .chapter-head, .section-intro, .catalog-head { margin-bottom: 24px; }
-  .sticky-toolbar-light { position: static; border-radius: 22px; padding: 14px; gap: 12px; }
-  .filter-pills { gap: 8px; }
-  .toolbar-right { width: 100%; gap: 10px; }
+  .spotlight-section, .specs-section, .themes-section { padding: 44px 0; }
+  .chapter-head, .section-intro, .catalog-head { margin-bottom: 18px; }
+  .section-intro h2, .chapter-head h2, .catalog-head h2 { font-size: 1.65rem; }
+
+  /* Compact Bento Tiles */
+  .bento-specs { gap: 10px; }
+  .spec-tile { padding: 16px 18px; border-radius: 18px; gap: 4px; }
+  .spec-big { font-size: 1.65rem; }
+  .spec-tile p { font-size: 0.82rem; }
+
+  /* Compact Last Page (Setup + FAQ + Footer fit cleanly) */
+  .install-section { min-height: calc(100dvh - 44px); padding: 54px 0 18px; justify-content: space-evenly; }
+  .steps-grid { gap: 10px; margin-bottom: 22px; }
+  .step-card { padding: 14px 16px; border-radius: 16px; }
+  .step-card h3 { margin: 4px 0; font-size: 0.96rem; }
+  .step-card p { font-size: 0.8rem; line-height: 1.38; }
+  .faq-heading { font-size: 1.25rem; margin-bottom: 10px; }
+  .faq-list { gap: 7px; }
+  .faq-item { padding: 11px 14px; border-radius: 13px; }
+  .faq-item summary { font-size: 0.86rem; }
+  .faq-item p { font-size: 0.78rem; margin-top: 6px; }
+  .site-footer { padding: 10px 0; font-size: 0.65rem; }
+  .footer-inner { justify-content: center; text-align: center; gap: 2px 10px; }
+
+  .sticky-toolbar-light { position: static; border-radius: 18px; padding: 12px; gap: 10px; }
+  .filter-pills { gap: 6px; }
+  .pill { padding: 5px 10px; font-size: 0.74rem; }
+  .toolbar-right { width: 100%; gap: 8px; }
   .search-inline { flex: 1; }
-  .search-inline input { width: 100%; padding: 8px 14px; }
+  .search-inline input { width: 100%; padding: 7px 12px; font-size: 0.8rem; }
   .kbd-hint { display: none; }
-  .theme-grid { grid-template-columns: 1fr; gap: 20px; }
-  .card-body { padding: 18px 20px 22px; gap: 11px; }
-  .fav-btn { min-width: 36px; min-height: 36px; display: grid; place-items: center; }
-  .dlg-shell { padding: 16px; }
+  .theme-grid { grid-template-columns: 1fr; gap: 16px; }
+  .card-body { padding: 15px 16px 18px; gap: 9px; }
+  .card-title { font-size: 1rem; }
+  .card-desc { font-size: 0.8rem; }
+  .fav-btn { min-width: 34px; min-height: 34px; display: grid; place-items: center; }
+  .dlg-shell { padding: 14px; }
   .dlg-head { flex-direction: column; align-items: flex-start; }
   .dlg-url-row .btn { width: 100%; }
-  .preset-chip { padding: 6px 12px; font-size: 0.78rem; }
+  .preset-chip { padding: 5px 11px; font-size: 0.75rem; }
 }
