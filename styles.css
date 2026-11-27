@@ -196,17 +196,17 @@ body {
     #050609;
 }
 
-/* Expandable Apple 4-Dot Hero Finish Pill */
+/* Expandable Apple 4-Dot Hero Finish Pill (Expands Left — Dots Stay Anchored!) */
 .hero-finish-pill {
   position: absolute; top: 68px; right: max(20px, calc((100vw - 1180px) / 2 + 20px)); z-index: 3;
   display: inline-flex; align-items: center;
-  padding: 6px 8px; border-radius: 980px;
+  padding: 6px 10px; border-radius: 980px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.14);
   backdrop-filter: blur(14px) saturate(180%);
   -webkit-backdrop-filter: blur(14px) saturate(180%);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  transition: padding 0.36s cubic-bezier(0.22, 1, 0.36, 1), background 0.25s ease, border-color 0.25s ease;
+  transition: background 0.25s ease, border-color 0.25s ease;
 }
 .finish-dots { display: flex; align-items: center; gap: 7px; }
 .finish-dot {
@@ -222,29 +222,41 @@ body {
   opacity: 1; transform: scale(1.06);
   box-shadow: 0 0 0 2px #050609, 0 0 0 3.3px #f5f5f7;
 }
+.finish-label-wrap {
+  display: grid; grid-template-columns: 0fr; opacity: 0;
+  transition: grid-template-columns 0.36s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.26s ease;
+}
 .finish-label {
-  display: inline-block; max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+  overflow: hidden; white-space: nowrap; text-align: right; min-width: 0;
   font-size: 0.72rem; font-weight: 600; color: #e5e5ea; letter-spacing: 0.01em;
-  transition: max-width 0.38s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease, margin-left 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+  padding-right: 0;
+  transition: padding-right 0.36s cubic-bezier(0.22, 1, 0.36, 1), min-width 0.36s cubic-bezier(0.22, 1, 0.36, 1);
 }
 @media (hover: hover) {
   .hero-finish-pill:hover,
   .hero-finish-pill:focus-within {
-    padding-right: 13px; background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.24);
+    background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.24);
+  }
+  .hero-finish-pill:hover .finish-label-wrap,
+  .hero-finish-pill:focus-within .finish-label-wrap {
+    grid-template-columns: 1fr; opacity: 1;
   }
   .hero-finish-pill:hover .finish-label,
   .hero-finish-pill:focus-within .finish-label {
-    max-width: 110px; opacity: 1; margin-left: 9px;
+    padding-right: 10px; min-width: 66px;
   }
 }
 .hero-finish-pill.expanded {
-  padding-right: 13px; background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.24);
+}
+.hero-finish-pill.expanded .finish-label-wrap {
+  grid-template-columns: 1fr; opacity: 1;
 }
 .hero-finish-pill.expanded .finish-label {
-  max-width: 110px; opacity: 1; margin-left: 9px;
+  padding-right: 10px; min-width: 66px;
 }
 @media (max-width: 640px) {
-  .hero-finish-pill { top: 56px; right: 14px; padding: 5px 7px; }
+  .hero-finish-pill { top: 56px; right: 14px; padding: 5px 8px; }
   .finish-dot { width: 12px; height: 12px; }
 }
 .hero-inner { position: relative; z-index: 1; }
