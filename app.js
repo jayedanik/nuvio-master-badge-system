@@ -590,7 +590,7 @@ if (location.hash.startsWith("#theme=")) {
   if (idx >= 0) openDialog(idx);
 }
 
-/* ---------- Hero Attack-on-Titan Swaying Fins & White Steam Gas ---------- */
+/* ---------- Hero Apple Clear Glass Kinetic Fins + Opening White Steam ---------- */
 (function initHeroAotAtmosphere() {
   const canvas = document.getElementById("hero-aot-canvas");
   const heroSection = document.querySelector(".hero");
@@ -608,8 +608,9 @@ if (location.hash.startsWith("#theme=")) {
   let isHeroInView = true;
   let lastTime = 0;
   let simTime = 0;
+  let steamSpawnAcc = 0;
 
-  // Pre-render soft volumetric white steam puff sprite once (zero per-frame blur cost)
+  // Pre-rendered soft white steam puff sprite (zero per-frame blur cost)
   const puffSize = 128;
   const puffCanvas = document.createElement("canvas");
   puffCanvas.width = puffSize;
@@ -619,12 +620,46 @@ if (location.hash.startsWith("#theme=")) {
     puffSize * 0.5, puffSize * 0.5, puffSize * 0.04,
     puffSize * 0.5, puffSize * 0.5, puffSize * 0.5
   );
-  puffGrad.addColorStop(0, "rgba(255, 255, 255, 0.55)");
-  puffGrad.addColorStop(0.32, "rgba(240, 246, 255, 0.28)");
-  puffGrad.addColorStop(0.68, "rgba(210, 226, 250, 0.09)");
-  puffGrad.addColorStop(1, "rgba(210, 226, 250, 0)");
+  puffGrad.addColorStop(0, "rgba(255, 255, 255, 0.62)");
+  puffGrad.addColorStop(0.32, "rgba(242, 248, 255, 0.30)");
+  puffGrad.addColorStop(0.68, "rgba(215, 232, 255, 0.09)");
+  puffGrad.addColorStop(1, "rgba(215, 232, 255, 0)");
   pCtx.fillStyle = puffGrad;
   pCtx.fillRect(0, 0, puffSize, puffSize);
+
+  function easeInOutSine(x) {
+    return -(Math.cos(Math.PI * Math.max(0, Math.min(1, x))) - 1) / 2;
+  }
+
+  // Smooth breathing open/close curve: returns { open: 0..1, venting: 0..1 }
+  function getCycleState(time) {
+    const period = 7.6;
+    const u = (time % period) / period;
+    let open = 0;
+    let venting = 0;
+
+    if (u < 0.42) {
+      // Smoothly opening
+      const p = u / 0.42;
+      open = easeInOutSine(p);
+      // Steam bursts out strongest while fins are actively opening apart
+      venting = Math.sin(p * Math.PI) * (0.45 + 0.55 * open);
+    } else if (u < 0.54) {
+      // Gentle open hold
+      open = 1;
+      venting = 0.25 * (1 - (u - 0.42) / 0.12);
+    } else if (u < 0.90) {
+      // Smoothly closing back together
+      const p = (u - 0.54) / 0.36;
+      open = 1 - easeInOutSine(p);
+      venting = 0;
+    } else {
+      // Brief calm closed rest
+      open = 0;
+      venting = 0;
+    }
+    return { open, venting };
+  }
 
   function buildScene() {
     const rect = heroSection.getBoundingClientRect();
@@ -636,151 +671,134 @@ if (location.hash.startsWith("#theme=")) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     const isMobile = width <= 768;
-    const finCount = isMobile ? 14 : 22;
+    const pairCount = isMobile ? 6 : 9; // symmetrical wings of Apple clear glass fins
+    const totalFins = pairCount * 2;
     fins = [];
 
-    for (let i = 0; i < finCount; i++) {
-      const t = i / (finCount - 1); // 0..1 across width
-      // Keep center slightly lower/subtler so hero copy & cinema card stay crystal clear, taller on flanks
-      const edgeBias = Math.abs(t - 0.5) * 2; // 0 in center, 1 at edges
-      const baseHeight = height * (0.34 + edgeBias * 0.38 + (Math.sin(i * 2.17) * 0.5 + 0.5) * 0.14);
-      const baseWidth = (isMobile ? 22 : 34) + edgeBias * 14 + (i % 3) * 5;
-      // Natural outward fan lean like Founding Titan rib-fins
-      const lean = (t - 0.5) * (isMobile ? 55 : 110);
+    for (let i = 0; i < totalFins; i++) {
+      // Order outer-to-inner so inner fins overlap cleanly in front when closed
+      const side = i % 2 === 0 ? -1 : 1;
+      const rank = Math.floor(i / 2); // 0 = outermost, pairCount-1 = innermost
+      const normRank = rank / Math.max(1, pairCount - 1); // 0..1
+
+      const maxSpreadAngle = (0.14 + (1 - normRank) * 0.58) * side; // fans outward up to ~41deg
+      const closedAngle = side * (0.015 + (1 - normRank) * 0.045); // folded nearly vertical together
+      const length = height * (0.46 + (1 - normRank) * 0.26);
+      const finWidth = (isMobile ? 28 : 42) + normRank * (isMobile ? 8 : 14);
+
       fins.push({
-        x: t * width + Math.sin(i * 1.7) * (width / finCount) * 0.25,
-        tNorm: t,
-        height: baseHeight,
-        width: baseWidth,
-        lean,
-        phase: i * 0.52,
-        swayAmp: (isMobile ? 14 : 22) + edgeBias * 10,
-        alpha: 0.16 + edgeBias * 0.16,
-        rimAlpha: 0.22 + edgeBias * 0.20,
-        depth: i % 2 === 0 ? 1 : 0.72
+        side,
+        rank,
+        normRank,
+        closedAngle,
+        openAngle: maxSpreadAngle,
+        length,
+        finWidth,
+        // Stagger outer fins slightly ahead of inner fins for a fluid bloom
+        stagger: (1 - normRank) * 0.14,
+        phase: i * 0.45
       });
     }
 
-    const steamCount = isMobile ? 36 : 64;
     steamParticles = [];
-    for (let i = 0; i < steamCount; i++) {
-      steamParticles.push(createSteamParticle(true));
+  }
+
+  function spawnSteamBurst(count, openAmount) {
+    const isMobile = width <= 768;
+    const maxParticles = isMobile ? 48 : 82;
+    const pivotX = width * 0.5;
+    const pivotY = height + 18;
+
+    for (let i = 0; i < count; i++) {
+      if (steamParticles.length >= maxParticles) break;
+      // Vent from inside the fanning gap between left & right fin banks
+      const spreadAngle = (Math.random() - 0.5) * (0.28 + openAmount * 0.72);
+      const distFromPivot = height * (0.14 + Math.random() * 0.34);
+      const spawnX = pivotX + Math.sin(spreadAngle) * distFromPivot;
+      const spawnY = pivotY - Math.cos(spreadAngle) * distFromPivot;
+      const speed = 34 + Math.random() * 44;
+
+      steamParticles.push({
+        x: spawnX,
+        y: spawnY,
+        vx: Math.sin(spreadAngle) * speed * 1.15 + (Math.random() - 0.5) * 14,
+        vy: -Math.cos(spreadAngle) * speed - 18,
+        size: (isMobile ? 54 : 82) + Math.random() * 64,
+        grow: 1.55 + Math.random() * 0.9,
+        maxAlpha: 0.16 + Math.random() * 0.18,
+        age: 0,
+        life: 3.4 + Math.random() * 2.8
+      });
     }
   }
 
-  function createSteamParticle(randomAge) {
-    const finIdx = Math.floor(Math.random() * Math.max(1, fins.length));
-    const fin = fins[finIdx] || { x: Math.random() * width, height: height * 0.4 };
-    // Spawn between fins along the lower-to-mid height
-    const spawnX = fin.x + (Math.random() - 0.5) * (width / Math.max(6, fins.length)) * 1.2;
-    const spawnY = height - Math.random() * (fin.height * 0.58) + 18;
-    const life = 4.2 + Math.random() * 4.5;
-    return {
-      x: spawnX,
-      y: spawnY,
-      vx: 8 + Math.random() * 14,
-      vy: -(22 + Math.random() * 28),
-      size: (width <= 768 ? 52 : 76) + Math.random() * 68,
-      grow: 1.45 + Math.random() * 0.9,
-      maxAlpha: 0.14 + Math.random() * 0.18,
-      age: randomAge ? Math.random() * life : 0,
-      life
-    };
-  }
+  // Draw a single Apple Clear Glass capsule/fin blade
+  function drawGlassFin(pivotX, pivotY, angle, length, finWidth, normRank, openAmount) {
+    ctx.save();
+    ctx.translate(pivotX, pivotY);
+    ctx.rotate(angle);
 
-  function windAt(tNorm, time) {
-    return (
-      Math.sin(time * 0.85 - tNorm * 3.4) * 0.7 +
-      Math.sin(time * 1.55 - tNorm * 5.8 + 1.2) * 0.3
-    );
-  }
+    const r = finWidth * 0.5;
+    const topY = -length;
 
-  function drawFins(time) {
-    const baseY = height + 24;
-    for (let i = 0; i < fins.length; i++) {
-      const f = fins[i];
-      const wVal = windAt(f.tNorm, time + f.phase * 0.25);
-      const sway = wVal * f.swayAmp;
-      const midSway = sway * 0.42;
+    // Rounded Apple pill-fin path
+    ctx.beginPath();
+    ctx.moveTo(-r, 0);
+    ctx.lineTo(-r, topY + r);
+    ctx.arc(0, topY + r, r, Math.PI, 0, false);
+    ctx.lineTo(r, 0);
+    ctx.closePath();
 
-      const tipX = f.x + f.lean + sway;
-      const tipY = baseY - f.height;
-      const cp1X = f.x + f.lean * 0.25 + midSway;
-      const cp1Y = baseY - f.height * 0.38;
-      const cp2X = f.x + f.lean * 0.72 + sway * 0.82;
-      const cp2Y = baseY - f.height * 0.74;
+    // Clear glass translucent fill with subtle specular refraction
+    const bodyGrad = ctx.createLinearGradient(-r, topY, r, 0);
+    bodyGrad.addColorStop(0, `rgba(255, 255, 255, ${0.13 + openAmount * 0.05})`);
+    bodyGrad.addColorStop(0.35, "rgba(210, 232, 255, 0.05)");
+    bodyGrad.addColorStop(0.75, "rgba(180, 210, 255, 0.03)");
+    bodyGrad.addColorStop(1, "rgba(255, 255, 255, 0.09)");
+    ctx.fillStyle = bodyGrad;
+    ctx.fill();
 
-      const halfW = f.width * 0.5;
+    // Crisp Apple Clear Glass rim highlight (bright top/left specular edge, soft bottom)
+    const rimGrad = ctx.createLinearGradient(0, topY, 0, 0);
+    rimGrad.addColorStop(0, `rgba(255, 255, 255, ${0.56 - (1 - normRank) * 0.16})`);
+    rimGrad.addColorStop(0.35, "rgba(220, 238, 255, 0.24)");
+    rimGrad.addColorStop(1, "rgba(255, 255, 255, 0.04)");
+    ctx.strokeStyle = rimGrad;
+    ctx.lineWidth = 1.25;
+    ctx.stroke();
 
-      // Translucent obsidian-mist fin body
-      const grad = ctx.createLinearGradient(f.x, baseY, tipX, tipY);
-      grad.addColorStop(0, `rgba(18, 24, 38, ${f.alpha * 1.15})`);
-      grad.addColorStop(0.55, `rgba(170, 195, 235, ${f.alpha * 0.52})`);
-      grad.addColorStop(1, `rgba(240, 248, 255, ${f.alpha * 0.12})`);
+    // Inner glass specular reflection streak (gives the unmistakable Apple clear glass bevel)
+    ctx.beginPath();
+    ctx.moveTo(-r + 3.5, -18);
+    ctx.lineTo(-r + 3.5, topY + r + 4);
+    ctx.arc(0, topY + r + 4, Math.max(4, r - 3.5), Math.PI, Math.PI * 1.48, false);
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.26)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
 
-      ctx.beginPath();
-      ctx.moveTo(f.x - halfW, baseY);
-      ctx.bezierCurveTo(
-        cp1X - halfW * 0.68, cp1Y,
-        cp2X - halfW * 0.26, cp2Y,
-        tipX, tipY
-      );
-      ctx.bezierCurveTo(
-        cp2X + halfW * 0.22, cp2Y + 4,
-        cp1X + halfW * 0.58, cp1Y + 4,
-        f.x + halfW, baseY
-      );
-      ctx.closePath();
-      ctx.fillStyle = grad;
-      ctx.fill();
-
-      // Delicate glowing silver-white leading edge (titan rib sheen)
-      const rimGrad = ctx.createLinearGradient(f.x, baseY, tipX, tipY);
-      rimGrad.addColorStop(0, "rgba(255, 255, 255, 0.02)");
-      rimGrad.addColorStop(0.45, `rgba(225, 238, 255, ${f.rimAlpha})`);
-      rimGrad.addColorStop(1, "rgba(255, 255, 255, 0.03)");
-
-      ctx.beginPath();
-      ctx.moveTo(f.x - halfW, baseY);
-      ctx.bezierCurveTo(
-        cp1X - halfW * 0.68, cp1Y,
-        cp2X - halfW * 0.26, cp2Y,
-        tipX, tipY
-      );
-      ctx.strokeStyle = rimGrad;
-      ctx.lineWidth = f.depth > 0.8 ? 1.3 : 0.9;
-      ctx.stroke();
-    }
+    ctx.restore();
   }
 
   function updateAndDrawSteam(dt, time) {
-    // Subtle ground steam mist veil at base of fins
-    const mistGrad = ctx.createLinearGradient(0, height * 0.62, 0, height);
-    mistGrad.addColorStop(0, "rgba(235, 244, 255, 0)");
-    mistGrad.addColorStop(1, "rgba(235, 244, 255, 0.07)");
-    ctx.fillStyle = mistGrad;
-    ctx.fillRect(0, height * 0.62, width, height * 0.38);
-
-    for (let i = 0; i < steamParticles.length; i++) {
+    for (let i = steamParticles.length - 1; i >= 0; i--) {
       const p = steamParticles[i];
       p.age += dt;
       if (p.age >= p.life || p.y < -p.size) {
-        steamParticles[i] = createSteamParticle(false);
+        steamParticles.splice(i, 1);
         continue;
       }
-
       const progress = p.age / p.life;
-      const windPush = windAt(p.x / Math.max(1, width), time) * 16;
-      p.x += (p.vx + windPush) * dt;
+      const breeze = Math.sin(time * 0.9 + p.y * 0.006) * 14;
+      p.x += (p.vx + breeze) * dt;
       p.y += p.vy * dt;
+      p.vx *= 1 - 0.55 * dt;
 
-      // Smooth fade-in then long Attack-on-Titan steam dissipation
-      const fadeIn = Math.min(1, progress / 0.18);
-      const fadeOut = Math.pow(1 - progress, 1.35);
+      const fadeIn = Math.min(1, progress / 0.16);
+      const fadeOut = Math.pow(1 - progress, 1.4);
       const alpha = p.maxAlpha * fadeIn * fadeOut;
       if (alpha <= 0.004) continue;
 
-      const curSize = p.size * (0.72 + progress * p.grow);
+      const curSize = p.size * (0.65 + progress * p.grow);
       ctx.globalAlpha = alpha;
       ctx.drawImage(
         puffCanvas,
@@ -803,9 +821,43 @@ if (location.hash.startsWith("#theme=")) {
     lastTime = now;
     simTime += dt;
 
+    const { open, venting } = getCycleState(simTime);
+    const pivotX = width * 0.5;
+    const pivotY = height + 24;
+
+    if (venting > 0.05) {
+      const spawnRate = (width <= 768 ? 16 : 26) * venting;
+      steamSpawnAcc += spawnRate * dt;
+      const toSpawn = Math.floor(steamSpawnAcc);
+      if (toSpawn > 0) {
+        steamSpawnAcc -= toSpawn;
+        spawnSteamBurst(toSpawn, open);
+      }
+    }
+
     ctx.clearRect(0, 0, width, height);
-    drawFins(simTime);
+
+    // 1. Back layer of glass fins (outer 60%)
+    const splitIdx = Math.floor(fins.length * 0.6);
+    for (let i = 0; i < splitIdx; i++) {
+      const f = fins[i];
+      const localOpen = Math.max(0, Math.min(1, open * (1 + f.stagger) - f.stagger * 0.35));
+      const windSway = Math.sin(simTime * 1.1 + f.phase) * 0.018 * (0.3 + localOpen);
+      const angle = f.closedAngle + (f.openAngle - f.closedAngle) * localOpen + windSway;
+      drawGlassFin(pivotX, pivotY, angle, f.length, f.finWidth, f.normRank, localOpen);
+    }
+
+    // 2. White steam venting out from inside between the glass fins
     updateAndDrawSteam(dt, simTime);
+
+    // 3. Front layer of Apple Clear Glass fins (inner 40%) — steam shines right through them
+    for (let i = splitIdx; i < fins.length; i++) {
+      const f = fins[i];
+      const localOpen = Math.max(0, Math.min(1, open * (1 + f.stagger) - f.stagger * 0.35));
+      const windSway = Math.sin(simTime * 1.1 + f.phase) * 0.018 * (0.3 + localOpen);
+      const angle = f.closedAngle + (f.openAngle - f.closedAngle) * localOpen + windSway;
+      drawGlassFin(pivotX, pivotY, angle, f.length, f.finWidth, f.normRank, localOpen);
+    }
 
     rafId = requestAnimationFrame(frame);
   }
@@ -813,8 +865,13 @@ if (location.hash.startsWith("#theme=")) {
   function startLoop() {
     if (reducedMotion) {
       ctx.clearRect(0, 0, width, height);
-      drawFins(0.8);
-      updateAndDrawSteam(0, 0.8);
+      const pivotX = width * 0.5;
+      const pivotY = height + 24;
+      for (let i = 0; i < fins.length; i++) {
+        const f = fins[i];
+        const angle = f.closedAngle + (f.openAngle - f.closedAngle) * 0.65;
+        drawGlassFin(pivotX, pivotY, angle, f.length, f.finWidth, f.normRank, 0.65);
+      }
       return;
     }
     if (!rafId && isHeroInView && !document.hidden) {
