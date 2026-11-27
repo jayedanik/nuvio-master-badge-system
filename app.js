@@ -155,38 +155,51 @@ function copyUrl(url, btn) {
 let activeFlagshipIdx = 0;
 let flagHoverPaused = false;
 let flagTimer = null;
+let flagFrontLayer = 0;
+
+function flagSlideHtml(f) {
+  const t = THEMES[f.idx];
+  const url = RAW_BASE + t.json;
+  return `
+    <div class="flag-media" data-open="${f.idx}">
+      <img src="previews/preview-${t.id}.jpg" alt="${t.name}" />
+    </div>
+    <div class="flag-info">
+      <span class="flag-kicker">${f.kicker}</span>
+      <h3>${t.name}</h3>
+      <p>${t.desc}</p>
+      <div class="flag-actions">
+        <button type="button" class="btn btn-blue btn-sm" data-copy="${url}">Copy JSON URL</button>
+        <button type="button" class="btn btn-outline-dark btn-sm" data-open="${f.idx}">Inspect 4K &amp; Regex ›</button>
+      </div>
+    </div>
+  `;
+}
 
 function renderFlagship(flagIdx, animate = true) {
   activeFlagshipIdx = (flagIdx + FLAGSHIPS.length) % FLAGSHIPS.length;
   const f = FLAGSHIPS[activeFlagshipIdx];
-  const t = THEMES[f.idx];
-  const url = RAW_BASE + t.json;
-
   flagTabsEl.querySelectorAll(".flag-tab").forEach((b, i) => b.classList.toggle("active", i === activeFlagshipIdx));
-  const apply = () => {
-    flagStageEl.innerHTML = `
-      <div class="flag-media" data-open="${f.idx}">
-        <img src="previews/preview-${t.id}.jpg" alt="${t.name}" />
-      </div>
-      <div class="flag-info">
-        <span class="flag-kicker">${f.kicker}</span>
-        <h3>${t.name}</h3>
-        <p>${t.desc}</p>
-        <div class="flag-actions">
-          <button type="button" class="btn btn-blue btn-sm" data-copy="${url}">Copy JSON URL</button>
-          <button type="button" class="btn btn-outline-dark btn-sm" data-open="${f.idx}">Inspect 4K &amp; Regex ›</button>
-        </div>
-      </div>
-    `;
-    flagStageEl.classList.remove("flag-swapping");
-  };
 
-  if (animate) {
-    flagStageEl.classList.add("flag-swapping");
-    setTimeout(apply, 180);
-  } else {
-    apply();
+  const slides = flagStageEl.querySelectorAll(".flag-slide");
+  if (!animate || slides.length < 2) {
+    flagStageEl.innerHTML = `
+      <div class="flag-slide layer-front">${flagSlideHtml(f)}</div>
+      <div class="flag-slide layer-back"></div>
+    `;
+    flagFrontLayer = 0;
+    return;
   }
+
+  const nextLayer = 1 - flagFrontLayer;
+  slides[nextLayer].innerHTML = flagSlideHtml(f);
+  requestAnimationFrame(() => {
+    slides[flagFrontLayer].classList.remove("layer-front");
+    slides[flagFrontLayer].classList.add("layer-back");
+    slides[nextLayer].classList.remove("layer-back");
+    slides[nextLayer].classList.add("layer-front");
+    flagFrontLayer = nextLayer;
+  });
 }
 
 function resetFlagTimer() {

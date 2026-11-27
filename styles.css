@@ -27,16 +27,16 @@ body {
 
 .container { width: min(1240px, calc(100% - 40px)); margin-inline: auto; }
 
-/* Apple Liquid Glass Floating Pill Header */
+/* Apple .clear Liquid Glass Floating Pill Header */
 .site-header {
   position: sticky; top: 12px; z-index: 50; height: 52px;
   width: min(1180px, calc(100% - 32px)); margin: 12px auto 0;
   border-radius: 980px;
-  background: rgba(24, 24, 30, 0.62);
-  backdrop-filter: saturate(200%) blur(28px);
-  -webkit-backdrop-filter: saturate(200%) blur(28px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: saturate(200%) blur(26px) brightness(1.06);
+  -webkit-backdrop-filter: saturate(200%) blur(26px) brightness(1.06);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.42), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
 }
 .header-inner { height: 100%; padding-inline: 22px; display: flex; align-items: center; justify-content: space-between; }
 .brand {
@@ -91,10 +91,14 @@ body {
 }
 .btn-outline-dark:hover { background: rgba(255, 255, 255, 0.95); border-color: rgba(0, 0, 0, 0.2); }
 .btn-glass {
-  background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.22); color: #f5f5f7;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.045); border-color: rgba(255, 255, 255, 0.22); color: #f5f5f7;
+  backdrop-filter: saturate(190%) blur(20px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.38), inset 0 -1px 0 rgba(255, 255, 255, 0.06);
 }
-.btn-glass:hover { background: rgba(255, 255, 255, 0.18); border-color: rgba(255, 255, 255, 0.35); }
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.11); border-color: rgba(255, 255, 255, 0.36);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
 .btn.copied { background: #30d158 !important; border-color: #30d158 !important; color: #02200a !important; }
 
 .chapter-dark { background: var(--dark-bg); color: #f5f5f7; }
@@ -128,17 +132,17 @@ body {
 .hero-sub { margin: 0 auto 28px; color: #a1a1a6; font-size: clamp(1rem, 1.7vw, 1.18rem); max-width: 600px; }
 .hero-actions { display: flex; justify-content: center; align-items: center; gap: 14px; margin-bottom: 46px; }
 
-/* Apple TV+ Cinematic Liquid Glass Stage */
+/* Apple .clear Liquid Glass Cinema Stage */
 .cinema-frame {
   position: relative;
   max-width: 920px; margin-inline: auto; text-align: left;
-  padding: 36px 38px 30px;
-  background: radial-gradient(120% 100% at 50% 0%, rgba(40, 42, 54, 0.72) 0%, rgba(14, 14, 18, 0.94) 68%);
-  backdrop-filter: saturate(200%) blur(34px);
-  -webkit-backdrop-filter: saturate(200%) blur(34px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 34px 36px 28px;
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: saturate(200%) blur(32px) brightness(1.05);
+  -webkit-backdrop-filter: saturate(200%) blur(32px) brightness(1.05);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 32px; overflow: hidden;
-  box-shadow: 0 44px 110px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.38), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
 }
 .cinema-ambient {
   position: absolute; top: -80px; right: -80px; width: 380px; height: 380px; border-radius: 50%;
@@ -194,10 +198,10 @@ body {
 .glass-pill-dock {
   display: inline-flex; align-items: center; gap: 10px;
   padding: 5px 6px; border-radius: 980px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   backdrop-filter: saturate(200%) blur(24px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -1px 0 rgba(255, 255, 255, 0.06);
 }
 .dock-btn {
   width: 32px; height: 32px; border-radius: 50%; border: 0;
@@ -237,24 +241,31 @@ body {
 }
 
 .flagship-stage {
-  background: #ffffff; border-radius: 26px; border: 1px solid var(--light-border);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.06); overflow: hidden;
-  display: grid; grid-template-columns: 1.55fr 1fr; align-items: center;
-  height: 450px;
-  transition: opacity 0.3s ease;
+  position: relative;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: saturate(190%) blur(24px);
+  border-radius: 28px; border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.08), inset 0 1px 0 #fff;
+  overflow: hidden; height: 420px;
 }
-.flagship-stage.flag-swapping { opacity: 0.35; }
+.flag-slide {
+  position: absolute; inset: 0;
+  display: grid; grid-template-columns: 1.55fr 1fr; align-items: center;
+  transition: opacity 0.52s cubic-bezier(0.22, 1, 0.36, 1), transform 0.52s cubic-bezier(0.22, 1, 0.36, 1), filter 0.52s ease;
+}
+.flag-slide.layer-back { opacity: 0; pointer-events: none; transform: scale(0.985); filter: blur(4px); }
+.flag-slide.layer-front { opacity: 1; transform: scale(1); filter: blur(0); }
 .flag-media {
-  cursor: zoom-in; height: 100%; padding: 20px 0 20px 20px;
+  cursor: zoom-in; height: 100%; padding: 18px 0 18px 18px;
   display: flex; align-items: center; justify-content: center;
-  background: #ffffff;
 }
 .flag-media img {
   width: 100%; height: auto; max-height: 100%; object-fit: contain; display: block;
   border-radius: 16px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);
   transition: transform 0.45s var(--ease);
 }
-.flagship-stage:hover .flag-media img { transform: scale(1.015); }
+.flag-slide:hover .flag-media img { transform: scale(1.015); }
 .flag-info { padding: 28px 34px; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
 .flag-kicker { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.08em; font-weight: 600; color: var(--blue); }
 .flag-info h3 { margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 1.65rem; letter-spacing: -0.025em; color: var(--ink-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -407,7 +418,9 @@ body {
 .dlg-url-row code { flex: 1; min-width: 200px; font-family: 'JetBrains Mono', monospace; font-size: 0.79rem; color: #e5e5ea; word-break: break-all; }
 
 @media (max-width: 960px) {
-  .flagship-stage { grid-template-columns: 1fr; height: auto; }
+  .flagship-stage { height: auto; }
+  .flag-slide { position: relative; grid-template-columns: 1fr; }
+  .flag-slide.layer-back { display: none; }
   .flag-media { padding: 16px 16px 0; height: auto; }
   .bento-specs { grid-template-columns: 1fr; }
   .spec-tile.wide, .spec-tile.wide-accent { grid-column: auto; }
