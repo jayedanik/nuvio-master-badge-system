@@ -156,6 +156,17 @@ let activeFlagshipIdx = 0;
 let flagHoverPaused = false;
 let flagTimer = null;
 let flagFrontLayer = 0;
+let flagSeq = 0;
+
+function preloadFlagshipImg(f) {
+  const t = THEMES[f.idx];
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => (img.decode ? img.decode().then(resolve, resolve) : resolve());
+    img.onerror = resolve;
+    img.src = `previews/preview-${t.id}.jpg`;
+  });
+}
 
 function flagSlideHtml(f) {
   const t = THEMES[f.idx];
@@ -176,10 +187,14 @@ function flagSlideHtml(f) {
   `;
 }
 
-function renderFlagship(flagIdx, animate = true) {
+async function renderFlagship(flagIdx, animate = true) {
+  const seq = ++flagSeq;
   activeFlagshipIdx = (flagIdx + FLAGSHIPS.length) % FLAGSHIPS.length;
   const f = FLAGSHIPS[activeFlagshipIdx];
   flagTabsEl.querySelectorAll(".flag-tab").forEach((b, i) => b.classList.toggle("active", i === activeFlagshipIdx));
+
+  await preloadFlagshipImg(f);
+  if (seq !== flagSeq) return;
 
   const slides = flagStageEl.querySelectorAll(".flag-slide");
   if (!animate || slides.length < 2) {
@@ -188,18 +203,19 @@ function renderFlagship(flagIdx, animate = true) {
       <div class="flag-slide layer-back"></div>
     `;
     flagFrontLayer = 0;
-    return;
+  } else {
+    const nextLayer = 1 - flagFrontLayer;
+    slides[nextLayer].innerHTML = flagSlideHtml(f);
+    requestAnimationFrame(() => {
+      slides[flagFrontLayer].classList.remove("layer-front");
+      slides[flagFrontLayer].classList.add("layer-back");
+      slides[nextLayer].classList.remove("layer-back");
+      slides[nextLayer].classList.add("layer-front");
+      flagFrontLayer = nextLayer;
+    });
   }
 
-  const nextLayer = 1 - flagFrontLayer;
-  slides[nextLayer].innerHTML = flagSlideHtml(f);
-  requestAnimationFrame(() => {
-    slides[flagFrontLayer].classList.remove("layer-front");
-    slides[flagFrontLayer].classList.add("layer-back");
-    slides[nextLayer].classList.remove("layer-back");
-    slides[nextLayer].classList.add("layer-front");
-    flagFrontLayer = nextLayer;
-  });
+  preloadFlagshipImg(FLAGSHIPS[(activeFlagshipIdx + 1) % FLAGSHIPS.length]);
 }
 
 function resetFlagTimer() {
