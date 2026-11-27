@@ -138,13 +138,13 @@ body {
   color: var(--ink-dark);
 }
 
-/* Chapter 1: Hero — Fluid Full Viewport on Every Screen */
+/* Chapter 1: Hero — Fluid Full Viewport (100svh prevents Android address-bar scroll jank) */
 .hero {
   position: relative;
   padding: clamp(64px, 8vh, 92px) 0 clamp(22px, 4vh, 48px);
   text-align: center; overflow: hidden;
   min-height: min(100vh, 980px);
-  min-height: min(100dvh, 980px);
+  min-height: min(100svh, 980px);
   display: flex; flex-direction: column; justify-content: center;
 }
 .hero-aura {
@@ -439,7 +439,7 @@ body {
 .install-section {
   padding: clamp(64px, 8vh, 88px) 0 40px;
   min-height: min(100vh, 960px);
-  min-height: min(100dvh, 960px);
+  min-height: min(100svh, 960px);
   display: flex; flex-direction: column; justify-content: center;
 }
 .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; margin-bottom: 54px; }
@@ -547,11 +547,15 @@ body {
   .theme-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 640px) {
-  /* Disable heavy per-card backdrop-filter on mobile for locked 120 FPS touch scroll */
+  /* Zero-jank mobile scroll: no backdrop-filter readbacks, no 100dvh relayouts, no scroll-reveal paint stalls */
+  .site-header, .cinema-frame, .glass-pill-dock, .btn-glass,
   .theme-card, .step-card, .spec-tile, .flagship-stage, .btn-outline-dark, .pill, .flag-tab, .search-inline input, .sort-select {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
+  .site-header { background: rgba(14, 15, 22, 0.92); }
+  .reveal, .scroll-card { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .theme-card { contain: layout style paint; }
   .chapter-dark {
     background:
       radial-gradient(520px 320px at 80% 18%, rgba(41, 151, 255, 0.12) 0%, transparent 65%),
@@ -569,7 +573,7 @@ body {
   .nav-link { display: none; }
 
   /* First Page: Fit 100% cleanly inside 1 mobile screen */
-  .hero { padding: 62px 0 18px; min-height: 100dvh; justify-content: space-evenly; }
+  .hero { padding: 62px 0 18px; min-height: 100svh; justify-content: space-evenly; }
   .hero-eyebrow { font-size: 0.64rem; margin-bottom: 6px; }
   .hero-title { font-size: clamp(1.85rem, 8vw, 2.25rem); margin-bottom: 8px; }
   .hero-sub { font-size: 0.88rem; margin-bottom: 14px; line-height: 1.4; }
@@ -612,7 +616,7 @@ body {
   .spec-tile p { font-size: 0.82rem; }
 
   /* Compact Last Page (Setup + FAQ + Footer fit cleanly) */
-  .install-section { min-height: 100dvh; padding: 62px 0 18px; justify-content: space-evenly; }
+  .install-section { min-height: 100svh; padding: 62px 0 18px; justify-content: space-evenly; }
   .steps-grid { gap: 10px; margin-bottom: 22px; }
   .step-card { padding: 14px 16px; border-radius: 16px; }
   .step-card h3 { margin: 4px 0; font-size: 0.96rem; }
