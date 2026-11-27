@@ -779,7 +779,7 @@ if (location.hash.startsWith("#theme=")) {
     // 3. Composite onto main hero canvas (light, refined, never overpowering)
     ctx.save();
     ctx.globalCompositeOperation = "screen";
-    ctx.globalAlpha = 0.13;
+    ctx.globalAlpha = 0.06;
     ctx.drawImage(plumeCanvas, 0, 0, width, height);
     ctx.restore();
   }
