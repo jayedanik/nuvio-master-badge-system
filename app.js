@@ -590,7 +590,7 @@ if (location.hash.startsWith("#theme=")) {
   if (idx >= 0) openDialog(idx);
 }
 
-/* ---------- Hero Apple Fluted Glass Louvers + AoT Sweeping Hot Steam ---------- */
+/* ---------- Hero Apple Fluted Glass Louvers + Jet-Vented Stand-Fan Steam ---------- */
 (function initHeroAotAtmosphere() {
   const canvas = document.getElementById("hero-aot-canvas");
   const heroSection = document.querySelector(".hero");
@@ -610,7 +610,7 @@ if (location.hash.startsWith("#theme=")) {
   let simTime = 0;
   let steamSpawnAcc = 0;
 
-  // Pre-rendered dense AoT white steam cloud sprite (zero per-frame blur cost)
+  // Pre-rendered soft volumetric white steam puff sprite
   const puffSize = 128;
   const puffCanvas = document.createElement("canvas");
   puffCanvas.width = puffSize;
@@ -620,10 +620,10 @@ if (location.hash.startsWith("#theme=")) {
     puffSize * 0.5, puffSize * 0.5, puffSize * 0.02,
     puffSize * 0.5, puffSize * 0.5, puffSize * 0.5
   );
-  puffGrad.addColorStop(0, "rgba(255, 255, 255, 0.95)");
-  puffGrad.addColorStop(0.30, "rgba(246, 250, 255, 0.62)");
-  puffGrad.addColorStop(0.65, "rgba(225, 238, 255, 0.22)");
-  puffGrad.addColorStop(1, "rgba(225, 238, 255, 0)");
+  puffGrad.addColorStop(0, "rgba(255, 255, 255, 0.96)");
+  puffGrad.addColorStop(0.28, "rgba(246, 250, 255, 0.64)");
+  puffGrad.addColorStop(0.62, "rgba(222, 236, 255, 0.22)");
+  puffGrad.addColorStop(1, "rgba(222, 236, 255, 0)");
   pCtx.fillStyle = puffGrad;
   pCtx.fillRect(0, 0, puffSize, puffSize);
 
@@ -677,35 +677,32 @@ if (location.hash.startsWith("#theme=")) {
 
   function spawnSteamBurst(count, open) {
     const isMobile = width <= 768;
-    const maxParticles = isMobile ? 80 : 140;
+    const maxParticles = isMobile ? 85 : 150;
     const slatW = width / slatCount;
 
     for (let i = 0; i < count; i++) {
       if (steamParticles.length >= maxParticles) break;
-      const idx = Math.floor(Math.random() * Math.max(1, slatCount - 1));
+      const idx = Math.floor(Math.random() * slatCount);
       const localOpen = getLocalOpen(idx, open);
       if (localOpen < 0.10) continue;
 
-      // Slats open to the right, so steam jets sideways to the right + slightly up (AoT wind sweep)
-      const gapCenterX = (idx + 1) * slatW;
+      // Slats hinge on their RIGHT edge & crack open on their LEFT edge -> jet shoots LEFT!
+      const slitX = idx * slatW + 4;
       const spawnY = height * (0.14 + Math.random() * 0.78);
-      const isStreak = Math.random() < 0.42;
 
       steamParticles.push({
-        x: gapCenterX,
+        x: slitX,
         y: spawnY,
-        vx: (isMobile ? 65 : 95) + Math.random() * (isMobile ? 55 : 85),
-        vy: -(18 + Math.random() * 34),
-        size: isStreak
-          ? ((isMobile ? 28 : 38) + Math.random() * 20)
-          : ((isMobile ? 42 : 58) + Math.random() * 34),
-        stretchX: isStreak ? 2.5 : 1.55,
-        stretchY: isStreak ? 0.55 : 0.85,
-        grow: isStreak ? 1.8 : 2.3,
-        maxAlpha: isStreak ? (0.34 + Math.random() * 0.20) : (0.28 + Math.random() * 0.22),
+        // Fast pressurized jet exhaust to the left, then fan-turbulence slows & swirls it
+        vx: -((isMobile ? 120 : 175) + Math.random() * (isMobile ? 80 : 120)),
+        vy: (Math.random() - 0.62) * 32,
+        size: (isMobile ? 22 : 30) + Math.random() * 18,
+        grow: (isMobile ? 3.2 : 4.0) + Math.random() * 1.4,
+        maxAlpha: 0.30 + Math.random() * 0.22,
         seed: Math.random() * Math.PI * 2,
+        spin: (Math.random() - 0.5) * 2.2,
         age: 0,
-        life: 1.5 + Math.random() * 1.3
+        life: 1.6 + Math.random() * 1.3
       });
     }
   }
@@ -714,51 +711,56 @@ if (location.hash.startsWith("#theme=")) {
     for (let i = steamParticles.length - 1; i >= 0; i--) {
       const p = steamParticles[i];
       p.age += dt;
-      if (p.age >= p.life || p.x > width + p.size * 2 || p.y < -p.size * 2) {
+      if (p.age >= p.life || p.x < -p.size * 3 || p.y < -p.size * 3) {
         steamParticles.splice(i, 1);
         continue;
       }
-      const waveY = Math.sin(time * 2.6 + p.seed + p.x * 0.012) * 16;
-      p.x += p.vx * dt;
-      p.y += (p.vy + waveY) * dt;
-      p.vx *= 1 - 0.18 * dt;
+      const progress = p.age / p.life;
+
+      // Jet phase (0..0.25): fast linear jet out of the glass slit
+      // Fan-wind phase (0.25..1.0): air drag + stand-fan swirling turbulence & upward billow
+      if (progress > 0.22) {
+        p.vx *= 1 - 1.35 * dt; // jet decelerates into ambient fan air
+        p.vy -= 42 * dt;       // hot steam rises as it slows
+        const fanSwirlY = Math.sin(time * 3.6 + p.seed + p.x * 0.014) * 58;
+        const fanSwirlX = Math.cos(time * 2.8 + p.seed + p.y * 0.012) * 24;
+        p.x += (p.vx + fanSwirlX) * dt;
+        p.y += (p.vy + fanSwirlY) * dt;
+      } else {
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+      }
     }
   }
 
-  function drawHotSteam(open) {
-    const slatW = width / slatCount;
-
+  function drawSteamLayer(frontPass) {
     ctx.save();
     ctx.globalCompositeOperation = "screen";
 
-    // Subtle bright vapor slit glow along the cracked-open side of each fin
-    if (open > 0.08) {
-      for (let i = 0; i < slatCount - 1; i++) {
-        const localOpen = getLocalOpen(i, open);
-        if (localOpen < 0.08) continue;
-        const gapCenterX = (i + 1) * slatW;
-        const glowW = Math.max(6, slatW * localOpen * 0.42);
-        ctx.fillStyle = `rgba(240, 248, 255, ${0.14 * localOpen})`;
-        ctx.fillRect(gapCenterX - glowW * 0.4, 0, glowW, height);
-      }
-    }
-
-    // Sweeping AoT-style white steam ribbons & clouds
     for (let i = 0; i < steamParticles.length; i++) {
       const p = steamParticles[i];
       const progress = p.age / p.life;
-      const fadeIn = Math.min(1, progress / 0.10);
+      // Young jet (progress <= 0.24) renders BEHIND the glass fins (emerging from inside!)
+      // Expanded fan-swirled clouds (progress > 0.24) render IN FRONT of the glass!
+      const isFront = progress > 0.24;
+      if (isFront !== frontPass) continue;
+
+      const fadeIn = Math.min(1, progress / 0.08);
       const fadeOut = Math.pow(1 - progress, 1.35);
       const alpha = p.maxAlpha * fadeIn * fadeOut;
       if (alpha <= 0.005) continue;
 
-      const curSize = p.size * (0.65 + progress * p.grow);
-      const angle = Math.atan2(p.vy, p.vx);
+      const curSize = p.size * (0.55 + progress * p.grow);
+      // Jet is stretched horizontally at birth, then relaxes into round billowing fan clouds
+      const jetFactor = Math.max(0, 1 - progress / 0.35);
+      const scaleX = 1 + jetFactor * 1.45;
+      const scaleY = 1 - jetFactor * 0.38;
+      const angle = Math.atan2(p.vy, p.vx) * jetFactor + p.spin * progress * (1 - jetFactor);
 
       ctx.save();
       ctx.translate(p.x, p.y);
       ctx.rotate(angle);
-      ctx.scale(p.stretchX, p.stretchY);
+      ctx.scale(scaleX, scaleY);
       ctx.globalAlpha = alpha;
       ctx.drawImage(puffCanvas, -curSize * 0.5, -curSize * 0.5, curSize, curSize);
       ctx.restore();
@@ -770,13 +772,29 @@ if (location.hash.startsWith("#theme=")) {
   function drawFlutedGlass(open, time) {
     const slatW = width / slatCount;
 
+    // Bright pressurized steam glow INSIDE behind the open left slits
+    if (open > 0.08) {
+      ctx.save();
+      ctx.globalCompositeOperation = "screen";
+      for (let i = 0; i < slatCount; i++) {
+        const localOpen = getLocalOpen(i, open);
+        if (localOpen < 0.08) continue;
+        const slitX = i * slatW;
+        const gapW = slatW * localOpen * 0.24;
+        ctx.fillStyle = `rgba(235, 246, 255, ${0.24 * localOpen})`;
+        ctx.fillRect(slitX, 0, Math.max(3, gapW), height);
+      }
+      ctx.restore();
+    }
+
     for (let i = 0; i < slatCount; i++) {
       const tNorm = i / Math.max(1, slatCount - 1);
       const localOpen = getLocalOpen(i, open);
 
-      // Subtle crack-open (~24%) pivoting to the left so the right-side slit opens
+      // Slats anchor on their RIGHT edge & crack open ~24% on their LEFT edge
       const faceW = slatW * (1 - localOpen * 0.24);
-      const xLeft = i * slatW;
+      const xRight = (i + 1) * slatW;
+      const xLeft = xRight - faceW;
 
       const wavePhase = Math.sin(tNorm * 4.2 + time * 0.35);
       const yShift = height * (0.38 + wavePhase * 0.16);
@@ -792,8 +810,8 @@ if (location.hash.startsWith("#theme=")) {
       ctx.fillStyle = vGrad;
       ctx.fillRect(xLeft, 0, faceW, height);
 
-      const hGrad = ctx.createLinearGradient(xLeft, 0, xLeft + faceW, 0);
-      hGrad.addColorStop(0, `rgba(255, 255, 255, ${0.24 + localOpen * 0.12})`);
+      const hGrad = ctx.createLinearGradient(xLeft, 0, xRight, 0);
+      hGrad.addColorStop(0, `rgba(255, 255, 255, ${0.26 + localOpen * 0.16})`);
       hGrad.addColorStop(0.16, "rgba(185, 228, 255, 0.10)");
       hGrad.addColorStop(0.55, "rgba(255, 255, 255, 0.01)");
       hGrad.addColorStop(0.88, "rgba(0, 0, 0, 0.28)");
@@ -802,8 +820,9 @@ if (location.hash.startsWith("#theme=")) {
       ctx.fillStyle = hGrad;
       ctx.fillRect(xLeft, 0, faceW, height);
 
-      ctx.fillStyle = `rgba(255, 255, 255, ${0.22 + localOpen * 0.16})`;
-      ctx.fillRect(xLeft, 0, 1.1, height);
+      // Crisp glass highlight on the opening LEFT edge
+      ctx.fillStyle = `rgba(255, 255, 255, ${0.24 + localOpen * 0.20})`;
+      ctx.fillRect(xLeft, 0, 1.2, height);
     }
 
     const vigTop = ctx.createLinearGradient(0, 0, 0, height * 0.18);
@@ -826,7 +845,7 @@ if (location.hash.startsWith("#theme=")) {
     const { open, venting } = getCycleState(simTime);
 
     if (venting > 0.04) {
-      const spawnRate = (width <= 768 ? 44 : 72) * venting;
+      const spawnRate = (width <= 768 ? 48 : 78) * venting;
       steamSpawnAcc += spawnRate * dt;
       const toSpawn = Math.floor(steamSpawnAcc);
       if (toSpawn > 0) {
@@ -838,8 +857,12 @@ if (location.hash.startsWith("#theme=")) {
     updateSteam(dt, simTime);
 
     ctx.clearRect(0, 0, width, height);
+    // 1. Jet steam emerging from INSIDE behind the glass slits
+    drawSteamLayer(false);
+    // 2. Fluted glass louvers
     drawFlutedGlass(open, simTime);
-    drawHotSteam(open);
+    // 3. Escaped steam caught in the stand-fan breeze & billowing outward
+    drawSteamLayer(true);
 
     rafId = requestAnimationFrame(frame);
   }
