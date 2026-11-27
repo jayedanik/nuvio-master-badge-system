@@ -13,7 +13,9 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+@media (min-width: 769px) and (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
 
 body {
   margin: 0;
@@ -215,13 +217,14 @@ body {
 .sim-layer {
   width: 100%;
   display: flex; flex-wrap: nowrap; gap: 10px; align-items: center; overflow: hidden;
-  transition: opacity 0.48s cubic-bezier(0.22, 1, 0.36, 1), transform 0.48s cubic-bezier(0.22, 1, 0.36, 1), filter 0.48s ease;
+  will-change: opacity, transform;
+  transition: opacity 0.48s cubic-bezier(0.22, 1, 0.36, 1), transform 0.48s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .sim-layer.layer-back {
   position: absolute; inset: 0; opacity: 0; pointer-events: none;
-  transform: scale(0.98); filter: blur(3px);
+  transform: scale(0.985);
 }
-.sim-layer.layer-front { position: relative; opacity: 1; transform: scale(1); filter: blur(0); }
+.sim-layer.layer-front { position: relative; opacity: 1; transform: scale(1); }
 .sim-layer img {
   height: 38px; width: auto; max-width: 150px; object-fit: contain; flex-shrink: 1;
   filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.55));
@@ -295,10 +298,11 @@ body {
 .flag-slide {
   position: absolute; inset: 0; height: 100%;
   display: grid; grid-template-columns: 1.55fr 1fr; align-items: center;
-  transition: opacity 0.52s cubic-bezier(0.22, 1, 0.36, 1), transform 0.52s cubic-bezier(0.22, 1, 0.36, 1), filter 0.52s ease;
+  will-change: opacity, transform;
+  transition: opacity 0.48s cubic-bezier(0.22, 1, 0.36, 1), transform 0.48s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.flag-slide.layer-back { opacity: 0; pointer-events: none; transform: scale(0.985); filter: blur(4px); }
-.flag-slide.layer-front { opacity: 1; transform: scale(1); filter: blur(0); }
+.flag-slide.layer-back { opacity: 0; pointer-events: none; transform: scale(0.988); }
+.flag-slide.layer-front { opacity: 1; transform: scale(1); }
 .flag-media {
   cursor: zoom-in; height: 100%; min-height: 0; padding: 20px 0 20px 20px;
   display: flex; align-items: center; justify-content: center;
@@ -399,13 +403,12 @@ body {
 .theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 22px; align-items: stretch; }
 .theme-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.16);
-  backdrop-filter: blur(2px) saturate(180%);
-  -webkit-backdrop-filter: blur(2px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.62); border-radius: 22px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.82); border-radius: 22px;
   overflow: hidden; display: flex; flex-direction: column;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.82);
-  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.42s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s ease;
+  contain: layout style paint;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.36s cubic-bezier(0.22, 1, 0.36, 1), background 0.25s ease;
 }
 .theme-card:hover {
   transform: translateY(-5px) scale(1.012);
