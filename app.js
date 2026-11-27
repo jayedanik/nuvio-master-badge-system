@@ -39,51 +39,58 @@ const LIVE_TITLES = [
     title: "Superman",
     meta: "2025 · 2160p UHD BluRay REMUX · Real-Debrid · 72.1 GB",
     release: "Superman.2025.2160p.UHD.BluRay.REMUX.DV.TrueHD.7.1.Atmos.IMAX.HEVC.10bit.MKV",
-    badges: ["4k", "remux", "dolby-vision", "dolby-atmos", "imax", "warnerbros", "english-flag"]
+    badges: ["4k", "remux", "dolby-vision", "dolby-atmos", "warnerbros", "english-flag"]
   },
   {
     title: "Avatar: Fire and Ash",
     meta: "2025 · 2160p IMAX UHD REMUX · Real-Debrid · 84.0 GB",
     release: "Avatar.Fire.and.Ash.2025.2160p.UHD.BluRay.REMUX.DV.Atmos.IMAX.HEVC.MKV",
-    badges: ["4k", "remux", "dolby-vision", "dolby-atmos", "imax", "20thcentury", "english-flag"]
+    badges: ["4k", "remux", "dolby-vision", "dolby-atmos", "imax", "english-flag"]
   },
   {
     title: "Mission: Impossible – The Final Reckoning",
     meta: "2025 · 2160p UHD REMUX · TorBox · 78.6 GB",
     release: "Mission.Impossible.The.Final.Reckoning.2025.2160p.UHD.REMUX.HDR10Plus.Atmos.IMAX.MKV",
-    badges: ["4k", "remux", "hdr10plus", "dolby-atmos", "imax", "paramount_studio", "english-flag"]
+    badges: ["4k", "remux", "hdr10plus", "dolby-atmos", "paramount_studio", "english-flag"]
   },
   {
     title: "Severance · S02E10",
     meta: "2025 · 2160p ATVP WEB-DL · Real-Debrid · 6.4 GB",
     release: "Severance.S02E10.2025.2160p.ATVP.WEB-DL.DDP5.1.Atmos.DV.H265.English.MKV",
-    badges: ["4k", "web-dl", "dolby-vision", "dolby-atmos", "appletv", "cached", "english-flag"]
+    badges: ["4k", "web-dl", "dolby-vision", "dolby-atmos", "appletv", "english-flag"]
   },
   {
     title: "The Fantastic Four: First Steps",
     meta: "2025 · 2160p DSNP WEB-DL · TorBox · 18.4 GB",
     release: "The.Fantastic.Four.First.Steps.2025.2160p.DSNP.WEB-DL.DV.Atmos.IMAX.H265.MKV",
-    badges: ["4k", "web-dl", "dolby-vision", "dolby-atmos", "imax", "disney", "english-flag"]
+    badges: ["4k", "web-dl", "dolby-vision", "dolby-atmos", "disney", "english-flag"]
   },
   {
     title: "Solo Leveling · S02E13",
     meta: "2025 · 1080p CR WEB-DL · Dual-Audio · 1.8 GB",
     release: "[SubsPlease] Solo Leveling S2 - 13 (2025) (1080p) [Dual-Audio] [Crunchyroll] [AV1].mkv",
-    badges: ["1080p", "web-dl", "av1", "dual", "crunchyroll", "japanese", "english-flag"]
+    badges: ["1080p", "web-dl", "av1", "dual", "crunchyroll", "english-flag"]
   },
   {
     title: "Andor · S02E12",
     meta: "2025 · 2160p DSNP WEB-DL · Real-Debrid · 5.8 GB",
     release: "Andor.S02E12.2025.2160p.DSNP.WEB-DL.DV.Atmos.H265.English.MKV",
-    badges: ["4k", "web-dl", "dolby-vision", "dolby-atmos", "disney", "cached", "english-flag"]
+    badges: ["4k", "web-dl", "dolby-vision", "dolby-atmos", "cached", "english-flag"]
   },
   {
     title: "Formula 1 · Monaco Grand Prix",
     meta: "2026 · Live Sports Feed · 1080p 60 FPS",
     release: "F1.Grand.Prix.2026.Live.1080p.60fps.HDTV.AAC.English.TS",
-    badges: ["live", "1080p", "60fps", "aac", "hdtv", "cached", "english-flag"]
+    badges: ["live", "1080p", "60fps", "hevc", "cached", "english-flag"]
   }
 ];
+
+function getBadgesForTheme(theme, titleObj) {
+  if (theme.id === "live-tv-broadcast") {
+    return ["live", "4k", "1080p", "60fps", "hevc", "english-flag"];
+  }
+  return titleObj.badges;
+}
 
 const TIER_SAMPLES = [
   "4k", "remux", "dolby-vision", "dolby-atmos", "imax", "cached", "live",
@@ -211,7 +218,8 @@ let simHoverPaused = false;
 let simTimer = null;
 
 function preloadThemeBadges(theme, titleObj) {
-  return Promise.all(titleObj.badges.map((b) => new Promise((resolve) => {
+  const list = getBadgesForTheme(theme, titleObj);
+  return Promise.all(list.map((b) => new Promise((resolve) => {
     const img = new Image();
     img.onload = () => (img.decode ? img.decode().then(resolve, resolve) : resolve());
     img.onerror = resolve;
@@ -247,7 +255,8 @@ async function renderSimulator(themeId, animate = true) {
   if (seq !== simRenderSeq) return;
 
   const layers = [simLayer0, simLayer1];
-  const badgesHtml = titleObj.badges.map((b) => `<img src="${t.dir}/${b}.webp" alt="${b}" onerror="this.style.display='none'" />`).join("");
+  const badgeList = getBadgesForTheme(t, titleObj);
+  const badgesHtml = badgeList.map((b) => `<img src="${t.dir}/${b}.webp" alt="${b}" />`).join("");
 
   if (!animate) {
     layers[frontLayerIdx].innerHTML = badgesHtml;
