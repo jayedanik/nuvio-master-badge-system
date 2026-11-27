@@ -682,29 +682,19 @@ if (location.hash.startsWith("#theme=")) {
     return t * t * (3 - 2 * t);
   }
 
-  // Smooth open -> immediate reverse close -> brief 0.6s closed breath (~6.4s)
+  // Pure continuous zero-delay cosine wave (no stalls, no clamping kinks)
   function getCycleState(time) {
-    const period = 6.4;
-    const u = (time % period) / period;
-    let open = 0;
-    let steam = 0;
-
-    if (u < 0.90) {
-      const p = u / 0.90; // 0..1
-      open = 0.5 - 0.5 * Math.cos(p * Math.PI * 2);
-      steam = Math.pow(open, 0.85);
-    } else {
-      open = 0;
-      steam = 0;
-    }
-    return { open, steam };
+    const period = 6.2;
+    const open = 0.5 - 0.5 * Math.cos((time / period) * Math.PI * 2);
+    return { open, steam: 1, time };
   }
 
-  function getLocalOpen(index, open) {
-    if (open <= 0.001) return 0;
+  function getLocalOpen(index, _open, time) {
+    const period = 6.2;
     const tNorm = index / Math.max(1, slatCount - 1);
-    const waveOffset = Math.sin(tNorm * Math.PI) * 0.08;
-    return Math.max(0, Math.min(1, open * 1.08 - waveOffset));
+    // Silky travelling cosine wave across all fins — zero delay, zero hard stops
+    const phase = (time / period) * Math.PI * 2 - tNorm * 1.4;
+    return 0.5 - 0.5 * Math.cos(phase);
   }
 
   function buildScene() {
@@ -725,7 +715,7 @@ if (location.hash.startsWith("#theme=")) {
 
   // Render FBM steam strictly masked to plumes originating from each open fin slit & sweeping left
   function drawFinSlitSteam(open, steam, time) {
-    if (steam <= 0.004 || open <= 0.004 || !plumeCtx || !steamPattern) return;
+    if (!plumeCtx || !steamPattern) return;
 
     const pw = plumeCanvas.width;
     const ph = plumeCanvas.height;
@@ -738,7 +728,7 @@ if (location.hash.startsWith("#theme=")) {
 
     // 1. Paint exact plume emission masks anchored at every open fin slit, fading left
     for (let i = 0; i < slatCount; i++) {
-      const localOpen = getLocalOpen(i, open);
+      const localOpen = getLocalOpen(i, open, time);
       if (localOpen <= 0.01) continue;
 
       const slitX = i * slatW + slatW * localOpen * 0.14;
@@ -789,7 +779,7 @@ if (location.hash.startsWith("#theme=")) {
 
     for (let i = 0; i < slatCount; i++) {
       const tNorm = i / Math.max(1, slatCount - 1);
-      const localOpen = getLocalOpen(i, open);
+      const localOpen = getLocalOpen(i, open, time);
 
       // When localOpen === 0, faceW === slatW (100% sealed shut, zero gap)
       const faceW = slatW * (1 - localOpen * 0.24);
