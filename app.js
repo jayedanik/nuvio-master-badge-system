@@ -800,11 +800,26 @@ if (location.hash.startsWith("#theme=")) {
       const xRight = (i + 1) * slatW;
       const xLeft = xRight - faceW;
 
-      // Monochrome Platinum & Smoked Obsidian Fluted Glass (matching the 3-rib logo)
+      const finish = heroSection.dataset.finish || "platinum";
       const vGrad = ctx.createLinearGradient(0, 0, 0, height);
-      vGrad.addColorStop(0, "rgba(255, 255, 255, 0.03)");
-      vGrad.addColorStop(0.42, `rgba(210, 216, 228, ${0.06 + 0.03 * (1 - localOpen)})`);
-      vGrad.addColorStop(1, "rgba(5, 6, 10, 0.48)");
+      if (finish === "original") {
+        const wavePhase = Math.sin(tNorm * 4.2 + time * 0.35);
+        const bluePos = Math.max(0.18, Math.min(0.65, 0.38 + wavePhase * 0.16));
+        const coralAlpha = 0.12 * Math.max(0, 1 - tNorm * 1.55);
+        vGrad.addColorStop(0, `rgba(255, 92, 68, ${coralAlpha})`);
+        vGrad.addColorStop(bluePos, `rgba(28, 108, 210, ${0.22 + 0.06 * (1 - localOpen)})`);
+        vGrad.addColorStop(Math.min(0.88, bluePos + 0.24), "rgba(92, 44, 165, 0.20)");
+        vGrad.addColorStop(1, "rgba(6, 8, 16, 0.44)");
+      } else if (finish === "aurora") {
+        vGrad.addColorStop(0, "rgba(41, 151, 255, 0.07)");
+        vGrad.addColorStop(0.46, `rgba(110, 168, 255, ${0.10 + 0.04 * (1 - localOpen)})`);
+        vGrad.addColorStop(0.82, "rgba(175, 82, 222, 0.10)");
+        vGrad.addColorStop(1, "rgba(5, 6, 10, 0.48)");
+      } else {
+        vGrad.addColorStop(0, "rgba(255, 255, 255, 0.03)");
+        vGrad.addColorStop(0.42, `rgba(210, 216, 228, ${0.06 + 0.03 * (1 - localOpen)})`);
+        vGrad.addColorStop(1, "rgba(5, 6, 10, 0.48)");
+      }
 
       ctx.fillStyle = vGrad;
       ctx.fillRect(xLeft, 0, faceW, height);
@@ -831,7 +846,7 @@ if (location.hash.startsWith("#theme=")) {
   }
 
   function frame(now) {
-    if (!isHeroInView || document.hidden) {
+    if (!isHeroInView || document.hidden || heroSection.dataset.finish === "obsidian") {
       rafId = 0;
       return;
     }
@@ -855,7 +870,7 @@ if (location.hash.startsWith("#theme=")) {
       drawFlutedGlass(0.35, 0.8);
       return;
     }
-    if (!rafId && isHeroInView && !document.hidden) {
+    if (!rafId && isHeroInView && !document.hidden && heroSection.dataset.finish !== "obsidian") {
       lastTime = 0;
       rafId = requestAnimationFrame(frame);
     }
@@ -886,6 +901,65 @@ if (location.hash.startsWith("#theme=")) {
     else if (isHeroInView) startLoop();
   });
 
+  window.addEventListener("nuvio:finishchange", (e) => {
+    if (e.detail === "obsidian") stopLoop();
+    else startLoop();
+  });
+
   buildScene();
   startLoop();
+})();
+
+/* ---------- Hero Finish Switcher (Hover & Mobile Tap-to-Expand) ---------- */
+(function initHeroFinishPill() {
+  const hero = document.querySelector(".hero");
+  const pill = document.getElementById("hero-finish-pill");
+  const labelEl = document.getElementById("hero-finish-label");
+  if (!hero || !pill || !labelEl) return;
+
+  const NAMES = { obsidian: "Obsidian", platinum: "Platinum", aurora: "Aurora", original: "Original" };
+  let activeFinish = localStorage.getItem("nuvio_hero_finish") || "platinum";
+  if (!NAMES[activeFinish]) activeFinish = "platinum";
+  let collapseTimer = null;
+
+  function applyFinish(fin) {
+    activeFinish = fin;
+    hero.dataset.finish = fin;
+    labelEl.textContent = NAMES[fin];
+    pill.querySelectorAll(".finish-dot").forEach((d) => {
+      d.classList.toggle("active", d.dataset.finish === fin);
+    });
+    localStorage.setItem("nuvio_hero_finish", fin);
+    window.dispatchEvent(new CustomEvent("nuvio:finishchange", { detail: fin }));
+  }
+
+  function expandBriefly() {
+    pill.classList.add("expanded");
+    clearTimeout(collapseTimer);
+    collapseTimer = setTimeout(() => pill.classList.remove("expanded"), 2200);
+  }
+
+  pill.querySelectorAll(".finish-dot").forEach((dot) => {
+    dot.addEventListener("mouseenter", () => {
+      labelEl.textContent = NAMES[dot.dataset.finish];
+    });
+    dot.addEventListener("click", (e) => {
+      e.stopPropagation();
+      applyFinish(dot.dataset.finish);
+      expandBriefly();
+    });
+  });
+
+  pill.addEventListener("mouseleave", () => {
+    labelEl.textContent = NAMES[activeFinish];
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!pill.contains(e.target)) {
+      pill.classList.remove("expanded");
+      clearTimeout(collapseTimer);
+    }
+  });
+
+  applyFinish(activeFinish);
 })();
