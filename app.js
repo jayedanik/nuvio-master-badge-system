@@ -590,7 +590,7 @@ if (location.hash.startsWith("#theme=")) {
   if (idx >= 0) openDialog(idx);
 }
 
-/* ---------- Hero Apple Fluted Glass Louvers + Consistent Velvety FBM Steam ---------- */
+/* ---------- Hero Apple Fluted Glass Louvers + Seamless Continuous FBM Steam Curtain ---------- */
 (function initHeroAotAtmosphere() {
   const canvas = document.getElementById("hero-aot-canvas");
   const heroSection = document.querySelector(".hero");
@@ -603,18 +603,14 @@ if (location.hash.startsWith("#theme=")) {
   let height = 0;
   let dpr = 1;
   let slatCount = 26;
-  let steamParticles = [];
   let rafId = 0;
   let isHeroInView = true;
   let lastTime = 0;
   let simTime = 0;
-  let steamSpawnAcc = 0;
-  let nextGapCursor = 0;
-  let nextBandCursor = 0;
 
-  // Build 2 ultra-velvety FBM-noise steam sprites once at init
-  function createFbmSteamSprite(seedOffset) {
-    const size = 128;
+  // Build seamlessly tileable 256x256 FBM steam texture once at init (100% consistent, zero seams)
+  function createTileableFbmTexture(seedOffset, gridPeriod) {
+    const size = 256;
     const off = document.createElement("canvas");
     off.width = size;
     off.height = size;
@@ -622,54 +618,51 @@ if (location.hash.startsWith("#theme=")) {
     const img = oCtx.createImageData(size, size);
     const data = img.data;
 
-    function hash(x, y) {
-      const n = Math.sin(x * 127.1 + y * 311.7 + seedOffset * 74.7) * 43758.5453;
+    function hash(x, y, per) {
+      const wx = ((x % per) + per) % per;
+      const wy = ((y % per) + per) % per;
+      const n = Math.sin(wx * 127.1 + wy * 311.7 + seedOffset * 74.7) * 43758.5453;
       return n - Math.floor(n);
     }
-    function smoothNoise(x, y) {
+    function smoothNoise(x, y, per) {
       const ix = Math.floor(x);
       const iy = Math.floor(y);
       const fx = x - ix;
       const fy = y - iy;
       const ux = fx * fx * (3 - 2 * fx);
       const uy = fy * fy * (3 - 2 * fy);
-      const a = hash(ix, iy);
-      const b = hash(ix + 1, iy);
-      const c = hash(ix, iy + 1);
-      const d = hash(ix + 1, iy + 1);
+      const a = hash(ix, iy, per);
+      const b = hash(ix + 1, iy, per);
+      const c = hash(ix, iy + 1, per);
+      const d = hash(ix + 1, iy + 1, per);
       return a + (b - a) * ux + (c - a) * uy + (a - b - c + d) * ux * uy;
     }
-    function fbm(x, y) {
+    function fbm(x, y, basePer) {
       let val = 0;
       let amp = 0.5;
       let freq = 1;
       for (let o = 0; o < 4; o++) {
-        val += amp * smoothNoise(x * freq, y * freq);
-        freq *= 2.02;
+        val += amp * smoothNoise(x * freq, y * freq, basePer * freq);
+        freq *= 2;
         amp *= 0.5;
       }
       return val;
     }
 
-    const half = size * 0.5;
     for (let y = 0; y < size; y++) {
       for (let x = 0; x < size; x++) {
-        const dx = (x - half) / half;
-        const dy = (y - half) / half;
-        const r2 = dx * dx + dy * dy;
-        if (r2 >= 1) continue;
-
-        const falloff = Math.pow(1 - r2, 2.5);
-        const nx = (x / size) * 2.8;
-        const ny = (y / size) * 2.8;
-        const warp = fbm(nx + 1.4, ny + 2.8);
-        const n = fbm(nx + warp * 0.85, ny + warp * 0.85);
-        const density = (0.50 + 0.55 * n) * falloff;
-        const alpha = Math.min(255, Math.round(density * 225));
+        const nx = (x / size) * gridPeriod;
+        const ny = (y / size) * gridPeriod;
+        const warpX = fbm(nx + 1.3, ny + 2.7, gridPeriod);
+        const warpY = fbm(nx + 4.1, ny + 0.9, gridPeriod);
+        const n = fbm(nx + warpX * 1.1, ny + warpY * 1.1, gridPeriod);
+        // Smooth silky vapor contrast
+        const density = Math.max(0, Math.min(1, (n - 0.24) * 1.45));
+        const alpha = Math.round(density * 255);
 
         const p = (y * size + x) * 4;
-        data[p] = 246;
-        data[p + 1] = 250;
+        data[p] = 244;
+        data[p + 1] = 249;
         data[p + 2] = 255;
         data[p + 3] = alpha;
       }
@@ -678,7 +671,8 @@ if (location.hash.startsWith("#theme=")) {
     return off;
   }
 
-  const steamSprites = [createFbmSteamSprite(1), createFbmSteamSprite(7)];
+  const steamTexA = createTileableFbmTexture(3, 4);
+  const steamTexB = createTileableFbmTexture(11, 6);
 
   function smoothstep(edge0, edge1, x) {
     const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
@@ -689,30 +683,29 @@ if (location.hash.startsWith("#theme=")) {
     return -(Math.cos(Math.PI * Math.max(0, Math.min(1, x))) - 1) / 2;
   }
 
-  // Clear open -> hold -> full close -> calm sealed rest (~7.6s)
+  // Smooth cycle: crack open -> hold -> full sealed close -> calm rest (~7.6s)
   function getCycleState(time) {
     const period = 7.6;
     const u = (time % period) / period;
     let open = 0;
-    let venting = 0;
+    let steam = 0;
 
-    if (u < 0.30) {
-      const p = u / 0.30;
+    if (u < 0.28) {
+      const p = u / 0.28;
       open = easeInOutSine(p);
-      venting = smoothstep(0.15, 0.85, p);
-    } else if (u < 0.48) {
+      steam = smoothstep(0.08, 0.92, p);
+    } else if (u < 0.50) {
       open = 1;
-      venting = 1 - 0.35 * ((u - 0.30) / 0.18);
+      steam = 1;
     } else if (u < 0.78) {
-      const p = (u - 0.48) / 0.30;
+      const p = (u - 0.50) / 0.28;
       open = 1 - easeInOutSine(p);
-      venting = 0;
+      steam = 1 - smoothstep(0.05, 0.95, p);
     } else {
-      // Fully closed & sealed rest (~1.67s)
       open = 0;
-      venting = 0;
+      steam = 0;
     }
-    return { open, venting };
+    return { open, steam };
   }
 
   function getLocalOpen(index, open) {
@@ -732,105 +725,22 @@ if (location.hash.startsWith("#theme=")) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     slatCount = width <= 768 ? 16 : 26;
-    steamParticles = [];
   }
 
-  function spawnSteamBurst(count, open) {
-    const isMobile = width <= 768;
-    const maxParticles = isMobile ? 90 : 160;
-    const slatW = width / slatCount;
-    const bands = [0.30, 0.48, 0.66, 0.82];
+  // Draw seamless tiled FBM steam drifting steadily LEFT + gently UP (like a right-side fan)
+  function drawTiledSteam(tex, tileSize, speedX, speedY, alpha, time) {
+    if (alpha <= 0.003) return;
+    const ox = -(((time * speedX) % tileSize + tileSize) % tileSize);
+    const oy = -(((time * speedY) % tileSize + tileSize) % tileSize);
 
-    for (let i = 0; i < count; i++) {
-      if (steamParticles.length >= maxParticles) break;
-
-      // Round-robin across every open gap + stratified vertical bands for 100% consistent flow
-      const idx = nextGapCursor % slatCount;
-      nextGapCursor++;
-      const localOpen = getLocalOpen(idx, open);
-      if (localOpen < 0.12) continue;
-
-      const bandY = bands[nextBandCursor % bands.length];
-      nextBandCursor++;
-      const gapX = idx * slatW + (slatW * localOpen * 0.12);
-      const spawnY = height * (bandY + (Math.random() - 0.5) * 0.08);
-
-      steamParticles.push({
-        x: gapX,
-        y: spawnY,
-        vx: -20,
-        vy: -16,
-        size: isMobile ? 92 : 126,
-        grow: 1.55,
-        maxAlpha: 0.15,
-        spriteIdx: (idx + nextBandCursor) % steamSprites.length,
-        rot: (idx * 0.7 + nextBandCursor * 1.1) % (Math.PI * 2),
-        rotSpeed: 0.12 * (idx % 2 === 0 ? 1 : -1),
-        seed: idx * 0.5 + nextBandCursor * 0.8,
-        age: 0,
-        life: 2.7
-      });
-    }
-  }
-
-  function updateSteam(dt, time) {
-    const isMobile = width <= 768;
-    const fanWindX = isMobile ? -90 : -128;
-
-    for (let i = steamParticles.length - 1; i >= 0; i--) {
-      const p = steamParticles[i];
-      p.age += dt;
-      if (p.age >= p.life || p.x < -p.size * 2 || p.y < -p.size * 2) {
-        steamParticles.splice(i, 1);
-        continue;
-      }
-
-      const progress = p.age / p.life;
-      const fanBlend = smoothstep(0.10, 0.46, progress);
-      p.vx += (fanWindX - p.vx) * (1.5 * fanBlend) * dt;
-      const waveY = Math.sin(time * 1.6 + p.seed + p.x * 0.007) * (14 * fanBlend);
-
-      p.x += p.vx * dt;
-      p.y += (p.vy + waveY) * dt;
-      p.rot += p.rotSpeed * dt;
-    }
-  }
-
-  function drawSteamPass(frontPass) {
     ctx.save();
     ctx.globalCompositeOperation = "screen";
-
-    for (let i = 0; i < steamParticles.length; i++) {
-      const p = steamParticles[i];
-      const progress = p.age / p.life;
-
-      const frontBlend = smoothstep(0.14, 0.36, progress);
-      const passWeight = frontPass ? frontBlend : (1 - frontBlend);
-      if (passWeight <= 0.01) continue;
-
-      const fadeIn = smoothstep(0, 0.20, progress);
-      const fadeOut = Math.pow(1 - progress, 1.55);
-      const alpha = p.maxAlpha * fadeIn * fadeOut * passWeight;
-      if (alpha <= 0.003) continue;
-
-      const curSize = p.size * (0.62 + progress * p.grow);
-      const windStretch = 1 + frontBlend * 0.25;
-
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot);
-      ctx.scale(windStretch, 1);
-      ctx.globalAlpha = alpha;
-      ctx.drawImage(
-        steamSprites[p.spriteIdx],
-        -curSize * 0.5,
-        -curSize * 0.5,
-        curSize,
-        curSize
-      );
-      ctx.restore();
+    ctx.globalAlpha = alpha;
+    for (let y = oy; y < height; y += tileSize) {
+      for (let x = ox; x < width; x += tileSize) {
+        ctx.drawImage(tex, x, y, tileSize, tileSize);
+      }
     }
-
     ctx.restore();
   }
 
@@ -891,24 +801,20 @@ if (location.hash.startsWith("#theme=")) {
     lastTime = now;
     simTime += dt;
 
-    const { open, venting } = getCycleState(simTime);
-
-    if (venting > 0.04) {
-      const spawnRate = (width <= 768 ? 42 : 68) * venting;
-      steamSpawnAcc += spawnRate * dt;
-      const toSpawn = Math.floor(steamSpawnAcc);
-      if (toSpawn > 0) {
-        steamSpawnAcc -= toSpawn;
-        spawnSteamBurst(toSpawn, open);
-      }
-    }
-
-    updateSteam(dt, simTime);
+    const { open, steam } = getCycleState(simTime);
+    const tileA = width <= 768 ? 260 : 340;
+    const tileB = width <= 768 ? 320 : 420;
 
     ctx.clearRect(0, 0, width, height);
-    drawSteamPass(false);
+
+    // 1. Bright steady steam BEHIND the fluted glass (shines through the opening slits)
+    drawTiledSteam(steamTexA, tileA, 48, 22, steam * 0.24, simTime);
+
+    // 2. Fluted glass louvers
     drawFlutedGlass(open, simTime);
-    drawSteamPass(true);
+
+    // 3. Silky counter-drifting steam IN FRONT sweeping steadily LEFT from right-side fan
+    drawTiledSteam(steamTexB, tileB, 86, 30, steam * 0.16, simTime);
 
     rafId = requestAnimationFrame(frame);
   }
