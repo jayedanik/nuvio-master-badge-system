@@ -589,3 +589,265 @@ if (location.hash.startsWith("#theme=")) {
   const idx = THEMES.findIndex((t) => t.id === id);
   if (idx >= 0) openDialog(idx);
 }
+
+/* ---------- Hero Attack-on-Titan Swaying Fins & White Steam Gas ---------- */
+(function initHeroAotAtmosphere() {
+  const canvas = document.getElementById("hero-aot-canvas");
+  const heroSection = document.querySelector(".hero");
+  if (!canvas || !heroSection) return;
+  const ctx = canvas.getContext("2d", { alpha: true });
+  if (!ctx) return;
+
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let width = 0;
+  let height = 0;
+  let dpr = 1;
+  let fins = [];
+  let steamParticles = [];
+  let rafId = 0;
+  let isHeroInView = true;
+  let lastTime = 0;
+  let simTime = 0;
+
+  // Pre-render soft volumetric white steam puff sprite once (zero per-frame blur cost)
+  const puffSize = 128;
+  const puffCanvas = document.createElement("canvas");
+  puffCanvas.width = puffSize;
+  puffCanvas.height = puffSize;
+  const pCtx = puffCanvas.getContext("2d");
+  const puffGrad = pCtx.createRadialGradient(
+    puffSize * 0.5, puffSize * 0.5, puffSize * 0.04,
+    puffSize * 0.5, puffSize * 0.5, puffSize * 0.5
+  );
+  puffGrad.addColorStop(0, "rgba(255, 255, 255, 0.55)");
+  puffGrad.addColorStop(0.32, "rgba(240, 246, 255, 0.28)");
+  puffGrad.addColorStop(0.68, "rgba(210, 226, 250, 0.09)");
+  puffGrad.addColorStop(1, "rgba(210, 226, 250, 0)");
+  pCtx.fillStyle = puffGrad;
+  pCtx.fillRect(0, 0, puffSize, puffSize);
+
+  function buildScene() {
+    const rect = heroSection.getBoundingClientRect();
+    width = Math.max(1, rect.width);
+    height = Math.max(1, rect.height);
+    dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const isMobile = width <= 768;
+    const finCount = isMobile ? 14 : 22;
+    fins = [];
+
+    for (let i = 0; i < finCount; i++) {
+      const t = i / (finCount - 1); // 0..1 across width
+      // Keep center slightly lower/subtler so hero copy & cinema card stay crystal clear, taller on flanks
+      const edgeBias = Math.abs(t - 0.5) * 2; // 0 in center, 1 at edges
+      const baseHeight = height * (0.34 + edgeBias * 0.38 + (Math.sin(i * 2.17) * 0.5 + 0.5) * 0.14);
+      const baseWidth = (isMobile ? 22 : 34) + edgeBias * 14 + (i % 3) * 5;
+      // Natural outward fan lean like Founding Titan rib-fins
+      const lean = (t - 0.5) * (isMobile ? 55 : 110);
+      fins.push({
+        x: t * width + Math.sin(i * 1.7) * (width / finCount) * 0.25,
+        tNorm: t,
+        height: baseHeight,
+        width: baseWidth,
+        lean,
+        phase: i * 0.52,
+        swayAmp: (isMobile ? 14 : 22) + edgeBias * 10,
+        alpha: 0.16 + edgeBias * 0.16,
+        rimAlpha: 0.22 + edgeBias * 0.20,
+        depth: i % 2 === 0 ? 1 : 0.72
+      });
+    }
+
+    const steamCount = isMobile ? 36 : 64;
+    steamParticles = [];
+    for (let i = 0; i < steamCount; i++) {
+      steamParticles.push(createSteamParticle(true));
+    }
+  }
+
+  function createSteamParticle(randomAge) {
+    const finIdx = Math.floor(Math.random() * Math.max(1, fins.length));
+    const fin = fins[finIdx] || { x: Math.random() * width, height: height * 0.4 };
+    // Spawn between fins along the lower-to-mid height
+    const spawnX = fin.x + (Math.random() - 0.5) * (width / Math.max(6, fins.length)) * 1.2;
+    const spawnY = height - Math.random() * (fin.height * 0.58) + 18;
+    const life = 4.2 + Math.random() * 4.5;
+    return {
+      x: spawnX,
+      y: spawnY,
+      vx: 8 + Math.random() * 14,
+      vy: -(22 + Math.random() * 28),
+      size: (width <= 768 ? 52 : 76) + Math.random() * 68,
+      grow: 1.45 + Math.random() * 0.9,
+      maxAlpha: 0.14 + Math.random() * 0.18,
+      age: randomAge ? Math.random() * life : 0,
+      life
+    };
+  }
+
+  function windAt(tNorm, time) {
+    return (
+      Math.sin(time * 0.85 - tNorm * 3.4) * 0.7 +
+      Math.sin(time * 1.55 - tNorm * 5.8 + 1.2) * 0.3
+    );
+  }
+
+  function drawFins(time) {
+    const baseY = height + 24;
+    for (let i = 0; i < fins.length; i++) {
+      const f = fins[i];
+      const wVal = windAt(f.tNorm, time + f.phase * 0.25);
+      const sway = wVal * f.swayAmp;
+      const midSway = sway * 0.42;
+
+      const tipX = f.x + f.lean + sway;
+      const tipY = baseY - f.height;
+      const cp1X = f.x + f.lean * 0.25 + midSway;
+      const cp1Y = baseY - f.height * 0.38;
+      const cp2X = f.x + f.lean * 0.72 + sway * 0.82;
+      const cp2Y = baseY - f.height * 0.74;
+
+      const halfW = f.width * 0.5;
+
+      // Translucent obsidian-mist fin body
+      const grad = ctx.createLinearGradient(f.x, baseY, tipX, tipY);
+      grad.addColorStop(0, `rgba(18, 24, 38, ${f.alpha * 1.15})`);
+      grad.addColorStop(0.55, `rgba(170, 195, 235, ${f.alpha * 0.52})`);
+      grad.addColorStop(1, `rgba(240, 248, 255, ${f.alpha * 0.12})`);
+
+      ctx.beginPath();
+      ctx.moveTo(f.x - halfW, baseY);
+      ctx.bezierCurveTo(
+        cp1X - halfW * 0.68, cp1Y,
+        cp2X - halfW * 0.26, cp2Y,
+        tipX, tipY
+      );
+      ctx.bezierCurveTo(
+        cp2X + halfW * 0.22, cp2Y + 4,
+        cp1X + halfW * 0.58, cp1Y + 4,
+        f.x + halfW, baseY
+      );
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Delicate glowing silver-white leading edge (titan rib sheen)
+      const rimGrad = ctx.createLinearGradient(f.x, baseY, tipX, tipY);
+      rimGrad.addColorStop(0, "rgba(255, 255, 255, 0.02)");
+      rimGrad.addColorStop(0.45, `rgba(225, 238, 255, ${f.rimAlpha})`);
+      rimGrad.addColorStop(1, "rgba(255, 255, 255, 0.03)");
+
+      ctx.beginPath();
+      ctx.moveTo(f.x - halfW, baseY);
+      ctx.bezierCurveTo(
+        cp1X - halfW * 0.68, cp1Y,
+        cp2X - halfW * 0.26, cp2Y,
+        tipX, tipY
+      );
+      ctx.strokeStyle = rimGrad;
+      ctx.lineWidth = f.depth > 0.8 ? 1.3 : 0.9;
+      ctx.stroke();
+    }
+  }
+
+  function updateAndDrawSteam(dt, time) {
+    // Subtle ground steam mist veil at base of fins
+    const mistGrad = ctx.createLinearGradient(0, height * 0.62, 0, height);
+    mistGrad.addColorStop(0, "rgba(235, 244, 255, 0)");
+    mistGrad.addColorStop(1, "rgba(235, 244, 255, 0.07)");
+    ctx.fillStyle = mistGrad;
+    ctx.fillRect(0, height * 0.62, width, height * 0.38);
+
+    for (let i = 0; i < steamParticles.length; i++) {
+      const p = steamParticles[i];
+      p.age += dt;
+      if (p.age >= p.life || p.y < -p.size) {
+        steamParticles[i] = createSteamParticle(false);
+        continue;
+      }
+
+      const progress = p.age / p.life;
+      const windPush = windAt(p.x / Math.max(1, width), time) * 16;
+      p.x += (p.vx + windPush) * dt;
+      p.y += p.vy * dt;
+
+      // Smooth fade-in then long Attack-on-Titan steam dissipation
+      const fadeIn = Math.min(1, progress / 0.18);
+      const fadeOut = Math.pow(1 - progress, 1.35);
+      const alpha = p.maxAlpha * fadeIn * fadeOut;
+      if (alpha <= 0.004) continue;
+
+      const curSize = p.size * (0.72 + progress * p.grow);
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(
+        puffCanvas,
+        p.x - curSize * 0.5,
+        p.y - curSize * 0.5,
+        curSize,
+        curSize
+      );
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function frame(now) {
+    if (!isHeroInView || document.hidden) {
+      rafId = 0;
+      return;
+    }
+    if (!lastTime) lastTime = now;
+    const dt = Math.min(0.05, (now - lastTime) / 1000);
+    lastTime = now;
+    simTime += dt;
+
+    ctx.clearRect(0, 0, width, height);
+    drawFins(simTime);
+    updateAndDrawSteam(dt, simTime);
+
+    rafId = requestAnimationFrame(frame);
+  }
+
+  function startLoop() {
+    if (reducedMotion) {
+      ctx.clearRect(0, 0, width, height);
+      drawFins(0.8);
+      updateAndDrawSteam(0, 0.8);
+      return;
+    }
+    if (!rafId && isHeroInView && !document.hidden) {
+      lastTime = 0;
+      rafId = requestAnimationFrame(frame);
+    }
+  }
+
+  function stopLoop() {
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+  }
+
+  const ro = new ResizeObserver(() => {
+    buildScene();
+    if (reducedMotion) startLoop();
+  });
+  ro.observe(heroSection);
+
+  const aotIo = new IntersectionObserver((entries) => {
+    isHeroInView = entries[0].isIntersecting;
+    if (isHeroInView) startLoop();
+    else stopLoop();
+  }, { threshold: 0.01 });
+  aotIo.observe(heroSection);
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) stopLoop();
+    else if (isHeroInView) startLoop();
+  });
+
+  buildScene();
+  startLoop();
+})();
