@@ -4,15 +4,9 @@
       <stop offset="0%" stop-color="#1A1D2B"/>
       <stop offset="100%" stop-color="#090A0F"/>
     </linearGradient>
-    <linearGradient id="nb_rim" x1="10" y1="10" x2="54" y2="54" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#2997FF"/>
-      <stop offset="55%" stop-color="#AF52DE"/>
-      <stop offset="100%" stop-color="#FF3E9D"/>
-    </linearGradient>
   </defs>
   <rect width="64" height="64" rx="16" fill="url(#nb_bg)"/>
-  <rect x="11" y="11" width="42" height="42" rx="11" stroke="url(#nb_rim)" stroke-width="4.2"/>
-  <path d="M21 24.5H43" stroke="#F5F5F7" stroke-width="4.2" stroke-linecap="round"/>
-  <path d="M21 39.5H33" stroke="#F5F5F7" stroke-width="4.2" stroke-linecap="round"/>
-  <circle cx="40.5" cy="39.5" r="3.4" fill="#FF3E9D"/>
+  <rect x="13" y="13" width="11" height="38" rx="4.5" fill="rgba(255,255,255,0.22)"/>
+  <rect x="27" y="13" width="11" height="38" rx="4.5" fill="rgba(255,255,255,0.52)"/>
+  <rect x="41" y="13" width="8.5" height="38" rx="4" fill="#F5F5F7"/>
 </svg>
