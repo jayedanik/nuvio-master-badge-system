@@ -590,7 +590,7 @@ if (location.hash.startsWith("#theme=")) {
   if (idx >= 0) openDialog(idx);
 }
 
-/* ---------- Hero Apple Fluted Glass Louvers + Velvety Crossfaded FBM Steam ---------- */
+/* ---------- Hero Apple Fluted Glass Louvers + Consistent Velvety FBM Steam ---------- */
 (function initHeroAotAtmosphere() {
   const canvas = document.getElementById("hero-aot-canvas");
   const heroSection = document.querySelector(".hero");
@@ -609,8 +609,10 @@ if (location.hash.startsWith("#theme=")) {
   let lastTime = 0;
   let simTime = 0;
   let steamSpawnAcc = 0;
+  let nextGapCursor = 0;
+  let nextBandCursor = 0;
 
-  // Build 2 ultra-velvety FBM-noise steam sprites (seamless, zero hard edges or blotches)
+  // Build 2 ultra-velvety FBM-noise steam sprites once at init
   function createFbmSteamSprite(seedOffset) {
     const size = 128;
     const off = document.createElement("canvas");
@@ -657,14 +659,13 @@ if (location.hash.startsWith("#theme=")) {
         const r2 = dx * dx + dy * dy;
         if (r2 >= 1) continue;
 
-        const falloff = Math.pow(1 - r2, 2.4);
-        const nx = (x / size) * 3.1;
-        const ny = (y / size) * 3.1;
+        const falloff = Math.pow(1 - r2, 2.5);
+        const nx = (x / size) * 2.8;
+        const ny = (y / size) * 2.8;
         const warp = fbm(nx + 1.4, ny + 2.8);
-        const n = fbm(nx + warp * 0.9, ny + warp * 0.9);
-        // Gentle velvety contrast so overlapping puffs merge seamlessly
-        const density = (0.45 + 0.65 * n) * falloff;
-        const alpha = Math.min(255, Math.round(density * 235));
+        const n = fbm(nx + warp * 0.85, ny + warp * 0.85);
+        const density = (0.50 + 0.55 * n) * falloff;
+        const alpha = Math.min(255, Math.round(density * 225));
 
         const p = (y * size + x) * 4;
         data[p] = 246;
@@ -688,25 +689,26 @@ if (location.hash.startsWith("#theme=")) {
     return -(Math.cos(Math.PI * Math.max(0, Math.min(1, x))) - 1) / 2;
   }
 
-  // Smooth crack-open & close cycle (~7.4s)
+  // Clear open -> hold -> full close -> calm sealed rest (~7.6s)
   function getCycleState(time) {
-    const period = 7.4;
+    const period = 7.6;
     const u = (time % period) / period;
     let open = 0;
     let venting = 0;
 
-    if (u < 0.36) {
-      const p = u / 0.36;
+    if (u < 0.30) {
+      const p = u / 0.30;
       open = easeInOutSine(p);
-      venting = Math.sin(p * Math.PI) * (0.4 + 0.6 * open);
-    } else if (u < 0.52) {
+      venting = smoothstep(0.15, 0.85, p);
+    } else if (u < 0.48) {
       open = 1;
-      venting = 0.6 * (1 - (u - 0.36) / 0.16);
-    } else if (u < 0.88) {
-      const p = (u - 0.52) / 0.36;
+      venting = 1 - 0.35 * ((u - 0.30) / 0.18);
+    } else if (u < 0.78) {
+      const p = (u - 0.48) / 0.30;
       open = 1 - easeInOutSine(p);
       venting = 0;
     } else {
+      // Fully closed & sealed rest (~1.67s)
       open = 0;
       venting = 0;
     }
@@ -714,9 +716,10 @@ if (location.hash.startsWith("#theme=")) {
   }
 
   function getLocalOpen(index, open) {
+    if (open <= 0.001) return 0;
     const tNorm = index / Math.max(1, slatCount - 1);
-    const waveOffset = Math.sin(tNorm * Math.PI) * 0.10;
-    return Math.max(0, Math.min(1, open * 1.10 - waveOffset));
+    const waveOffset = Math.sin(tNorm * Math.PI) * 0.08;
+    return Math.max(0, Math.min(1, open * 1.08 - waveOffset));
   }
 
   function buildScene() {
@@ -728,45 +731,51 @@ if (location.hash.startsWith("#theme=")) {
     canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    slatCount = width <= 768 ? 16 : 28;
+    slatCount = width <= 768 ? 16 : 26;
     steamParticles = [];
   }
 
   function spawnSteamBurst(count, open) {
     const isMobile = width <= 768;
-    const maxParticles = isMobile ? 75 : 130;
+    const maxParticles = isMobile ? 90 : 160;
     const slatW = width / slatCount;
+    const bands = [0.30, 0.48, 0.66, 0.82];
 
     for (let i = 0; i < count; i++) {
       if (steamParticles.length >= maxParticles) break;
-      const idx = Math.floor(Math.random() * slatCount);
-      const localOpen = getLocalOpen(idx, open);
-      if (localOpen < 0.10) continue;
 
+      // Round-robin across every open gap + stratified vertical bands for 100% consistent flow
+      const idx = nextGapCursor % slatCount;
+      nextGapCursor++;
+      const localOpen = getLocalOpen(idx, open);
+      if (localOpen < 0.12) continue;
+
+      const bandY = bands[nextBandCursor % bands.length];
+      nextBandCursor++;
       const gapX = idx * slatW + (slatW * localOpen * 0.12);
-      const spawnY = height * (0.22 + Math.random() * 0.70);
+      const spawnY = height * (bandY + (Math.random() - 0.5) * 0.08);
 
       steamParticles.push({
         x: gapX,
         y: spawnY,
-        vx: -(16 + Math.random() * 14),
-        vy: -(14 + Math.random() * 18),
-        size: (isMobile ? 86 : 122) + Math.random() * 64,
-        grow: 1.65 + Math.random() * 0.8,
-        maxAlpha: 0.15 + Math.random() * 0.10,
-        spriteIdx: i % steamSprites.length,
-        rot: Math.random() * Math.PI * 2,
-        rotSpeed: (Math.random() - 0.5) * 0.18,
-        seed: Math.random() * Math.PI * 2,
+        vx: -20,
+        vy: -16,
+        size: isMobile ? 92 : 126,
+        grow: 1.55,
+        maxAlpha: 0.15,
+        spriteIdx: (idx + nextBandCursor) % steamSprites.length,
+        rot: (idx * 0.7 + nextBandCursor * 1.1) % (Math.PI * 2),
+        rotSpeed: 0.12 * (idx % 2 === 0 ? 1 : -1),
+        seed: idx * 0.5 + nextBandCursor * 0.8,
         age: 0,
-        life: 2.6 + Math.random() * 1.4
+        life: 2.7
       });
     }
   }
 
   function updateSteam(dt, time) {
     const isMobile = width <= 768;
-    const fanWindX = isMobile ? -92 : -132;
+    const fanWindX = isMobile ? -90 : -128;
 
     for (let i = steamParticles.length - 1; i >= 0; i--) {
       const p = steamParticles[i];
@@ -777,10 +786,9 @@ if (location.hash.startsWith("#theme=")) {
       }
 
       const progress = p.age / p.life;
-      // Smooth continuous blend into right-side fan breeze (zero sudden jump!)
-      const fanBlend = smoothstep(0.10, 0.48, progress);
+      const fanBlend = smoothstep(0.10, 0.46, progress);
       p.vx += (fanWindX - p.vx) * (1.5 * fanBlend) * dt;
-      const waveY = Math.sin(time * 1.8 + p.seed + p.x * 0.008) * (16 * fanBlend);
+      const waveY = Math.sin(time * 1.6 + p.seed + p.x * 0.007) * (14 * fanBlend);
 
       p.x += p.vx * dt;
       p.y += (p.vy + waveY) * dt;
@@ -796,18 +804,17 @@ if (location.hash.startsWith("#theme=")) {
       const p = steamParticles[i];
       const progress = p.age / p.life;
 
-      // Crossfade smoothly from behind-glass to front-of-glass (zero visual pop!)
       const frontBlend = smoothstep(0.14, 0.36, progress);
       const passWeight = frontPass ? frontBlend : (1 - frontBlend);
       if (passWeight <= 0.01) continue;
 
-      const fadeIn = smoothstep(0, 0.18, progress);
-      const fadeOut = Math.pow(1 - progress, 1.5);
+      const fadeIn = smoothstep(0, 0.20, progress);
+      const fadeOut = Math.pow(1 - progress, 1.55);
       const alpha = p.maxAlpha * fadeIn * fadeOut * passWeight;
       if (alpha <= 0.003) continue;
 
-      const curSize = p.size * (0.60 + progress * p.grow);
-      const windStretch = 1 + frontBlend * 0.26;
+      const curSize = p.size * (0.62 + progress * p.grow);
+      const windStretch = 1 + frontBlend * 0.25;
 
       ctx.save();
       ctx.translate(p.x, p.y);
@@ -834,7 +841,8 @@ if (location.hash.startsWith("#theme=")) {
       const tNorm = i / Math.max(1, slatCount - 1);
       const localOpen = getLocalOpen(i, open);
 
-      const faceW = slatW * (1 - localOpen * 0.26);
+      // When localOpen === 0, faceW === slatW (100% sealed shut, zero gap)
+      const faceW = slatW * (1 - localOpen * 0.24);
       const xRight = (i + 1) * slatW;
       const xLeft = xRight - faceW;
 
@@ -853,7 +861,7 @@ if (location.hash.startsWith("#theme=")) {
       ctx.fillRect(xLeft, 0, faceW, height);
 
       const hGrad = ctx.createLinearGradient(xLeft, 0, xRight, 0);
-      hGrad.addColorStop(0, `rgba(255, 255, 255, ${0.24 + localOpen * 0.14})`);
+      hGrad.addColorStop(0, `rgba(255, 255, 255, ${0.22 + localOpen * 0.16})`);
       hGrad.addColorStop(0.16, "rgba(185, 228, 255, 0.10)");
       hGrad.addColorStop(0.55, "rgba(10, 14, 24, 0.18)");
       hGrad.addColorStop(0.88, "rgba(0, 0, 0, 0.36)");
@@ -862,7 +870,7 @@ if (location.hash.startsWith("#theme=")) {
       ctx.fillStyle = hGrad;
       ctx.fillRect(xLeft, 0, faceW, height);
 
-      ctx.fillStyle = `rgba(255, 255, 255, ${0.24 + localOpen * 0.16})`;
+      ctx.fillStyle = `rgba(255, 255, 255, ${0.22 + localOpen * 0.18})`;
       ctx.fillRect(xLeft, 0, 1.1, height);
     }
 
@@ -886,7 +894,7 @@ if (location.hash.startsWith("#theme=")) {
     const { open, venting } = getCycleState(simTime);
 
     if (venting > 0.04) {
-      const spawnRate = (width <= 768 ? 34 : 52) * venting;
+      const spawnRate = (width <= 768 ? 42 : 68) * venting;
       steamSpawnAcc += spawnRate * dt;
       const toSpawn = Math.floor(steamSpawnAcc);
       if (toSpawn > 0) {
@@ -898,11 +906,8 @@ if (location.hash.startsWith("#theme=")) {
     updateSteam(dt, simTime);
 
     ctx.clearRect(0, 0, width, height);
-    // 1. Emerging steam behind the fluted glass (crossfades smoothly)
     drawSteamPass(false);
-    // 2. Fluted glass louvers
     drawFlutedGlass(open, simTime);
-    // 3. Escaped steam in front sweeping smoothly left from right-side fan breeze
     drawSteamPass(true);
 
     rafId = requestAnimationFrame(frame);
