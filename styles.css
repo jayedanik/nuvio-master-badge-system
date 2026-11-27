@@ -116,7 +116,14 @@ body {
 }
 .btn.copied { background: #30d158 !important; border-color: #30d158 !important; color: #02200a !important; }
 
-.chapter-dark { background: var(--dark-bg); color: #f5f5f7; }
+.chapter-dark {
+  position: relative;
+  background:
+    radial-gradient(880px 440px at 85% 20%, rgba(41, 151, 255, 0.11) 0%, transparent 65%),
+    radial-gradient(760px 420px at 15% 80%, rgba(175, 82, 222, 0.09) 0%, transparent 65%),
+    var(--dark-bg);
+  color: #f5f5f7;
+}
 /* Apple .clear Light Backdrop Ambient for Visible Glass Refraction */
 .chapter-light {
   position: relative;
@@ -300,15 +307,28 @@ body {
 .flag-info p { margin: 0; color: var(--ink-muted); font-size: 0.94rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .flag-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
 
-/* Chapter 3 (Dark): Specs Bento */
+/* Chapter 3 (Dark): Glass Specs Bento */
 .specs-section { padding: 76px 0; }
 .bento-specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-.spec-tile { background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 24px; padding: 28px; display: flex; flex-direction: column; gap: 8px; }
+.spec-tile {
+  background: rgba(255, 255, 255, 0.045);
+  backdrop-filter: url(#waterdrop-glass) blur(4px) saturate(190%);
+  -webkit-backdrop-filter: blur(16px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 24px; padding: 28px;
+  display: flex; flex-direction: column; gap: 8px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  transition: transform 0.38s var(--ease), border-color 0.25s ease, background 0.25s ease;
+}
+.spec-tile:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.075);
+  border-color: rgba(255, 255, 255, 0.28);
+}
 .spec-tile.wide { grid-column: span 2; }
 .spec-tile.wide-accent {
   grid-column: span 2;
-  background: linear-gradient(135deg, rgba(0, 113, 227, 0.16) 0%, rgba(175, 82, 222, 0.12) 100%);
-  border-color: rgba(41, 151, 255, 0.25);
+  background: linear-gradient(135deg, rgba(0, 113, 227, 0.14) 0%, rgba(175, 82, 222, 0.1) 100%);
+  border-color: rgba(41, 151, 255, 0.28);
 }
 .spec-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.08em; color: var(--blue-bright); }
 .spec-big { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.1rem, 3.6vw, 3rem); line-height: 1.05; letter-spacing: -0.03em; }
@@ -397,10 +417,18 @@ body {
 .card-actions .btn { flex: 1; }
 .empty-state { text-align: center; color: var(--ink-muted); padding: 48px 0; }
 
-/* Chapter 5 (Dark): Import & FAQ */
+/* Chapter 5 (Dark): Glass Import & FAQ */
 .install-section { padding: 76px 0 80px; }
 .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; margin-bottom: 54px; }
-.step-card { background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 22px; padding: 24px; }
+.step-card {
+  background: rgba(255, 255, 255, 0.045);
+  backdrop-filter: url(#waterdrop-glass) blur(4px) saturate(190%);
+  -webkit-backdrop-filter: blur(16px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 22px; padding: 24px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  transition: transform 0.38s var(--ease), border-color 0.25s ease, background 0.25s ease;
+}
+.step-card:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.075); border-color: rgba(255, 255, 255, 0.28); }
 .step-num { font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: var(--blue-bright); }
 .step-card h3 { margin: 8px 0 8px; font-size: 1.1rem; }
 .step-card p { margin: 0; font-size: 0.9rem; color: #a1a1a6; }
@@ -408,7 +436,15 @@ body {
 
 .faq-heading { margin: 0 0 18px; font-family: 'Space Grotesk', sans-serif; font-size: 1.55rem; }
 .faq-list { display: flex; flex-direction: column; gap: 10px; }
-.faq-item { background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 16px; padding: 16px 20px; }
+.faq-item {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 16px; padding: 16px 20px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+.faq-item:hover { background: rgba(255, 255, 255, 0.065); border-color: rgba(255, 255, 255, 0.24); }
 .faq-item summary { font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
 .faq-item summary::after { content: "+"; color: #a1a1a6; font-size: 1.2rem; }
 .faq-item[open] summary::after { content: "−"; }
@@ -429,9 +465,14 @@ body {
   .reveal, .scroll-card { opacity: 1; transform: none; transition: none; }
 }
 
-/* Inspector Dialog */
+/* Glass Inspector Dialog */
 .inspector-dialog {
-  border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 24px; background: #0d0d10; color: #f5f5f7;
+  border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 26px;
+  background: rgba(14, 15, 22, 0.78);
+  backdrop-filter: saturate(200%) blur(28px);
+  -webkit-backdrop-filter: saturate(200%) blur(28px);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.26);
+  color: #f5f5f7;
   width: min(1140px, calc(100vw - 24px)); max-height: calc(100vh - 24px); padding: 0; overflow: auto;
 }
 .inspector-dialog::backdrop { background: rgba(0, 0, 0, 0.84); backdrop-filter: blur(10px); }
