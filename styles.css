@@ -30,17 +30,18 @@ body {
 .container { width: min(1240px, calc(100% - clamp(28px, 5vw, 48px))); margin-inline: auto; }
 
 /* Crystal-Clear Apple .clear Glass Fixed Floating Pill Header */
+/* Crystal-Clear Apple .clear Glass Fixed Floating Pill Header */
 .site-header {
   position: fixed; top: 12px; left: 50%; transform: translateX(-50%); z-index: 50; height: 50px;
   width: min(1180px, calc(100% - 28px));
   border-radius: 980px;
-  background: rgba(14, 15, 22, 0.72);
-  backdrop-filter: blur(10px) saturate(180%);
-  -webkit-backdrop-filter: blur(10px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(14, 15, 22, 0.28);
+  backdrop-filter: blur(2.5px) saturate(190%);
+  -webkit-backdrop-filter: blur(2.5px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   box-shadow:
-    0 10px 28px rgba(0, 0, 0, 0.24),
-    inset 0 1px 0 rgba(255, 255, 255, 0.36),
+    0 10px 28px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.44),
     inset 0 -1px 0 rgba(255, 255, 255, 0.08);
 }
 .header-inner { height: 100%; padding-inline: 22px; display: flex; align-items: center; justify-content: space-between; }
@@ -358,13 +359,13 @@ body {
   position: sticky; top: 72px; z-index: 30;
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
   padding: 10px 14px; margin-bottom: 24px; border-radius: 980px;
-  background: rgba(246, 246, 250, 0.84);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(2.5px) saturate(190%);
+  -webkit-backdrop-filter: blur(2.5px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.72);
   box-shadow:
-    0 10px 28px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 10px 28px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
     inset 0 -1px 0 rgba(0, 0, 0, 0.04);
 }
 .filter-pills { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -551,13 +552,12 @@ body {
   .theme-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 640px) {
-  /* Zero-jank mobile scroll: no backdrop-filter readbacks, no 100dvh relayouts, no scroll-reveal paint stalls */
-  .site-header, .cinema-frame, .glass-pill-dock, .btn-glass,
-  .theme-card, .step-card, .spec-tile, .flagship-stage, .btn-outline-dark, .pill, .flag-tab, .search-inline input, .sort-select {
+  /* Keep crisp .clear glass on header & dock; avoid reveal paint stalls on scroll */
+  .theme-card, .step-card, .spec-tile {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
-  .site-header { background: rgba(14, 15, 22, 0.92); }
+  .site-header { background: rgba(14, 15, 22, 0.42); backdrop-filter: blur(2.5px) saturate(190%); -webkit-backdrop-filter: blur(2.5px) saturate(190%); }
   .reveal, .scroll-card { opacity: 1 !important; transform: none !important; transition: none !important; }
   .theme-card { contain: layout style paint; }
   .chapter-dark {

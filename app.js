@@ -155,25 +155,13 @@ function copyUrl(url, btn) {
 let activeFlagshipIdx = 0;
 let flagHoverPaused = false;
 let flagTimer = null;
-let flagFrontLayer = 0;
-let flagSeq = 0;
-
-function preloadFlagshipImg(f) {
-  const t = THEMES[f.idx];
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => (img.decode ? img.decode().then(resolve, resolve) : resolve());
-    img.onerror = resolve;
-    img.src = `previews/preview-${t.id}.jpg`;
-  });
-}
 
 function flagSlideHtml(f) {
   const t = THEMES[f.idx];
   const url = RAW_BASE + t.json;
   return `
     <div class="flag-media" data-open="${f.idx}">
-      <img src="previews/preview-${t.id}.jpg" alt="${t.name}" />
+      <img src="previews/preview-${t.id}.jpg" alt="${t.name}" decoding="async" />
     </div>
     <div class="flag-info">
       <span class="flag-kicker">${f.kicker}</span>
@@ -187,58 +175,43 @@ function flagSlideHtml(f) {
   `;
 }
 
-async function renderFlagship(flagIdx, animate = true) {
-  const seq = ++flagSeq;
+function buildFlagshipSlidesOnce() {
+  flagStageEl.innerHTML = FLAGSHIPS.map((f, i) =>
+    `<div class="flag-slide ${i === 0 ? "layer-front" : "layer-back"}" data-flag-slide="${i}">${flagSlideHtml(f)}</div>`
+  ).join("");
+}
+
+function renderFlagship(flagIdx) {
   activeFlagshipIdx = (flagIdx + FLAGSHIPS.length) % FLAGSHIPS.length;
-  const f = FLAGSHIPS[activeFlagshipIdx];
   flagTabsEl.querySelectorAll(".flag-tab").forEach((b, i) => b.classList.toggle("active", i === activeFlagshipIdx));
-
-  await preloadFlagshipImg(f);
-  if (seq !== flagSeq) return;
-
-  const slides = flagStageEl.querySelectorAll(".flag-slide");
-  if (!animate || slides.length < 2) {
-    flagStageEl.innerHTML = `
-      <div class="flag-slide layer-front">${flagSlideHtml(f)}</div>
-      <div class="flag-slide layer-back"></div>
-    `;
-    flagFrontLayer = 0;
-  } else {
-    const nextLayer = 1 - flagFrontLayer;
-    slides[nextLayer].innerHTML = flagSlideHtml(f);
-    requestAnimationFrame(() => {
-      slides[flagFrontLayer].classList.remove("layer-front");
-      slides[flagFrontLayer].classList.add("layer-back");
-      slides[nextLayer].classList.remove("layer-back");
-      slides[nextLayer].classList.add("layer-front");
-      flagFrontLayer = nextLayer;
-    });
-  }
-
-  preloadFlagshipImg(FLAGSHIPS[(activeFlagshipIdx + 1) % FLAGSHIPS.length]);
+  flagStageEl.querySelectorAll(".flag-slide").forEach((slide, i) => {
+    const isAct = i === activeFlagshipIdx;
+    slide.classList.toggle("layer-front", isAct);
+    slide.classList.toggle("layer-back", !isAct);
+  });
 }
 
 function resetFlagTimer() {
   if (flagTimer) clearInterval(flagTimer);
   flagTimer = setInterval(() => {
-    if (!flagHoverPaused && flagVisible && !dialogEl.open) renderFlagship(activeFlagshipIdx + 1, true);
+    if (!flagHoverPaused && flagVisible && !dialogEl.open) renderFlagship(activeFlagshipIdx + 1);
   }, 4000);
 }
 
 function initFlagships() {
+  buildFlagshipSlidesOnce();
   flagTabsEl.innerHTML = FLAGSHIPS.map((f, i) =>
     `<button type="button" class="flag-tab${i === 0 ? " active" : ""}" data-flag="${i}">${f.tab}</button>`
   ).join("");
   flagTabsEl.addEventListener("click", (e) => {
     const tab = e.target.closest(".flag-tab");
     if (tab) {
-      renderFlagship(Number(tab.dataset.flag), true);
+      renderFlagship(Number(tab.dataset.flag));
       resetFlagTimer();
     }
   });
   flagStageEl.addEventListener("mouseenter", () => { flagHoverPaused = true; });
   flagStageEl.addEventListener("mouseleave", () => { flagHoverPaused = false; });
-  renderFlagship(0, false);
   resetFlagTimer();
 }
 
