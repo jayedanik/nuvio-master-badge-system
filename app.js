@@ -590,7 +590,7 @@ if (location.hash.startsWith("#theme=")) {
   if (idx >= 0) openDialog(idx);
 }
 
-/* ---------- Hero Apple Clear Glass Kinetic Fins + Opening White Steam ---------- */
+/* ---------- Hero Apple Fluted Glass Louvers + Opening White Steam ---------- */
 (function initHeroAotAtmosphere() {
   const canvas = document.getElementById("hero-aot-canvas");
   const heroSection = document.querySelector(".hero");
@@ -602,7 +602,7 @@ if (location.hash.startsWith("#theme=")) {
   let width = 0;
   let height = 0;
   let dpr = 1;
-  let fins = [];
+  let slatCount = 28;
   let steamParticles = [];
   let rafId = 0;
   let isHeroInView = true;
@@ -620,7 +620,7 @@ if (location.hash.startsWith("#theme=")) {
     puffSize * 0.5, puffSize * 0.5, puffSize * 0.04,
     puffSize * 0.5, puffSize * 0.5, puffSize * 0.5
   );
-  puffGrad.addColorStop(0, "rgba(255, 255, 255, 0.62)");
+  puffGrad.addColorStop(0, "rgba(255, 255, 255, 0.65)");
   puffGrad.addColorStop(0.32, "rgba(242, 248, 255, 0.30)");
   puffGrad.addColorStop(0.68, "rgba(215, 232, 255, 0.09)");
   puffGrad.addColorStop(1, "rgba(215, 232, 255, 0)");
@@ -631,30 +631,25 @@ if (location.hash.startsWith("#theme=")) {
     return -(Math.cos(Math.PI * Math.max(0, Math.min(1, x))) - 1) / 2;
   }
 
-  // Smooth breathing open/close curve: returns { open: 0..1, venting: 0..1 }
+  // Smooth open/close breathing cycle (~7.8s)
   function getCycleState(time) {
-    const period = 7.6;
+    const period = 7.8;
     const u = (time % period) / period;
     let open = 0;
     let venting = 0;
 
-    if (u < 0.42) {
-      // Smoothly opening
-      const p = u / 0.42;
+    if (u < 0.40) {
+      const p = u / 0.40;
       open = easeInOutSine(p);
-      // Steam bursts out strongest while fins are actively opening apart
-      venting = Math.sin(p * Math.PI) * (0.45 + 0.55 * open);
+      venting = Math.sin(p * Math.PI) * (0.4 + 0.6 * open);
     } else if (u < 0.54) {
-      // Gentle open hold
       open = 1;
-      venting = 0.25 * (1 - (u - 0.42) / 0.12);
+      venting = 0.25 * (1 - (u - 0.40) / 0.14);
     } else if (u < 0.90) {
-      // Smoothly closing back together
       const p = (u - 0.54) / 0.36;
       open = 1 - easeInOutSine(p);
       venting = 0;
     } else {
-      // Brief calm closed rest
       open = 0;
       venting = 0;
     }
@@ -670,113 +665,32 @@ if (location.hash.startsWith("#theme=")) {
     canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const isMobile = width <= 768;
-    const pairCount = isMobile ? 6 : 9; // symmetrical wings of Apple clear glass fins
-    const totalFins = pairCount * 2;
-    fins = [];
-
-    for (let i = 0; i < totalFins; i++) {
-      // Order outer-to-inner so inner fins overlap cleanly in front when closed
-      const side = i % 2 === 0 ? -1 : 1;
-      const rank = Math.floor(i / 2); // 0 = outermost, pairCount-1 = innermost
-      const normRank = rank / Math.max(1, pairCount - 1); // 0..1
-
-      const maxSpreadAngle = (0.14 + (1 - normRank) * 0.58) * side; // fans outward up to ~41deg
-      const closedAngle = side * (0.015 + (1 - normRank) * 0.045); // folded nearly vertical together
-      const length = height * (0.46 + (1 - normRank) * 0.26);
-      const finWidth = (isMobile ? 28 : 42) + normRank * (isMobile ? 8 : 14);
-
-      fins.push({
-        side,
-        rank,
-        normRank,
-        closedAngle,
-        openAngle: maxSpreadAngle,
-        length,
-        finWidth,
-        // Stagger outer fins slightly ahead of inner fins for a fluid bloom
-        stagger: (1 - normRank) * 0.14,
-        phase: i * 0.45
-      });
-    }
-
+    slatCount = width <= 768 ? 18 : 32;
     steamParticles = [];
   }
 
-  function spawnSteamBurst(count, openAmount) {
+  function spawnSteamBurst(count) {
     const isMobile = width <= 768;
-    const maxParticles = isMobile ? 48 : 82;
-    const pivotX = width * 0.5;
-    const pivotY = height + 18;
+    const maxParticles = isMobile ? 46 : 80;
+    const slatW = width / slatCount;
 
     for (let i = 0; i < count; i++) {
       if (steamParticles.length >= maxParticles) break;
-      // Vent from inside the fanning gap between left & right fin banks
-      const spreadAngle = (Math.random() - 0.5) * (0.28 + openAmount * 0.72);
-      const distFromPivot = height * (0.14 + Math.random() * 0.34);
-      const spawnX = pivotX + Math.sin(spreadAngle) * distFromPivot;
-      const spawnY = pivotY - Math.cos(spreadAngle) * distFromPivot;
-      const speed = 34 + Math.random() * 44;
-
+      const idx = Math.floor(Math.random() * slatCount);
+      const gapX = (idx + 0.5) * slatW + (Math.random() - 0.5) * 8;
+      const spawnY = height * (0.28 + Math.random() * 0.68);
       steamParticles.push({
-        x: spawnX,
+        x: gapX,
         y: spawnY,
-        vx: Math.sin(spreadAngle) * speed * 1.15 + (Math.random() - 0.5) * 14,
-        vy: -Math.cos(spreadAngle) * speed - 18,
-        size: (isMobile ? 54 : 82) + Math.random() * 64,
-        grow: 1.55 + Math.random() * 0.9,
+        vx: (Math.random() - 0.35) * 26,
+        vy: -(24 + Math.random() * 34),
+        size: (isMobile ? 54 : 84) + Math.random() * 64,
+        grow: 1.5 + Math.random() * 0.85,
         maxAlpha: 0.16 + Math.random() * 0.18,
         age: 0,
-        life: 3.4 + Math.random() * 2.8
+        life: 3.0 + Math.random() * 2.5
       });
     }
-  }
-
-  // Draw a single Apple Clear Glass capsule/fin blade
-  function drawGlassFin(pivotX, pivotY, angle, length, finWidth, normRank, openAmount) {
-    ctx.save();
-    ctx.translate(pivotX, pivotY);
-    ctx.rotate(angle);
-
-    const r = finWidth * 0.5;
-    const topY = -length;
-
-    // Rounded Apple pill-fin path
-    ctx.beginPath();
-    ctx.moveTo(-r, 0);
-    ctx.lineTo(-r, topY + r);
-    ctx.arc(0, topY + r, r, Math.PI, 0, false);
-    ctx.lineTo(r, 0);
-    ctx.closePath();
-
-    // Clear glass translucent fill with subtle specular refraction
-    const bodyGrad = ctx.createLinearGradient(-r, topY, r, 0);
-    bodyGrad.addColorStop(0, `rgba(255, 255, 255, ${0.13 + openAmount * 0.05})`);
-    bodyGrad.addColorStop(0.35, "rgba(210, 232, 255, 0.05)");
-    bodyGrad.addColorStop(0.75, "rgba(180, 210, 255, 0.03)");
-    bodyGrad.addColorStop(1, "rgba(255, 255, 255, 0.09)");
-    ctx.fillStyle = bodyGrad;
-    ctx.fill();
-
-    // Crisp Apple Clear Glass rim highlight (bright top/left specular edge, soft bottom)
-    const rimGrad = ctx.createLinearGradient(0, topY, 0, 0);
-    rimGrad.addColorStop(0, `rgba(255, 255, 255, ${0.56 - (1 - normRank) * 0.16})`);
-    rimGrad.addColorStop(0.35, "rgba(220, 238, 255, 0.24)");
-    rimGrad.addColorStop(1, "rgba(255, 255, 255, 0.04)");
-    ctx.strokeStyle = rimGrad;
-    ctx.lineWidth = 1.25;
-    ctx.stroke();
-
-    // Inner glass specular reflection streak (gives the unmistakable Apple clear glass bevel)
-    ctx.beginPath();
-    ctx.moveTo(-r + 3.5, -18);
-    ctx.lineTo(-r + 3.5, topY + r + 4);
-    ctx.arc(0, topY + r + 4, Math.max(4, r - 3.5), Math.PI, Math.PI * 1.48, false);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.26)";
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    ctx.restore();
   }
 
   function updateAndDrawSteam(dt, time) {
@@ -788,17 +702,16 @@ if (location.hash.startsWith("#theme=")) {
         continue;
       }
       const progress = p.age / p.life;
-      const breeze = Math.sin(time * 0.9 + p.y * 0.006) * 14;
+      const breeze = Math.sin(time * 0.9 + p.y * 0.006) * 16;
       p.x += (p.vx + breeze) * dt;
       p.y += p.vy * dt;
-      p.vx *= 1 - 0.55 * dt;
 
       const fadeIn = Math.min(1, progress / 0.16);
-      const fadeOut = Math.pow(1 - progress, 1.4);
+      const fadeOut = Math.pow(1 - progress, 1.35);
       const alpha = p.maxAlpha * fadeIn * fadeOut;
       if (alpha <= 0.004) continue;
 
-      const curSize = p.size * (0.65 + progress * p.grow);
+      const curSize = p.size * (0.68 + progress * p.grow);
       ctx.globalAlpha = alpha;
       ctx.drawImage(
         puffCanvas,
@@ -809,6 +722,63 @@ if (location.hash.startsWith("#theme=")) {
       );
     }
     ctx.globalAlpha = 1;
+  }
+
+  function drawFlutedGlass(open, time) {
+    const slatW = width / slatCount;
+
+    for (let i = 0; i < slatCount; i++) {
+      const tNorm = i / (slatCount - 1);
+      const waveOffset = Math.sin(tNorm * Math.PI) * 0.12;
+      const localOpen = Math.max(0, Math.min(1, open * 1.12 - waveOffset));
+
+      // Louver rotation shrinks visible face width & opens glowing gaps between slats
+      const faceW = slatW * (1 - localOpen * 0.72);
+      const xCenter = (i + 0.5) * slatW;
+      const xLeft = xCenter - faceW * 0.5;
+
+      // Optical fluted-glass refraction wave (warm coral -> electric blue -> deep violet)
+      const wavePhase = Math.sin(tNorm * 4.2 + time * 0.35);
+      const yShift = height * (0.38 + wavePhase * 0.16);
+
+      const vGrad = ctx.createLinearGradient(0, 0, 0, height);
+      const coralAlpha = 0.14 * Math.max(0, 1 - tNorm * 1.55);
+      const bluePos = Math.max(0.18, Math.min(0.65, yShift / height));
+      vGrad.addColorStop(0, `rgba(255, 92, 68, ${coralAlpha})`);
+      vGrad.addColorStop(bluePos, `rgba(41, 151, 255, ${0.22 + 0.10 * (1 - localOpen * 0.5)})`);
+      vGrad.addColorStop(Math.min(0.88, bluePos + 0.24), "rgba(138, 68, 226, 0.18)");
+      vGrad.addColorStop(1, "rgba(6, 8, 16, 0.55)");
+
+      ctx.fillStyle = vGrad;
+      ctx.fillRect(xLeft, 0, faceW, height);
+
+      // Horizontal fluted-glass bevel shading (bright specular left ridge -> dark shadow right edge)
+      const hGrad = ctx.createLinearGradient(xLeft, 0, xLeft + faceW, 0);
+      hGrad.addColorStop(0, `rgba(255, 255, 255, ${0.24 + localOpen * 0.14})`);
+      hGrad.addColorStop(0.16, "rgba(185, 228, 255, 0.10)");
+      hGrad.addColorStop(0.55, "rgba(255, 255, 255, 0.01)");
+      hGrad.addColorStop(0.88, "rgba(0, 0, 0, 0.38)");
+      hGrad.addColorStop(1, "rgba(0, 0, 0, 0.56)");
+
+      ctx.fillStyle = hGrad;
+      ctx.fillRect(xLeft, 0, faceW, height);
+
+      // Crisp 1px glass edge highlight on the leading ridge
+      ctx.fillStyle = `rgba(255, 255, 255, ${0.22 + localOpen * 0.16})`;
+      ctx.fillRect(xLeft, 0, 1.1, height);
+    }
+
+    const vigTop = ctx.createLinearGradient(0, 0, 0, height * 0.24);
+    vigTop.addColorStop(0, "rgba(0, 0, 0, 0.65)");
+    vigTop.addColorStop(1, "rgba(0, 0, 0, 0)");
+    ctx.fillStyle = vigTop;
+    ctx.fillRect(0, 0, width, height * 0.24);
+
+    const vigBot = ctx.createLinearGradient(0, height * 0.78, 0, height);
+    vigBot.addColorStop(0, "rgba(0, 0, 0, 0)");
+    vigBot.addColorStop(1, "rgba(0, 0, 0, 0.75)");
+    ctx.fillStyle = vigBot;
+    ctx.fillRect(0, height * 0.78, width, height * 0.22);
   }
 
   function frame(now) {
@@ -822,8 +792,6 @@ if (location.hash.startsWith("#theme=")) {
     simTime += dt;
 
     const { open, venting } = getCycleState(simTime);
-    const pivotX = width * 0.5;
-    const pivotY = height + 24;
 
     if (venting > 0.05) {
       const spawnRate = (width <= 768 ? 16 : 26) * venting;
@@ -831,33 +799,13 @@ if (location.hash.startsWith("#theme=")) {
       const toSpawn = Math.floor(steamSpawnAcc);
       if (toSpawn > 0) {
         steamSpawnAcc -= toSpawn;
-        spawnSteamBurst(toSpawn, open);
+        spawnSteamBurst(toSpawn);
       }
     }
 
     ctx.clearRect(0, 0, width, height);
-
-    // 1. Back layer of glass fins (outer 60%)
-    const splitIdx = Math.floor(fins.length * 0.6);
-    for (let i = 0; i < splitIdx; i++) {
-      const f = fins[i];
-      const localOpen = Math.max(0, Math.min(1, open * (1 + f.stagger) - f.stagger * 0.35));
-      const windSway = Math.sin(simTime * 1.1 + f.phase) * 0.018 * (0.3 + localOpen);
-      const angle = f.closedAngle + (f.openAngle - f.closedAngle) * localOpen + windSway;
-      drawGlassFin(pivotX, pivotY, angle, f.length, f.finWidth, f.normRank, localOpen);
-    }
-
-    // 2. White steam venting out from inside between the glass fins
+    drawFlutedGlass(open, simTime);
     updateAndDrawSteam(dt, simTime);
-
-    // 3. Front layer of Apple Clear Glass fins (inner 40%) — steam shines right through them
-    for (let i = splitIdx; i < fins.length; i++) {
-      const f = fins[i];
-      const localOpen = Math.max(0, Math.min(1, open * (1 + f.stagger) - f.stagger * 0.35));
-      const windSway = Math.sin(simTime * 1.1 + f.phase) * 0.018 * (0.3 + localOpen);
-      const angle = f.closedAngle + (f.openAngle - f.closedAngle) * localOpen + windSway;
-      drawGlassFin(pivotX, pivotY, angle, f.length, f.finWidth, f.normRank, localOpen);
-    }
 
     rafId = requestAnimationFrame(frame);
   }
@@ -865,13 +813,7 @@ if (location.hash.startsWith("#theme=")) {
   function startLoop() {
     if (reducedMotion) {
       ctx.clearRect(0, 0, width, height);
-      const pivotX = width * 0.5;
-      const pivotY = height + 24;
-      for (let i = 0; i < fins.length; i++) {
-        const f = fins[i];
-        const angle = f.closedAngle + (f.openAngle - f.closedAngle) * 0.65;
-        drawGlassFin(pivotX, pivotY, angle, f.length, f.finWidth, f.normRank, 0.65);
-      }
+      drawFlutedGlass(0.35, 0.8);
       return;
     }
     if (!rafId && isHeroInView && !document.hidden) {
