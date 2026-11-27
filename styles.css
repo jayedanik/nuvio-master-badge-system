@@ -585,21 +585,52 @@ body {
 .btn-apple-white:hover { background: #fff; transform: translateY(-1px); }
 .btn-apple-white.copied { background: #30d158 !important; color: #02200a !important; }
 
-.tester-box { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
-.tester-label { display: block; font-size: 0.84rem; color: #98989d; margin-bottom: 8px; }
-.tester-input { width: 100%; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; border-radius: 10px; padding: 10px 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; margin-bottom: 10px; }
-.preset-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
-.preset-chip { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.10); color: #e5e5ea; border-radius: 980px; padding: 4px 11px; font-size: 0.76rem; cursor: pointer; }
-.preset-chip:hover { border-color: var(--blue-bright); }
-.tester-output-wrap, .tier-sample-grid { border-radius: 12px; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.025); }
-.tester-output-wrap { min-height: 108px; }
-.tester-count { font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; color: var(--blue-bright); margin-bottom: 8px; }
-.tester-badges, .tier-sample-grid { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.tester-badges img, .tier-sample-grid img { height: 30px; width: auto; object-fit: contain; }
-.all-badges-section { margin-bottom: 6px; }
-.all-badges-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.all-badges-head h4 { margin: 0; font-size: 0.94rem; }
-.manifest-stats { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #98989d; }
+/* Apple Spotlight Live Release Tester */
+.spotlight-wrap { margin-bottom: 16px; }
+.spotlight-bar {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(255, 255, 255, 0.055); border-radius: 14px; padding: 4px 16px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.spotlight-icon { color: #86868b; flex-shrink: 0; }
+.tester-input {
+  width: 100%; background: transparent; border: 0; outline: 0; color: #f5f5f7;
+  padding: 10px 0; font-family: 'JetBrains Mono', monospace; font-size: 0.84rem;
+}
+.preset-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+.presets-lbl {
+  font-size: 0.68rem; color: #6e6e73; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em; margin-right: 4px;
+}
+.preset-chip {
+  background: rgba(255, 255, 255, 0.045); border: 0; color: #98989d;
+  border-radius: 980px; padding: 5px 13px; font-size: 0.76rem; font-weight: 500; cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.preset-chip:hover { background: rgba(255, 255, 255, 0.09); color: #f5f5f7; }
+.preset-chip.active { background: rgba(255, 255, 255, 0.14); color: #f5f5f7; }
+
+.tester-output-wrap {
+  margin: 16px 0 20px; padding: 16px 20px; border-radius: 18px; min-height: 92px;
+  background: rgba(255, 255, 255, 0.026); border: 1px solid rgba(255, 255, 255, 0.065);
+}
+.tester-count {
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: #6e6e73; margin-bottom: 12px;
+}
+.tester-badges, .tier-sample-grid { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; }
+.tester-badges img { height: 34px; width: auto; object-fit: contain; }
+.tier-sample-grid img { height: 28px; width: auto; object-fit: contain; opacity: 0.92; }
+.all-badges-section { border-top: 1px solid rgba(255, 255, 255, 0.07); padding-top: 16px; margin-bottom: 4px; }
+.all-badges-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.all-badges-head h4 {
+  margin: 0; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: #6e6e73;
+}
+.manifest-stats {
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #6e6e73;
+}
 
 @media (max-width: 1024px) {
   .flagship-stage { height: auto; }

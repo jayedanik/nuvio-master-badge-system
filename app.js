@@ -432,10 +432,10 @@ async function runReleaseTester(theme) {
       } catch (_) {}
     }
 
-    testerCount.textContent = `${matched.length} badge${matched.length === 1 ? "" : "s"} matched this release:`;
+    testerCount.textContent = `LIVE STREAM PREVIEW · ${matched.length} ACTIVE`;
     testerBadges.innerHTML = matched.length
       ? matched.map((m) => `<img src="${theme.dir}/${m.fname}" alt="${m.name}" title="${m.name}" />`).join("")
-      : `<span style="color:#a1a1a6;font-size:0.84rem;">No badges matched. Try adding 4K, REMUX, Atmos, or Netflix.</span>`;
+      : `<span style="color:#6e6e73;font-size:0.84rem;">No badges matched. Try adding 4K, REMUX, Atmos, or Netflix.</span>`;
   } catch (err) {
     testerCount.textContent = "Run via a local server or GitHub Pages to load live JSON rules.";
     testerBadges.innerHTML = "";
@@ -512,9 +512,14 @@ if (dlgToggleTesterBtn) {
   });
 }
 
-releaseInput.addEventListener("input", () => runReleaseTester(THEMES[currentDialogIndex]));
+releaseInput.addEventListener("input", () => {
+  document.querySelectorAll(".preset-chip").forEach((c) => c.classList.toggle("active", c.dataset.preset === releaseInput.value));
+  runReleaseTester(THEMES[currentDialogIndex]);
+});
 document.querySelectorAll(".preset-chip").forEach((chip) => {
   chip.addEventListener("click", () => {
+    document.querySelectorAll(".preset-chip").forEach((c) => c.classList.remove("active"));
+    chip.classList.add("active");
     releaseInput.value = chip.dataset.preset;
     runReleaseTester(THEMES[currentDialogIndex]);
   });
