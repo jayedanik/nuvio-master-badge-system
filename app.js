@@ -333,12 +333,13 @@ function renderGrid() {
   });
   if (sortEl.value === "az") list = [...list].sort((a, b) => a.name.localeCompare(b.name));
 
-  gridEl.innerHTML = list.map((t) => {
+  gridEl.innerHTML = list.map((t, i) => {
     const idx = THEMES.indexOf(t);
     const jsonUrl = RAW_BASE + t.json;
     const isSaved = savedIds.has(t.id);
+    const delay = (i % 3) * 70;
     return `
-      <article class="theme-card">
+      <article class="theme-card scroll-card" style="transition-delay:${delay}ms">
         <div class="card-media">
           <button type="button" class="card-thumb-btn" data-open="${idx}" aria-label="Inspect ${t.name}">
             <img src="previews/preview-${t.id}.jpg" alt="${t.name} 4K preview" loading="lazy" decoding="async" />
@@ -361,6 +362,7 @@ function renderGrid() {
   }).join("");
 
   emptyEl.hidden = list.length > 0;
+  observeScrollItems();
 }
 
 async function getManifest(theme) {
@@ -500,8 +502,39 @@ const io = new IntersectionObserver((entries) => {
   entries.forEach((en) => {
     if (en.isIntersecting) { en.target.classList.add("visible"); io.unobserve(en.target); }
   });
-}, { threshold: 0.08 });
-document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+}, { threshold: 0.08, rootMargin: "0px 0px -30px 0px" });
+
+function observeScrollItems() {
+  document.querySelectorAll(".reveal, .spec-tile, .step-card, .faq-item, .scroll-card").forEach((el, i) => {
+    if (!el.classList.contains("scroll-card") && !el.classList.contains("reveal")) {
+      el.classList.add("scroll-card");
+      el.style.transitionDelay = `${(i % 4) * 75}ms`;
+    }
+    if (!el.classList.contains("visible")) io.observe(el);
+  });
+}
+
+// Smooth Hero Scroll Parallax
+const heroTitleEl = document.querySelector(".hero-title");
+const heroAuraEl = document.querySelector(".hero-aura");
+let scrollTicking = false;
+window.addEventListener("scroll", () => {
+  if (scrollTicking) return;
+  scrollTicking = true;
+  requestAnimationFrame(() => {
+    const y = Math.min(window.scrollY, 500);
+    if (heroTitleEl) {
+      heroTitleEl.style.transform = `translateY(${y * 0.14}px)`;
+      heroTitleEl.style.opacity = String(Math.max(0.25, 1 - y / 460));
+    }
+    if (heroAuraEl) {
+      heroAuraEl.style.transform = `translateX(-50%) translateY(${y * 0.25}px) scale(${1 + y * 0.0006})`;
+    }
+    scrollTicking = false;
+  });
+}, { passive: true });
+
+observeScrollItems();
 
 updateSavedCount();
 buildSimRowsOnce();
