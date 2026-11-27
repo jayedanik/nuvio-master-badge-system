@@ -675,34 +675,25 @@ if (location.hash.startsWith("#theme=")) {
   }
 
   const steamTex = createTileableFbmTexture(5, 5);
+  const steamPattern = plumeCtx ? plumeCtx.createPattern(steamTex, "repeat") : null;
 
   function smoothstep(edge0, edge1, x) {
     const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
     return t * t * (3 - 2 * t);
   }
 
-  function easeInOutSine(x) {
-    return -(Math.cos(Math.PI * Math.max(0, Math.min(1, x))) - 1) / 2;
-  }
-
-  // Smooth cycle: crack open -> hold -> full sealed close -> calm rest (~7.6s)
+  // Zero-pause smooth open -> immediate reverse close -> calm sealed rest (~7.2s)
   function getCycleState(time) {
-    const period = 7.6;
+    const period = 7.2;
     const u = (time % period) / period;
     let open = 0;
     let steam = 0;
 
-    if (u < 0.28) {
-      const p = u / 0.28;
-      open = easeInOutSine(p);
-      steam = smoothstep(0.08, 0.92, p);
-    } else if (u < 0.50) {
-      open = 1;
-      steam = 1;
-    } else if (u < 0.78) {
-      const p = (u - 0.50) / 0.28;
-      open = 1 - easeInOutSine(p);
-      steam = 1 - smoothstep(0.05, 0.95, p);
+    if (u < 0.74) {
+      const p = u / 0.74; // 0..1
+      // Pure cosine bell: smoothly opens 0 -> 1 (at p=0.5) and immediately reverses 1 -> 0 with zero delay
+      open = 0.5 - 0.5 * Math.cos(p * Math.PI * 2);
+      steam = Math.pow(open, 0.75);
     } else {
       open = 0;
       steam = 0;
@@ -735,13 +726,13 @@ if (location.hash.startsWith("#theme=")) {
 
   // Render FBM steam strictly masked to plumes originating from each open fin slit & sweeping left
   function drawFinSlitSteam(open, steam, time) {
-    if (steam <= 0.004 || open <= 0.004 || !plumeCtx) return;
+    if (steam <= 0.004 || open <= 0.004 || !plumeCtx || !steamPattern) return;
 
     const pw = plumeCanvas.width;
     const ph = plumeCanvas.height;
     const sx = pw / width;
     const slatW = pw / slatCount;
-    const reach = slatW * (1.4 + 1.1 * steam); // how far left the fan carries steam from each slit
+    const reach = slatW * (1.4 + 1.1 * steam);
 
     plumeCtx.globalCompositeOperation = "source-over";
     plumeCtx.clearRect(0, 0, pw, ph);
@@ -755,7 +746,7 @@ if (location.hash.startsWith("#theme=")) {
       const leftX = slitX - reach;
       const g = plumeCtx.createLinearGradient(leftX, 0, slitX + 2, 0);
       g.addColorStop(0, "rgba(255, 255, 255, 0)");
-      g.addColorStop(0.55, `rgba(255, 255, 255, ${0.42 * localOpen * steam})`);
+      g.addColorStop(0.55, `rgba(255, 255, 255, ${0.46 * localOpen * steam})`);
       g.addColorStop(0.92, `rgba(255, 255, 255, ${0.95 * localOpen * steam})`);
       g.addColorStop(1, "rgba(255, 255, 255, 0)");
 
@@ -763,29 +754,30 @@ if (location.hash.startsWith("#theme=")) {
       plumeCtx.fillRect(leftX, 0, reach + 3, ph);
     }
 
-    // Soft top & bottom vertical fade so plumes emerge smoothly from mid-to-lower fins
+    // Soft top & bottom vertical fade
     plumeCtx.globalCompositeOperation = "destination-in";
     const vMask = plumeCtx.createLinearGradient(0, 0, 0, ph);
     vMask.addColorStop(0, "rgba(255, 255, 255, 0)");
-    vMask.addColorStop(0.18, "rgba(255, 255, 255, 0.65)");
+    vMask.addColorStop(0.18, "rgba(255, 255, 255, 0.70)");
     vMask.addColorStop(0.65, "rgba(255, 255, 255, 1)");
-    vMask.addColorStop(0.95, "rgba(255, 255, 255, 0.35)");
+    vMask.addColorStop(0.95, "rgba(255, 255, 255, 0.40)");
     vMask.addColorStop(1, "rgba(255, 255, 255, 0)");
     plumeCtx.fillStyle = vMask;
     plumeCtx.fillRect(0, 0, pw, ph);
 
-    // 2. Multiply scrolling FBM vapor texture strictly inside those fin-slit plumes
+    // 2. Single fillRect with repeating CanvasPattern so source-in covers the ENTIRE canvas!
     plumeCtx.globalCompositeOperation = "source-in";
-    const tile = (width <= 768 ? 140 : 190) * sx;
-    const ox = -(((time * 64 * sx) % tile + tile) % tile);
-    const oy = -(((time * 24 * sx) % tile + tile) % tile);
-    for (let y = oy; y < ph; y += tile) {
-      for (let x = ox; x < pw; x += tile) {
-        plumeCtx.drawImage(steamTex, x, y, tile, tile);
-      }
-    }
+    const scale = (width <= 768 ? 140 : 190) * sx / 256;
+    const ox = -((time * 68 * sx) % (256 * scale));
+    const oy = -((time * 24 * sx) % (256 * scale));
+    plumeCtx.save();
+    plumeCtx.translate(ox, oy);
+    plumeCtx.scale(scale, scale);
+    plumeCtx.fillStyle = steamPattern;
+    plumeCtx.fillRect(-ox / scale, -oy / scale, pw / scale + 256, ph / scale + 256);
+    plumeCtx.restore();
 
-    // 3. Composite onto main hero canvas
+    // 3. Composite onto main hero canvas (light, refined, never overpowering)
     ctx.save();
     ctx.globalCompositeOperation = "screen";
     ctx.globalAlpha = 0.34;
