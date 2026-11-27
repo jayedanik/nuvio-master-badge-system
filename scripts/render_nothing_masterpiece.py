@@ -242,14 +242,12 @@ TIERS = [
     ("STUDIOS", "Theatrical cinema & television production houses",
      ["warnerbros", "universal", "mgm", "sonypictures", "a24", "ghibli", "redchillies", "paramount_studio", "toho", "lionsgate", "bbc", "amc"]),
     ("LANGUAGES", "Sovereign territory flags & multi-language audio tracks",
-     ["bangladesh-flag", "india-flag", "usa-flag", "uk", "japan-flag", "korean", "france", "germany", "nepali-flag", "saudi-arabia-flag", "spain", "italy", "brazil", "russia"])
+     ["bangladesh-flag", "uk", "korean", "nepali-flag", "brazil"])
 ]
 
 def render_html_preview(cfg):
     theme_id = cfg["id"]
-    if theme_id == "washi-tape":
-        # Washi tape has an approved, bespoke master showcase with 3D shadows and elevated grounding
-        return
+    # Standardized 5-language tier across all themes
     title_name = cfg["name"]
     accent_hex = cfg["accent"]
     desc = cfg["desc"]
@@ -261,7 +259,7 @@ def render_html_preview(cfg):
     elif bg_type == "aurora":
         bg_style = f"url('data:image/jpeg;base64,{b64_aurora}') center / cover no-repeat, #08090d"
     elif bg_type == "frieren":
-        bg_style = f"url('data:image/jpeg;base64,{b64_frieren}') center / cover no-repeat, #08090d"
+        bg_style = f"linear-gradient(180deg, rgba(6, 12, 8, 0.74) 0%, rgba(5, 8, 6, 0.82) 100%), url('data:image/jpeg;base64,{b64_frieren}') center / cover no-repeat, #08090d"
     elif bg_type == "gta6_vice":
         gta_svg = """<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2400 960' preserveAspectRatio='xMidYMid slice'>
   <defs>
