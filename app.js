@@ -800,31 +800,26 @@ if (location.hash.startsWith("#theme=")) {
       const xRight = (i + 1) * slatW;
       const xLeft = xRight - faceW;
 
-      const wavePhase = Math.sin(tNorm * 4.2 + time * 0.35);
-      const yShift = height * (0.38 + wavePhase * 0.16);
-
+      // Monochrome Platinum & Smoked Obsidian Fluted Glass (matching the 3-rib logo)
       const vGrad = ctx.createLinearGradient(0, 0, 0, height);
-      const coralAlpha = 0.08 * Math.max(0, 1 - tNorm * 1.55);
-      const bluePos = Math.max(0.18, Math.min(0.65, yShift / height));
-      vGrad.addColorStop(0, `rgba(255, 92, 68, ${coralAlpha})`);
-      vGrad.addColorStop(bluePos, `rgba(24, 92, 185, ${0.16 + 0.05 * (1 - localOpen)})`);
-      vGrad.addColorStop(Math.min(0.88, bluePos + 0.24), "rgba(74, 34, 138, 0.15)");
-      vGrad.addColorStop(1, "rgba(4, 6, 12, 0.42)");
+      vGrad.addColorStop(0, "rgba(255, 255, 255, 0.03)");
+      vGrad.addColorStop(0.42, `rgba(210, 216, 228, ${0.06 + 0.03 * (1 - localOpen)})`);
+      vGrad.addColorStop(1, "rgba(5, 6, 10, 0.48)");
 
       ctx.fillStyle = vGrad;
       ctx.fillRect(xLeft, 0, faceW, height);
 
       const hGrad = ctx.createLinearGradient(xLeft, 0, xRight, 0);
-      hGrad.addColorStop(0, `rgba(255, 255, 255, ${0.13 + localOpen * 0.09})`);
-      hGrad.addColorStop(0.16, "rgba(185, 228, 255, 0.05)");
-      hGrad.addColorStop(0.55, "rgba(6, 8, 16, 0.28)");
-      hGrad.addColorStop(0.88, "rgba(0, 0, 0, 0.46)");
-      hGrad.addColorStop(1, "rgba(0, 0, 0, 0.62)");
+      hGrad.addColorStop(0, `rgba(255, 255, 255, ${0.12 + localOpen * 0.09})`);
+      hGrad.addColorStop(0.18, "rgba(226, 232, 240, 0.04)");
+      hGrad.addColorStop(0.55, "rgba(8, 9, 14, 0.30)");
+      hGrad.addColorStop(0.88, "rgba(0, 0, 0, 0.50)");
+      hGrad.addColorStop(1, "rgba(0, 0, 0, 0.66)");
 
       ctx.fillStyle = hGrad;
       ctx.fillRect(xLeft, 0, faceW, height);
 
-      ctx.fillStyle = `rgba(255, 255, 255, ${0.13 + localOpen * 0.10})`;
+      ctx.fillStyle = `rgba(245, 245, 247, ${0.12 + localOpen * 0.10})`;
       ctx.fillRect(xLeft, 0, 1.1, height);
     }
 
