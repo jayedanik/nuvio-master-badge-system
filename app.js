@@ -682,18 +682,17 @@ if (location.hash.startsWith("#theme=")) {
     return t * t * (3 - 2 * t);
   }
 
-  // Zero-pause smooth open -> immediate reverse close -> calm sealed rest (~7.2s)
+  // Smooth open -> immediate reverse close -> brief 0.6s closed breath (~6.4s)
   function getCycleState(time) {
-    const period = 7.2;
+    const period = 6.4;
     const u = (time % period) / period;
     let open = 0;
     let steam = 0;
 
-    if (u < 0.74) {
-      const p = u / 0.74; // 0..1
-      // Pure cosine bell: smoothly opens 0 -> 1 (at p=0.5) and immediately reverses 1 -> 0 with zero delay
+    if (u < 0.90) {
+      const p = u / 0.90; // 0..1
       open = 0.5 - 0.5 * Math.cos(p * Math.PI * 2);
-      steam = Math.pow(open, 0.75);
+      steam = Math.pow(open, 0.85);
     } else {
       open = 0;
       steam = 0;
@@ -780,7 +779,7 @@ if (location.hash.startsWith("#theme=")) {
     // 3. Composite onto main hero canvas (light, refined, never overpowering)
     ctx.save();
     ctx.globalCompositeOperation = "screen";
-    ctx.globalAlpha = 0.34;
+    ctx.globalAlpha = 0.13;
     ctx.drawImage(plumeCanvas, 0, 0, width, height);
     ctx.restore();
   }
