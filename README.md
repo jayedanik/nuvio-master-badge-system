@@ -48,11 +48,11 @@ https://raw.githubusercontent.com/jayedanik/nuvio-master-badge-system/main/badge
 
 ---
 
-### StreamBridge Studio Markers Enhanced
+### Pristine Pro
 > Enhanced frameless studio production markers with prismatic HDR spectrum & metallic accents
 
 <p align="center">
-  <img src="previews/preview-studio-markers.jpg?v=v4.0.0-LOCKED" alt="StreamBridge Studio Markers Enhanced" width="100%" />
+  <img src="previews/preview-studio-markers.jpg?v=v4.0.0-LOCKED" alt="Pristine Pro" width="100%" />
 </p>
 
 ```text
